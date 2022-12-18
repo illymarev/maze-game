@@ -2,6 +2,13 @@ import {useState, useRef, useReducer, useEffect} from 'react'
 import mazeNodesReducer from "./reducers/mazeNodesReducer";
 import generationFunctionsList from "./generation/generationFunctionsList";
 
+
+// TODO for tomorrow: CSS dimensions change
+// TODO start and end nodes (simple one, just 0,0 and -1, -1)
+// TODO after: user's ability to solve the maze
+// TODO after: refactor (mazeNodesReducer to use immer, forms to separate components, reducers, etc.)
+// TODO path finding algorithms
+// TODO advanced start and end nodes (longest path)
 const Maze = () => {
     const [dimensions, setDimensions] = useState({rows: '5', columns: '5'})
     const [mazeGenerationFunction, setMazeGenerationFunction] = useState('')
