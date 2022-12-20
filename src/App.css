@@ -37,13 +37,6 @@
     }
 }
 
-.maze {
-    display: inline-grid;
-    /*gap: 20px 20px;*/
-    grid-template: repeat(5, 50px) / repeat(5, 50px);
-    text-align: center;
-}
-
 .matrixNode {
     display: flex;
     justify-content: center;

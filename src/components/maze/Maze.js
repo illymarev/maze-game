@@ -1,9 +1,18 @@
 import {useState, useRef, useReducer, useEffect} from 'react'
+import styled from "styled-components";
 import mazeNodesReducer from "./reducers/mazeNodesReducer";
 import generationFunctionsList from "./generation/generationFunctionsList";
 
+const StyledMaze = styled.div`
+  border: 1px solid black;
+  margin-top: 10px;
+  display: inline-grid;
+  /*gap: 20px 20px;*/
+  grid-template: repeat(${props => props.rows}, 50px) / repeat(${props => props.columns}, 50px);
+  text-align: center;
+`
 
-// TODO for tomorrow: CSS dimensions change
+
 // TODO start and end nodes (simple one, just 0,0 and -1, -1)
 // TODO after: user's ability to solve the maze
 // TODO after: refactor (mazeNodesReducer to use immer, forms to separate components, reducers, etc.)
@@ -11,6 +20,7 @@ import generationFunctionsList from "./generation/generationFunctionsList";
 // TODO advanced start and end nodes (longest path)
 const Maze = () => {
     const [dimensions, setDimensions] = useState({rows: '5', columns: '5'})
+    const [dimensionsInput, setDimensionsInput] = useState(dimensions)
     const [mazeGenerationFunction, setMazeGenerationFunction] = useState('')
     const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, []);
 
@@ -19,10 +29,13 @@ const Maze = () => {
     const mazeNodesRef = useRef([])
     mazeNodesRef.current = mazeNodes
 
+    const initializeEmptyMaze = () => dispatchMazeNodes({type: "MAZE_INIT", payload: dimensions})
+
 
     useEffect(() => {
         initializeEmptyMaze()
-    }, [])
+    }, [dimensions])
+
 
     const handleGenerationFunctionChange = event => {
         event.preventDefault()
@@ -30,24 +43,8 @@ const Maze = () => {
     }
 
     const handleDimensionsChange = event => {
-        // TODO update CSS
         event.preventDefault()
-        initializeEmptyMaze()
-    }
-
-    const initializeEmptyMaze = () => {
-        const newMaze = []
-        for (let i = 0; i < dimensions['rows']; i++) {
-            newMaze[i] = []
-            for (let j = 0; j < dimensions['columns']; j++) {
-                newMaze[i][j] = {
-                    visited: false,
-                    current: false,
-                    pathways: {N: false, S: false, W: false, E: false}
-                };
-            }
-        }
-        dispatchMazeNodes({type: "MAZE_INIT", payload: {maze: newMaze}})
+        setDimensions(dimensionsInput)
     }
 
 
@@ -88,27 +85,21 @@ const Maze = () => {
         generationFunction(mazeNodesRef, generationActions)
     }
 
-    // ACTIONS FOR SOLVING
-
-
-    // if (currentMazeGenerationFunction !== mazeGenerationFunction) {
-    //     setCurrentMazeGenerationFunction(mazeGenerationFunction)
-    //     MAZE_GENERATION_FUNCTIONS[mazeGenerationFunction](nodesMatrixRef, generationActions)
-    // }
-
     return (
         <>
+            {/*TODO refactor to separate component*/}
             <form onSubmit={handleDimensionsChange}>
                 {/*TODO input validation*/}
-                <input type={'number'} name={'rows'} value={dimensions['rows']}
-                       onChange={e => setDimensions({...dimensions, rows: e.target.value})}
+                <input type={'number'} name={'rows'} value={dimensionsInput['rows']}
+                       onChange={e => setDimensionsInput({...dimensions, rows: e.target.value})}
                 />
-                <input type={'number'} name={'columns'} value={dimensions['columns']}
-                       onChange={e => setDimensions({...dimensions, columns: e.target.value})}
+                <input type={'number'} name={'columns'} value={dimensionsInput['columns']}
+                       onChange={e => setDimensionsInput({...dimensions, columns: e.target.value})}
                 />
                 <button type={"submit"}>Update maze dimensions</button>
             </form>
 
+            {/*TODO refactor to separate component*/}
             <form onSubmit={useMazeGenerationFunction}>
                 <select value={mazeGenerationFunction} onChange={handleGenerationFunctionChange}>
                     {/*TODO input validation*/}
@@ -120,13 +111,13 @@ const Maze = () => {
                 <button type={"submit"}>Generate maze</button>
             </form>
 
-            <div className="maze">
+            <StyledMaze rows={dimensions.rows} columns={dimensions.columns}>
                 {mazeNodes.map((row, yCoordinate) => {
                     return row.map((nodeData, xCoordinate) => <Node data={nodeData}
                                                                     key={`${yCoordinate}-${xCoordinate}`}/>
                     )
                 })}
-            </div>
+            </StyledMaze>
         </>
     )
         ;
