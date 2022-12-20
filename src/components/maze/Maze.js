@@ -7,13 +7,14 @@ const StyledMaze = styled.div`
   border: 1px solid black;
   margin-top: 10px;
   display: inline-grid;
-  /*gap: 20px 20px;*/
   grid-template: repeat(${props => props.rows}, 50px) / repeat(${props => props.columns}, 50px);
   text-align: center;
 `
 
 
 // TODO start and end nodes (simple one, just 0,0 and -1, -1)
+// TODO input validation, refactor input into separate components in separate files
+// TODO refactor node into a separate file
 // TODO after: user's ability to solve the maze
 // TODO after: refactor (mazeNodesReducer to use immer, forms to separate components, reducers, etc.)
 // TODO path finding algorithms
