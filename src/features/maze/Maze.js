@@ -19,10 +19,14 @@ const StyledMaze = styled.div`
 // TODO full cleanup, fixes and refactoring! This is a mess
 // TODO check all todos
 // TODO add the generation algorithm wrapper. It should run certain logic before and after the algorithm
-// Before the maze generation - reset the maze.
+// Before the maze generation - reset the maze. Mark "generation in progress" flag
 // After finishing the algorithm, it should mark the start and end nodes, as well as clear the current node.
+// Mark "generation in progress" flag as false
+// Decide if I want to do that cool visualization that demonstrates without walls and this stuff, only the real path
+// If yes - do it here!
 // TODO create another generation algorithm
 // TODO game component with the state
+// TODO add the game logic
 // TODO after: user's ability to solve the maze
 // TODO after: refactor (mazeReducer to use immer, forms to separate features, reducers, etc.)
 // TODO path finding algorithms
