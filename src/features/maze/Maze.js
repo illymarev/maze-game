@@ -15,7 +15,12 @@ const StyledMaze = styled.div`
 
 
 // TODO input validation, refactor input into separate features in separate files
-// TODO refactor node into a separate file
+// TODO full cleanup, fixes and refactoring! This is a mess
+// TODO add the generation algorithm wrapper. It should run certain logic before and after the algorithm
+// Before the maze generation - reset the maze.
+// After finishing the algorithm, it should mark the start and end nodes, as well as clear the current node.
+// TODO create another generation algorithm
+// TODO game component with the state
 // TODO after: user's ability to solve the maze
 // TODO after: refactor (mazeReducer to use immer, forms to separate features, reducers, etc.)
 // TODO path finding algorithms
