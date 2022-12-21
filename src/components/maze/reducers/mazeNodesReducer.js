@@ -1,22 +1,22 @@
-const mazeNodesReducer = (state, action) => {
+const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
         case "CLEAR_CURRENT":
-            return state.map(nestedArray => nestedArray.map(node => ({...node, current: false})))
+            // TODO optimize this, this is O(N) while it can be O(1)
+            draft.map(nestedArray => nestedArray.map(node => node.current = false))
+            break
 
         case "MARK_CURRENT":
-            const newState1 = state.map(nestedArray => nestedArray.map(node => ({...node, current: false})))
-            newState1[action.data.coordinates[0]][action.data.coordinates[1]]['current'] = true
-            return newState1
+            draft[action.data.coordinates[0]][action.data.coordinates[1]].current = true
+            break
 
         case "MARK_VISITED":
-            const newState = [...state]
-            newState[action.data.coordinates[0]][action.data.coordinates[1]]['visited'] = true
-            return newState
+            draft[action.data.coordinates[0]][action.data.coordinates[1]]['visited'] = true
+            break
 
         case "MARK_PATH":
-            const updatedState = [...state]
-            updatedState[action.data.coordinates[0]][action.data.coordinates[1]]['pathways'][action.data.path] = true
-            return updatedState
+            // const updatedState = [...state]
+            draft[action.data.coordinates[0]][action.data.coordinates[1]]['pathways'][action.data.path] = true
+            break
 
         case "MAZE_INIT":
             const newMaze = []
@@ -33,11 +33,14 @@ const mazeNodesReducer = (state, action) => {
             return newMaze
 
         case "MAZE_RESET":
-            return state.map(nestedArray => nestedArray.map(_ => ({
-                visited: false,
-                current: false,
-                pathways: {N: false, S: false, W: false, E: false}
-            })))
+            draft.forEach(row => {
+                row.forEach(node => {
+                    node.visited = false
+                    node.current = false
+                    node.pathways = {N: false, S: false, W: false, E: false}
+                })
+            });
+            break
 
         default:
             throw new Error()

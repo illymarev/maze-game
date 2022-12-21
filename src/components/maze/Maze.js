@@ -1,4 +1,5 @@
-import {useState, useRef, useReducer, useEffect} from 'react'
+import {useState, useRef, useEffect} from 'react'
+import {useImmerReducer} from "use-immer";
 import styled from "styled-components";
 import mazeNodesReducer from "./reducers/mazeNodesReducer";
 import generationFunctionsList from "./generation/generationFunctionsList";
@@ -23,7 +24,7 @@ const Maze = () => {
     const [dimensions, setDimensions] = useState({rows: '5', columns: '5'})
     const [dimensionsInput, setDimensionsInput] = useState(dimensions)
     const [mazeGenerationFunction, setMazeGenerationFunction] = useState('')
-    const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, []);
+    const [mazeNodes, dispatchMazeNodes] = useImmerReducer(mazeNodesReducer, []);
 
     // Read-only replica of the mazeNodes state that will be used in maze generation functions in
     // order to access the latest state
@@ -56,6 +57,7 @@ const Maze = () => {
     }
 
     const markCurrent = nodeCoordinates => {
+        clearCurrent()
         const action = {'type': 'MARK_CURRENT', data: {coordinates: nodeCoordinates}}
         dispatchMazeNodes(action)
     }
@@ -92,10 +94,10 @@ const Maze = () => {
             <form onSubmit={handleDimensionsChange}>
                 {/*TODO input validation*/}
                 <input type={'number'} name={'rows'} value={dimensionsInput['rows']}
-                       onChange={e => setDimensionsInput({...dimensions, rows: e.target.value})}
+                       onChange={e => setDimensionsInput({...dimensionsInput, rows: e.target.value})}
                 />
                 <input type={'number'} name={'columns'} value={dimensionsInput['columns']}
-                       onChange={e => setDimensionsInput({...dimensions, columns: e.target.value})}
+                       onChange={e => setDimensionsInput({...dimensionsInput, columns: e.target.value})}
                 />
                 <button type={"submit"}>Update maze dimensions</button>
             </form>
