@@ -14,8 +14,10 @@ const StyledMaze = styled.div`
 `
 
 
-// TODO input validation, refactor input into separate features in separate files
+// TODO refactor input into separate features in separate files
+// TODO add input validation
 // TODO full cleanup, fixes and refactoring! This is a mess
+// TODO check all todos
 // TODO add the generation algorithm wrapper. It should run certain logic before and after the algorithm
 // Before the maze generation - reset the maze.
 // After finishing the algorithm, it should mark the start and end nodes, as well as clear the current node.
