@@ -9,7 +9,7 @@ const recursiveBacktracking = (nodesMatrixRef, generationActions) => {
 
 const recursiveBacktrackingHelper = async (nodesMatrixRef, visitedStack, nodeCoordinates, actions) => {
     actions.markCurrent(nodeCoordinates)
-    await delay(0)
+    await delay(50)
 
     if (!nodesMatrixRef.current[nodeCoordinates[0]][nodeCoordinates[1]].visited) {
         actions.markVisited(nodeCoordinates)

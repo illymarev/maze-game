@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import Maze from './components/maze/Maze.js'
+import Maze from './features/maze/Maze.js'
 import './App.css';
 
 const App = () => {

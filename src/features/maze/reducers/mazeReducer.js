@@ -1,4 +1,4 @@
-const mazeNodesReducer = (draft, action) => {
+const mazeReducer = (draft, action) => {
     switch (action.type) {
         case "CLEAR_CURRENT":
             // TODO optimize this, this is O(N) while it can be O(1)
@@ -6,31 +6,33 @@ const mazeNodesReducer = (draft, action) => {
             break
 
         case "MARK_CURRENT":
-            draft[action.data.coordinates[0]][action.data.coordinates[1]].current = true
+            draft[action.payload.coordinates[0]][action.payload.coordinates[1]].current = true
             break
 
         case "MARK_VISITED":
-            draft[action.data.coordinates[0]][action.data.coordinates[1]]['visited'] = true
+            draft[action.payload.coordinates[0]][action.payload.coordinates[1]]['visited'] = true
             break
 
         case "MARK_PATH":
-            // const updatedState = [...state]
-            draft[action.data.coordinates[0]][action.data.coordinates[1]]['pathways'][action.data.path] = true
+            draft[action.payload.coordinates[0]][action.payload.coordinates[1]]['pathways'][action.payload.path] = true
+            break
+
+        case "MARK_START_AND_END_NODES":
+            draft[action.payload.start[0]][action.payload.start[1]]['start'] = true
+            draft[action.payload.end[0]][action.payload.end[1]]['end'] = true
             break
 
         case "MAZE_INIT":
-            const newMaze = []
+            const newMazeNodes = []
             for (let i = 0; i < action.payload.rows; i++) {
-                newMaze[i] = []
+                newMazeNodes[i] = []
                 for (let j = 0; j < action.payload.columns; j++) {
-                    newMaze[i][j] = {
-                        visited: false,
-                        current: false,
-                        pathways: {N: false, S: false, W: false, E: false}
+                    newMazeNodes[i][j] = {
+                        visited: false, current: false, pathways: {N: false, S: false, W: false, E: false}
                     };
                 }
             }
-            return newMaze
+            return newMazeNodes
 
         case "MAZE_RESET":
             draft.forEach(row => {
@@ -48,4 +50,4 @@ const mazeNodesReducer = (draft, action) => {
     }
 }
 
-export default mazeNodesReducer
+export default mazeReducer

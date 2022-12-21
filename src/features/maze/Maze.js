@@ -1,8 +1,9 @@
 import {useState, useRef, useEffect} from 'react'
 import {useImmerReducer} from "use-immer";
 import styled from "styled-components";
-import mazeNodesReducer from "./reducers/mazeNodesReducer";
+import mazeReducer from "./reducers/mazeReducer";
 import generationFunctionsList from "./generation/generationFunctionsList";
+import Node from "./Node";
 
 const StyledMaze = styled.div`
   border: 1px solid black;
@@ -13,25 +14,26 @@ const StyledMaze = styled.div`
 `
 
 
-// TODO start and end nodes (simple one, just 0,0 and -1, -1)
-// TODO input validation, refactor input into separate components in separate files
+// TODO input validation, refactor input into separate features in separate files
 // TODO refactor node into a separate file
 // TODO after: user's ability to solve the maze
-// TODO after: refactor (mazeNodesReducer to use immer, forms to separate components, reducers, etc.)
+// TODO after: refactor (mazeReducer to use immer, forms to separate features, reducers, etc.)
 // TODO path finding algorithms
 // TODO advanced start and end nodes (longest path)
 const Maze = () => {
+    // I don't think that I need to store both states. I can store only the dimensionsInput,
+    // and use the actual matrix to calculate the dimensions that will be passed to props. Double-check later
     const [dimensions, setDimensions] = useState({rows: '5', columns: '5'})
     const [dimensionsInput, setDimensionsInput] = useState(dimensions)
     const [mazeGenerationFunction, setMazeGenerationFunction] = useState('')
-    const [mazeNodes, dispatchMazeNodes] = useImmerReducer(mazeNodesReducer, []);
+    const [maze, dispatchMaze] = useImmerReducer(mazeReducer, []);
 
     // Read-only replica of the mazeNodes state that will be used in maze generation functions in
     // order to access the latest state
     const mazeNodesRef = useRef([])
-    mazeNodesRef.current = mazeNodes
+    mazeNodesRef.current = maze
 
-    const initializeEmptyMaze = () => dispatchMazeNodes({type: "MAZE_INIT", payload: dimensions})
+    const initializeEmptyMaze = () => dispatchMaze({type: "MAZE_INIT", payload: dimensions})
 
 
     useEffect(() => {
@@ -53,23 +55,23 @@ const Maze = () => {
     // ACTIONS FOR GENERATION
     const clearCurrent = () => {
         const action = {'type': 'CLEAR_CURRENT'}
-        dispatchMazeNodes(action)
+        dispatchMaze(action)
     }
 
     const markCurrent = nodeCoordinates => {
         clearCurrent()
-        const action = {'type': 'MARK_CURRENT', data: {coordinates: nodeCoordinates}}
-        dispatchMazeNodes(action)
+        const action = {'type': 'MARK_CURRENT', payload: {coordinates: nodeCoordinates}}
+        dispatchMaze(action)
     }
 
     const markVisited = nodeCoordinates => {
-        const action = {type: 'MARK_VISITED', data: {coordinates: nodeCoordinates}}
-        dispatchMazeNodes(action)
+        const action = {type: 'MARK_VISITED', payload: {coordinates: nodeCoordinates}}
+        dispatchMaze(action)
     }
 
     const markPath = (nodeCoordinates, path) => {
-        const action = {type: 'MARK_PATH', data: {coordinates: nodeCoordinates, path: path}}
-        dispatchMazeNodes(action)
+        const action = {type: 'MARK_PATH', payload: {coordinates: nodeCoordinates, path: path}}
+        dispatchMaze(action)
     }
 
     const generationActions = {
@@ -79,13 +81,24 @@ const Maze = () => {
         markPath: markPath
     }
 
+    // TODO handle the case that the user can click generate multiple times
     const useMazeGenerationFunction = (e) => {
         e.preventDefault()
         const resetAction = {type: 'MAZE_RESET'}
-        dispatchMazeNodes(resetAction)
+        dispatchMaze(resetAction)
 
         const generationFunction = generationFunctionsList[mazeGenerationFunction]['func']
         generationFunction(mazeNodesRef, generationActions)
+        // TODO fix it. Generate only on finish
+        markStartAndEndNodes()
+    }
+
+    const markStartAndEndNodes = () => {
+        const action = {
+            type: 'MARK_START_AND_END_NODES',
+            payload: {start: [0, 0], end: [dimensions.rows - 1, dimensions.columns - 1]}
+        }
+        dispatchMaze(action)
     }
 
     return (
@@ -115,34 +128,15 @@ const Maze = () => {
             </form>
 
             <StyledMaze rows={dimensions.rows} columns={dimensions.columns}>
-                {mazeNodes.map((row, yCoordinate) => {
+                {maze.map((row, yCoordinate) => {
                     return row.map((nodeData, xCoordinate) => <Node data={nodeData}
                                                                     key={`${yCoordinate}-${xCoordinate}`}/>
                     )
                 })}
             </StyledMaze>
         </>
-    )
-        ;
-}
-
-const Node = ({data}) => {
-    const nodeStyle = {}
-    if (data.current) {
-        nodeStyle['background'] = "blue"
-    }
-    if (data.visited) {
-        nodeStyle['color'] = 'red'
-    }
-
-    const validPathways = []
-    for (const [path, available] of Object.entries(data.pathways)) {
-        if (available) validPathways.push(path)
-    }
-    const pathwayText = validPathways.join()
-    const pathwayClasses = validPathways.join(' ')
-    return <span className={`matrixNode ${pathwayClasses}`} style={nodeStyle}>{pathwayText ? pathwayText : 0}</span>
-}
+    );
+};
 
 
 export default Maze
