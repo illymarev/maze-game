@@ -1,0 +1,10 @@
+PART 1:
+1) Create a layout on a piece of paper
+2) Consider the position of different components and states
+3) Create a layout with not-working buttons (just use a square instead of a maze grid)
+4) Add logic related to the existing UI buttons
+5) Tests
+
+PART 2:
+1) Add reducer for the maze to generate an empty maze
+NOTE: connect the library for mutating logic of the reducer
