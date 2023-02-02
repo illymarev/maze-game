@@ -12,6 +12,7 @@ const StyledMaze = styled.div`
   grid-template: repeat(${props => props.rows}, 50px) / repeat(${props => props.columns}, 50px);
   text-align: center;
 `
+// 1
 
 
 // TODO refactor input into separate features in separate files
