@@ -1,11 +1,13 @@
-import Content from './components/layout/Content';
+import ConfigurationPanel from './components/layout/ConfigurationPanel';
 import Footer from './components/layout/Footer';
+import Maze from "./components/layout/Maze";
 import './App.css';
 
 function App() {
     return (
         <div className='app'>
-            <Content/>
+            <ConfigurationPanel/>
+            <Maze/>
             <Footer/>
         </div>
     );
