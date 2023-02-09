@@ -2,7 +2,7 @@ import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material
 
 
 const ConfigurationPanel = () => (
-    <Stack spacing={2} alignItems='center' marginTop={'1rem'}>
+    <Stack spacing={1} alignItems='center' marginTop={'1rem'}>
 
         <Stack alignItems='center' direction='row' spacing={2}>
             <Stack width={'200px'}>
