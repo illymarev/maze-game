@@ -27,39 +27,3 @@ body {
     font-size: 20px;
     font-family: Roboto, sans-serif;
 }
-
-.label_and_input label, input {
-    display: flex;
-    flex-direction: column;
-}
-
-.two_column_flex {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.maze {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-}
-
-.maze_legend ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.maze_legend ul li {
-    margin: 0 10px 0 10px;
-}
-
-.maze_grid {
-    width: 1000px;
-    height: 500px;
-    border: 1px solid #ccc;
-}

@@ -1,7 +1,7 @@
 PART 1:
 1) Create a layout on a piece of paper / done
-2) Create a layout manually
-3) Create a layout with not-working buttons (just use a square instead of a maze grid).
+2) Create configuration panel layout / done
+3) Create a maze layout including cells / TODO
 Use material UI and styled components
 
 

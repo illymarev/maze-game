@@ -3,6 +3,7 @@ import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material
 
 const ConfigurationPanel = () => (
     <Stack spacing={3} alignItems='center' marginTop={'1rem'}>
+
         <Stack alignItems='center' direction='row' spacing={2}>
             <Stack width={'250px'}>
                 <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
@@ -17,17 +18,13 @@ const ConfigurationPanel = () => (
             </Stack>
             <Stack spacing={2}>
                 <Button variant="contained" color='secondary' size='large'
-                        sx={{
-                            width: '200px',
-                            height: '50px',
-                            'border-radius': '1.25rem',
-                        }}>Generate</Button>
+                        sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
+                    Generate
+                </Button>
                 <Button variant="contained" color='primary' size='large'
-                        sx={{
-                            width: '200px',
-                            height: '50px',
-                            'border-radius': '1.25rem',
-                        }}>Solve</Button>
+                        sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
+                    Solve
+                </Button>
             </Stack>
             <Stack width={'250px'}>
                 <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
@@ -41,6 +38,7 @@ const ConfigurationPanel = () => (
                 </Select>
             </Stack>
         </Stack>
+
         <Stack direction='column' justifyContent='center' alignItems='center'>
             <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
             <Slider
@@ -51,6 +49,7 @@ const ConfigurationPanel = () => (
                 size='medium'
                 sx={{width: '730px'}}/>
         </Stack>
+
     </Stack>
 )
 

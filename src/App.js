@@ -32,7 +32,7 @@ function App() {
             <div className='app'>
                 <ConfigurationPanel/>
                 <Maze/>
-                <Footer/>
+                {/*<Footer/>*/}
             </div>
         </ThemeProvider>
     );
