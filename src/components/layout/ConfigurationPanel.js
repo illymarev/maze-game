@@ -1,48 +1,56 @@
+import Button from '@mui/material/Button';
+import {Box, Container, Stack, Grid} from "@mui/material";
+
+
 const ConfigurationPanel = () => (
-    <div className='configuration_panel'>
-        <div className='two_column_flex generate_and_solve_buttons'>
-            <button className='generate_button button' id='generate_button'>Generate</button>
-            <button className='solve_button button' id='solve_button'>Solve</button>
-        </div>
-        <div className='two_column_flex generation_and_solving_algorithms_selection'>
-            <div className='label_and_input'>
-                <label> Generation Algorithm
-                    <select name='generation_algorithm_selector' id='generation_algorithm_selector'>
-                        <option value='recursive_backtracking' selected='selected'>Recursive Backtracking</option>
-                        <option value='random'>TODO</option>
-                    </select>
-                </label>
-            </div>
-            <div className='label_and_input'>
-                <label> Solving Algorithm
-                    <select name='solving_algorithm_selector' id='solving_algorithm_selector'>
-                        <option value='dijkstras_algorithm' selected='selected'>Dijkstra's Algorithm</option>
-                        <option value='random'>TODO</option>
-                    </select>
-                </label>
-            </div>
-        </div>
-        <div className='settings_window'>
-            <h3>Options</h3>
-            <div className='one_row'>
+    <Stack spacing={3} sx={{
+        'align-items': 'center',
+        'margin-top': '1rem'
+    }}>
+        <Stack direction='row' spacing={5}>
+            <Button variant="contained" color='secondary' size='large'
+                    sx={{
+                        width: '200px',
+                        height: '50px',
+                        'border-radius': '1.25rem',
+                    }}>Generate</Button>
+            <Button variant="contained" color='primary' size='large'
+                    sx={{
+                        width: '200px',
+                        height: '50px',
+                        'border-radius': '1.25rem',
+                    }}>Solve</Button>
+        </Stack>
+        <Stack sx={{
+            border: '1px solid #ccc',
+            'border-radius': '1.25rem',
+            padding: '1rem',
+        }}>
+            <Stack direction='row' spacing={2}>
                 <div className='label_and_input'>
-                    <label>Width
-                        <input type='number' name='width' id='width' min='5' max='100' value={10}/>
+                    <label> Generation Algorithm
+                        <select name='generation_algorithm_selector' id='generation_algorithm_selector'>
+                            <option value='recursive_backtracking' selected='selected'>Recursive Backtracking</option>
+                            <option value='random'>TODO</option>
+                        </select>
                     </label>
                 </div>
                 <div className='label_and_input'>
-                    <label>Height
-                        <input type='number' name='height' id='height' min='5' max='100' value={10}/>
+                    <label> Solving Algorithm
+                        <select name='solving_algorithm_selector' id='solving_algorithm_selector'>
+                            <option value='dijkstras_algorithm' selected='selected'>Dijkstra's Algorithm</option>
+                            <option value='random'>TODO</option>
+                        </select>
                     </label>
                 </div>
-            </div>
+            </Stack>
             <div className='label_and_input'>
                 <label>Visualization Speed
                     <input type='range' name='visualization_speed' id='visualization_speed' min='1' max='100'/>
                 </label>
             </div>
-        </div>
-    </div>
+        </Stack>
+    </Stack>
 )
 
 export default ConfigurationPanel;
