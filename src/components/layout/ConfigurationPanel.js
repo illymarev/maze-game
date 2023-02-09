@@ -2,10 +2,10 @@ import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material
 
 
 const ConfigurationPanel = () => (
-    <Stack spacing={3} alignItems='center' marginTop={'1rem'}>
+    <Stack spacing={2} alignItems='center' marginTop={'1rem'}>
 
         <Stack alignItems='center' direction='row' spacing={2}>
-            <Stack width={'250px'}>
+            <Stack width={'200px'}>
                 <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
                 <Select
                     labelId="generation_algorithm_label"
@@ -26,7 +26,7 @@ const ConfigurationPanel = () => (
                     Solve
                 </Button>
             </Stack>
-            <Stack width={'250px'}>
+            <Stack width={'200px'}>
                 <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
                 <Select
                     labelId="solving_algorithm_label"
@@ -47,7 +47,7 @@ const ConfigurationPanel = () => (
                 defaultValue={50}
                 valueLabelDisplay="auto"
                 size='medium'
-                sx={{width: '730px'}}/>
+                sx={{width: '625px'}}/>
         </Stack>
 
     </Stack>

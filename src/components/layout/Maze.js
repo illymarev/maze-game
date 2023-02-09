@@ -2,12 +2,12 @@ import {Grid, Stack, Box} from "@mui/material";
 
 const Maze = () => {
     const maze_nodes = []
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 169; i++) {
         maze_nodes.push(
-            <Grid xs={1}><Box sx={{
-                height: 25,
+            <Grid item={true} xs={1}><Box sx={{
+                aspectRatio: '1/0.8',
                 border: '1px solid #ccc',
-            }}>1</Box></Grid>
+            }}></Box></Grid>
         )
     }
     return (
@@ -18,7 +18,7 @@ const Maze = () => {
                 <span>Start</span>
                 <span>Finish</span>
             </Stack>
-            <Grid columns={10} container mt={'0.5rem'} sx={{'padding': '0 5rem 0 5rem'}}>
+            <Grid columns={13} container width={'35%'}>
                 {maze_nodes}
             </Grid>
         </Stack>
