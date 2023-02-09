@@ -39,53 +39,6 @@ body {
     justify-content: center;
 }
 
-.generation_and_solving_algorithms_selection {
-    margin-top: 20px;
-}
-
-.generation_and_solving_algorithms_selection div {
-    width: 300px;
-    margin: 0 100px 0 100px;
-}
-
-.generation_and_solving_algorithms_selection .label_and_input label select {
-    margin-top: 5px;
-}
-
-select {
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 0.25em;
-    padding: 0.25em 0.5em;
-    font-size: 1.1rem;
-    cursor: pointer;
-    line-height: 1.1;
-    background-color: #fff;
-    text-align: center;
-}
-
-.settings_window {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 30px;
-    border: 1px solid #ccc;
-    width: 800px;
-    border-radius: 0.25rem;
-}
-
-.one_row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-}
-
-.one_row div {
-    margin: 0 10px 0 10px;
-}
-
 .maze {
     display: flex;
     flex-direction: column;
