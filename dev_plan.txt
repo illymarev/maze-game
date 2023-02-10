@@ -3,13 +3,9 @@ PART 1:
 2) Create configuration panel layout / done
 3) Create a maze layout including cells / done
 4) Add legend for the maze / done
-6) Add permanent drawer https://mui.com/material-ui/react-drawer/ on the left side
-5) Work on view height and view width
-5) Add game state text
-6) Add a separate node component
-7) Final layout review, change if needed
-8) Create media queries for different screen sizes
-Use material UI and styled components
+5) Add game state text / done
+6) Add a separate node component / done
+7) Final layout review, change if needed / done
 
 
 2.1) Take a look at some existing projects on github

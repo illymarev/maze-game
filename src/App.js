@@ -1,7 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import ConfigurationPanel from './components/layout/ConfigurationPanel';
-import Footer from './components/layout/Footer';
 import Maze from "./components/layout/Maze";
 import './App.css';
 
