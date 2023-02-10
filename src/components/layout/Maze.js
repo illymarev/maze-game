@@ -4,7 +4,7 @@ import MazeLegend from "../MazeLegend";
 
 const Maze = () => {
     const maze_nodes = []
-    for (let i = 0; i < 392; i++) {
+    for (let i = 0; i < 336; i++) {
         maze_nodes.push(<MazeNode/>)
     }
     return (
