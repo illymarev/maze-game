@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import ConfigurationPanel from './components/layout/ConfigurationPanel';
+import Maze from "./components/layout/Maze";
 import './App.css';
 
+const theme = createTheme({
+    status: {
+        danger: '#e53e3e',
+    },
+    palette: {
+        primary: {
+            main: '#0971f1',
+            darker: '#053e85',
+        },
+        secondary: {
+            main: '#0fb45d',
+            contrastText: '#fff'
+        },
+        neutral: {
+            main: '#64748B',
+            contrastText: '#fff',
+        },
+    },
+});
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Hi!
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline/>
+            <div className='app'>
+                <ConfigurationPanel/>
+                <Maze/>
+                {/*<Footer/>*/}
+            </div>
+        </ThemeProvider>
+    );
 }
 
 export default App;

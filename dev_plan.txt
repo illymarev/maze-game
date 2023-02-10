@@ -1,0 +1,20 @@
+PART 1:
+1) Create a layout on a piece of paper / done
+2) Create configuration panel layout / done
+3) Create a maze layout including cells / done
+4) Add legend for the maze / done
+5) Add game state text / done
+6) Add a separate node component / done
+7) Final layout review, change if needed / done
+
+
+PART 2:
+
+1) Take a look at some existing projects on github
+https://www.youtube.com/watch?v=msttfIHHkak&ab_channel=Cl%C3%A9mentMihailescu
+https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial
+2) Consider the position of different components and states
+3) Write a plan for further tasks
+
+PART 3:
+TODO
