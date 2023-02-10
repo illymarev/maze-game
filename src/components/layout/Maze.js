@@ -2,9 +2,12 @@ import {Grid, Stack, Typography} from "@mui/material";
 import MazeNode from "../MazeNode";
 import MazeLegend from "../MazeLegend";
 
+const COLUMNS_NUMBER = 28;
+const ROWS_NUMBER = 12
+
 const Maze = () => {
     const maze_nodes = []
-    for (let i = 0; i < 336; i++) {
+    for (let i = 0; i < COLUMNS_NUMBER * ROWS_NUMBER; i++) {
         maze_nodes.push(<MazeNode/>)
     }
     return (
