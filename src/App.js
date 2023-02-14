@@ -1,7 +1,6 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import ConfigurationPanel from './components/layout/ConfigurationPanel';
-import Maze from "./components/layout/Maze";
+import MazeGame from './components/MazeGame'
 import './App.css';
 
 const theme = createTheme({
@@ -28,11 +27,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
-            <div className='app'>
-                <ConfigurationPanel/>
-                <Maze/>
-                {/*<Footer/>*/}
-            </div>
+            <MazeGame/>
         </ThemeProvider>
     );
 }

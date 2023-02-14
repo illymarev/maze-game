@@ -11,10 +11,49 @@ PART 1:
 PART 2:
 
 1) Take a look at some existing projects on github
-https://www.youtube.com/watch?v=msttfIHHkak&ab_channel=Cl%C3%A9mentMihailescu
-https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial
-2) Consider the position of different components and states
-3) Write a plan for further tasks
+https://www.youtube.com/watch?v=msttfIHHkak&ab_channel=Cl%C3%A9mentMihailescu / done
+https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial / done
+
+2) Consider the position of different components and states / done
+3) Write a plan for further tasks in details, including the flow of each func
+
+States:
+The main component should hold all states. States that need to be held:
+1) Object: {Maze nodes (populated to empty nodes by default), 'start', 'finish'}
+Node properties: visited, available_pathways
+2) Game states ('Waiting for generation', 'Generation in progress', 'Ready to start',
+'Game in progress', 'Solving in progress', 'Game finished')
+3) Algorithms settings {generation_algorithm, solving_algorithm, visualization_speed}
+
+Flow:
+0) User logs in. A modal with instructions is displayed
+1) 'Waiting for generation' state, "generate" button is highlighted. User clicks generate
+2) 'Generation in progress' state, all buttons are disabled, visualization is in progress
+3) Visualization finished, 'ready to start' state. Waiting for the user to click the start node / solve
+4 a) User started, recording input. "Game in progress" state.
+4 b) Solving algorithm started, visualization in progress
+5) Game finished, 'game finished' state. On top, "generate" button will be available and "solve" is disabled
+
+Couple of notes:
+- Algorithms should be separated from the UI. Return a list of visited notes or whatever is needed for the UI to display the path.
+And then use another func to visualize the path
+- Better to store "steps" in an array because it might be needed to visualize multple steps at a time.
+It will be much easier to flatten the array if it's not needed
+- Check onmouthup, onmouthenter, onmouthdown when handling the user's input logic
 
 PART 3:
-TODO
+1) Pass props & use them to all child components
+2) Handle algorithms settings change
+3) Work on first generation algorithm
+4) Work on generation visualization
+5) Work on user's input to solve
+6) Verify that the cycle "generate > solve by user" works
+7) Add first solving algorithm
+8) Add solving visualization
+9) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work, try mixing them
+10) Add the modal with instructions on first open
+11) Add more algorithms
+
+
+IDEAS:
+ Consider creating non-perfect mazes with multiple solutions in order to better demonstrate pathfinding algorithms
