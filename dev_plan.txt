@@ -32,8 +32,7 @@ Flow:
 3) Visualization finished, 'ready to start' state. Waiting for the user to click the start node / solve
 4 a) User started, recording input. "Game in progress" state.
 4 b) Solving algorithm started, visualization in progress
-5) Game finished, 'game finished' state. On top, "generate" and "restart" buttons will be available. Generate creates
-a new maze, "restart" resets the visited path of the current maze
+5) Game finished, 'game finished' state. On top, "generate" button will be available and "solve" is disabled
 
 Couple of notes:
 - Algorithms should be separated from the UI. Return a list of visited notes or whatever is needed for the UI to display the path.
@@ -43,7 +42,18 @@ It will be much easier to flatten the array if it's not needed
 - Check onmouthup, onmouthenter, onmouthdown when handling the user's input logic
 
 PART 3:
-TODO
+1) Pass props & use them to all child components
+2) Handle algorithms settings change
+3) Work on first generation algorithm
+4) Work on generation visualization
+5) Work on user's input to solve
+6) Verify that the cycle "generate > solve by user" works
+7) Add first solving algorithm
+8) Add solving visualization
+9) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work, try mixing them
+10) Add the modal with instructions on first open
+11) Add more algorithms
+
 
 IDEAS:
  Consider creating non-perfect mazes with multiple solutions in order to better demonstrate pathfinding algorithms
