@@ -3,17 +3,17 @@ import MazeNode from "./MazeNode";
 import MazeLegend from "./MazeLegend";
 
 
-const Maze = ({mazeNodes}) => {
+const Maze = ({mazeNodes, gameState: {title, description}}) => {
     const [rowsCount, columnsCount] = [mazeNodes.length, mazeNodes[0].length]
 
     return (
         <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
             <Stack marginBottom={'0.5rem'}>
-                <Typography variant="h4" component="h2">
-                    Ready To Start
+                <Typography variant="h4" component="h4">
+                    {title}
                 </Typography>
                 <Typography variant='body2' component='h4' fontWeight={300}>
-                    click the "solve" button or start solving yourself!
+                    {description}
                 </Typography>
             </Stack>
 

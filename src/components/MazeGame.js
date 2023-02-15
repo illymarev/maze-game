@@ -24,8 +24,8 @@ const mazeNodesReducer = (state, action) => {
 
 const gameStateOptions = {
     0: {
-        title: 'Waiting For Maze Generation',
-        description: 'Click "generate" to start!'
+        title: 'Maze Generation Pending',
+        description: 'Select the generation algorithm and click "generate" to start!'
     },
     1: {
         title: 'Generation In Progress',
@@ -51,11 +51,13 @@ const gameStateOptions = {
 
 const generationAlgorithmOptions = {
     'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: null},
+    'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
     'TODO': {title: 'TODO', relatedFunction: null}
 }
 
 const solvingAlgorithmOptions = {
     'dijkstras_algorithm': {title: "Dijkstra's Algorithm", relatedFunction: null},
+    'bellman_ford': {title: "Bellman Form Algorithm", relatedFunction: null},
     'TODO': {title: 'TODO', relatedFunction: null}
 }
 
@@ -63,15 +65,23 @@ const MazeGame = () => {
     const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, INITIAL_MAZE_NODES)
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
-        generationAlgorithmOptions: generationAlgorithmOptions['recursive_backtracking'],
-        solvingAlgorithm: solvingAlgorithmOptions['dijkstras_algorithm'],
-        visualizationSpeed: 500
+        generationAlgorithm: 'recursive_backtracking',
+        solvingAlgorithm: 'dijkstras_algorithm',
+        visualizationSpeed: 50
     })
 
     return (
         <>
-            <ConfigurationPanel/>
-            <Maze mazeNodes={mazeNodes}/>
+            <ConfigurationPanel
+                algorithmsSettings={algorithmsSettings}
+                setAlgorithmsSettings={setAlgorithmsSettings}
+                generationAlgorithmOptions={generationAlgorithmOptions}
+                solvingAlgorithmOptions={solvingAlgorithmOptions}
+            />
+            <Maze
+                gameState={gameState}
+                mazeNodes={mazeNodes}
+            />
         </>
     )
 }

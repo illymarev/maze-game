@@ -4,9 +4,6 @@ import MazeGame from './components/MazeGame'
 import './App.css';
 
 const theme = createTheme({
-    status: {
-        danger: '#e53e3e',
-    },
     palette: {
         primary: {
             main: '#0971f1',

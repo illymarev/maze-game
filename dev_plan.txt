@@ -42,8 +42,8 @@ It will be much easier to flatten the array if it's not needed
 - Check onmouthup, onmouthenter, onmouthdown when handling the user's input logic
 
 PART 3:
-1) Pass props & use them to all child components
-2) Handle algorithms settings change
+1) Pass props & use them to all child components / done
+2) Handle algorithms settings change / done
 3) Work on first generation algorithm
 4) Work on generation visualization
 5) Work on user's input to solve
@@ -53,6 +53,7 @@ PART 3:
 9) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work, try mixing them
 10) Add the modal with instructions on first open
 11) Add more algorithms
+12) Redesign the UI with a grid?
 
 
 IDEAS:
