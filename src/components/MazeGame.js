@@ -1,16 +1,22 @@
 import ConfigurationPanel from "./ConfigurationPanel/ConfigurationPanel";
 import Maze from "./Maze/Maze";
 import {useReducer, useState} from "react";
+import recursiveBacktrackingCaller from '../algorithms/generation/recursiveBacktracking'
 
-const COLUMNS_NUMBER = 30;
-const ROWS_NUMBER = 12;
-const INITIAL_MAZE_NODES = []
+// const COLUMNS_NUMBER = 30;
+// const ROWS_NUMBER = 12;
+const COLUMNS_NUMBER = 5;
+const ROWS_NUMBER = 4;
+const INITIAL_MAZE = []
 for (let i = 0; i < ROWS_NUMBER; i++) {
     const mazeRow = []
     for (let j = 0; j < COLUMNS_NUMBER; j++) {
-        mazeRow.push({availablePathways: {}, visited: false})
+        mazeRow.push({
+            availablePathways: {north: false, south: false, west: false, east: false},
+            visited: false
+        })
     }
-    INITIAL_MAZE_NODES.push(mazeRow)
+    INITIAL_MAZE.push(mazeRow)
 }
 
 const mazeNodesReducer = (state, action) => {
@@ -50,7 +56,7 @@ const gameStateOptions = {
 }
 
 const generationAlgorithmOptions = {
-    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: null},
+    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktrackingCaller},
     'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
     'TODO': {title: 'TODO', relatedFunction: null}
 }
@@ -62,13 +68,24 @@ const solvingAlgorithmOptions = {
 }
 
 const MazeGame = () => {
-    const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, INITIAL_MAZE_NODES)
+    // const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, INITIAL_MAZE_NODES)
+    const [maze, setMaze] = useState(INITIAL_MAZE)
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
         solvingAlgorithm: 'dijkstras_algorithm',
         visualizationSpeed: 50
     })
+
+    const generateMaze = () => {
+        setGameState(gameStateOptions[1])
+        const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
+        const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
+        console.log(newMaze)
+        // visualize()
+        setGameState(gameStateOptions[2])
+
+    }
 
     return (
         <>
@@ -77,10 +94,11 @@ const MazeGame = () => {
                 setAlgorithmsSettings={setAlgorithmsSettings}
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
+                generationFunction={generateMaze}
             />
             <Maze
                 gameState={gameState}
-                mazeNodes={mazeNodes}
+                mazeNodes={maze}
             />
         </>
     )

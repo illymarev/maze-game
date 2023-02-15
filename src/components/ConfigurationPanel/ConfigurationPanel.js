@@ -5,7 +5,8 @@ const ConfigurationPanel = ({
                                 algorithmsSettings,
                                 setAlgorithmsSettings,
                                 generationAlgorithmOptions,
-                                solvingAlgorithmOptions
+                                solvingAlgorithmOptions,
+                                generationFunction
                             }) => {
 
     const generationAlgorithmMenuItems = []
@@ -41,7 +42,7 @@ const ConfigurationPanel = ({
                     </Select>
                 </Stack>
                 <Stack spacing={2}>
-                    <Button variant="contained" color='secondary' size='large'
+                    <Button variant="contained" color='secondary' size='large' onClick={() => generationFunction()}
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
                         Generate
                     </Button>
