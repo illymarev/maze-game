@@ -13,43 +13,68 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     for (let j = 0; j < COLUMNS_NUMBER; j++) {
         mazeRow.push({
             availablePathways: {north: false, south: false, west: false, east: false},
-            visited: false
+            visited: false,
+            current: false
         })
     }
     INITIAL_MAZE.push(mazeRow)
 }
 
 const mazeNodesReducer = (state, action) => {
+    const stateCopy = structuredClone(state)
+
     switch (action.type) {
-        case 'TODO':
-            return null
+        case 'markCurrent':
+            stateCopy[action.payload.row][action.payload.column].current = true
+            return stateCopy
+        case 'markVisited':
+            stateCopy[action.payload.row][action.payload.column].visited = true
+            return stateCopy
+        case 'clearCurrent':
+            stateCopy[action.payload.row][action.payload.column].current = false
+            return stateCopy
+        case 'markPath':
+            stateCopy[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
+            return stateCopy
+        case 'setMaze':
+            return action.payload.newMaze
         default:
             throw Error('Not Implemented')
     }
 }
 
+function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+}
+
 const gameStateOptions = {
     0: {
+        id: 0,
         title: 'Maze Generation Pending',
         description: 'Select the generation algorithm and click "generate" to start!'
     },
     1: {
+        id: 1,
         title: 'Generation In Progress',
         description: 'Wait for the generation algorithm to finish before continuing.'
     },
     2: {
+        id: 2,
         title: 'Ready To Start',
         description: 'Click the the "solve" button on top or start solving the maze yourself!'
     },
     3: {
+        id: 3,
         title: 'Game In Progress',
         description: 'Continue playing or click the "solve" button if you need help!'
     },
     4: {
+        id: 4,
         title: 'Solving In Progress',
         description: 'Wait for the solving algorithm to finish before continuing.'
     },
     5: {
+        id: 5,
         title: 'Finish! Maze Solved!',
         description: 'Nicely done! Click "generate" to continue with a new maze!'
     }
@@ -68,8 +93,7 @@ const solvingAlgorithmOptions = {
 }
 
 const MazeGame = () => {
-    // const [mazeNodes, dispatchMazeNodes] = useReducer(mazeNodesReducer, INITIAL_MAZE_NODES)
-    const [maze, setMaze] = useState(INITIAL_MAZE)
+    const [maze, dispatchMaze] = useReducer(mazeNodesReducer, INITIAL_MAZE)
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
@@ -77,14 +101,26 @@ const MazeGame = () => {
         visualizationSpeed: 50
     })
 
+    const visualizeGeneration = async (newMaze, actionsToVisualize) => {
+        const delayTime = (100 - algorithmsSettings.visualizationSpeed) * 2
+        if (delayTime === 0) {
+            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
+        } else {
+            for (const action of actionsToVisualize) {
+                await delay(delayTime)
+                dispatchMaze(action)
+            }
+        }
+
+        setGameState(gameStateOptions[2])
+    }
+
     const generateMaze = () => {
+        dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
         setGameState(gameStateOptions[1])
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
-        console.log(newMaze)
-        // visualize()
-        setGameState(gameStateOptions[2])
-
+        visualizeGeneration(newMaze, actionsToVisualize)
     }
 
     return (

@@ -7,7 +7,7 @@ const recursiveBacktrackingCaller = emptyMaze => {
     const visitedStack = []
     const actionsToVisualize = []
 
-    recursivePart(mazeCopy, [0, 0], visitedStack)
+    recursivePart(mazeCopy, [0, 0], visitedStack, actionsToVisualize)
     return {
         newMaze: mazeCopy,
         actionsToVisualize: actionsToVisualize
@@ -17,13 +17,23 @@ const recursiveBacktrackingCaller = emptyMaze => {
 const recursivePart = (
     maze,
     currentNodeCoordinates,
-    visitedStack
+    visitedStack,
+    actionsToVisualize
 ) => {
     const [currentRow, currentColumn] = currentNodeCoordinates
+    actionsToVisualize.push({
+        type: 'markCurrent',
+        payload: {row: currentRow, column: currentColumn}
+    })
 
     if (!maze[currentRow][currentColumn].visited) {
         maze[currentRow][currentColumn].visited = true
         visitedStack.push(currentNodeCoordinates)
+
+        actionsToVisualize.push({
+            type: 'markVisited',
+            payload: {row: currentRow, column: currentColumn}
+        })
     }
 
     const nextNode = {exists: false, row: null, column: null, path: null}
@@ -35,25 +45,48 @@ const recursivePart = (
             nextNode.row = nextRow
             nextNode.column = nextColumn
             nextNode.path = directionKey
+            break
         }
     }
 
     if (nextNode.exists) {
         // Mark the path from the current node to the next node
         maze[currentRow][currentColumn].availablePathways[nextNode.path] = true
+        actionsToVisualize.push({
+            type: 'markPath',
+            payload: {row: currentRow, column: currentColumn, path: nextNode.path}
+        })
 
         // Mark the path from the next node to the current node
         const reversedDirection = reversedDirections[nextNode.path]
         maze[nextNode.row][nextNode.column].availablePathways[reversedDirection] = true
+        actionsToVisualize.push({
+            type: 'markPath',
+            payload: {row: nextNode.row, column: nextNode.column, path: reversedDirection}
+        })
 
-        return recursivePart(maze, [nextNode.row, nextNode.column], visitedStack)
+        actionsToVisualize.push({
+            type: 'clearCurrent',
+            payload: {row: currentRow, column: currentColumn}
+        })
+        return recursivePart(maze, [nextNode.row, nextNode.column], visitedStack, actionsToVisualize)
     }
 
     if (visitedStack.length > 1) {
         // Remove the current node from the stack
         visitedStack.pop()
         const lastVisitedCoordinates = visitedStack[visitedStack.length - 1]
-        return recursivePart(maze, lastVisitedCoordinates, visitedStack)
+        actionsToVisualize.push({
+            type: 'clearCurrent',
+            payload: {row: currentRow, column: currentColumn}
+        })
+        return recursivePart(maze, lastVisitedCoordinates, visitedStack, actionsToVisualize)
+    } else {
+        // We are back at node [0][0], generation is finished
+        actionsToVisualize.push({
+            type: 'clearCurrent',
+            payload: {row: currentRow, column: currentColumn}
+        })
     }
 }
 

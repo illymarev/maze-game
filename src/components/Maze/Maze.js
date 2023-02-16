@@ -3,7 +3,7 @@ import MazeNode from "./MazeNode";
 import MazeLegend from "./MazeLegend";
 
 
-const Maze = ({mazeNodes, gameState: {title, description}}) => {
+const Maze = ({mazeNodes, gameState: {id, title, description}}) => {
     const [rowsCount, columnsCount] = [mazeNodes.length, mazeNodes[0].length]
 
     return (
@@ -29,6 +29,7 @@ const Maze = ({mazeNodes, gameState: {title, description}}) => {
                                 node={node}
                                 rowsCount={rowsCount}
                                 columnsCount={columnsCount}
+                                gameStateId={id}
                             />
                     )
                 )}
