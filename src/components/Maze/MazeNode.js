@@ -1,15 +1,16 @@
 import {Box, Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
+import {memo} from "react";
 
-const MazeNode = ({
-                      gameStateId,
-                      rowNumber,
-                      columnNumber,
-                      rowsCount,
-                      columnsCount,
-                      node: {current, visited, availablePathways}
-                  }) => {
+const MazeNode = memo(({
+                           gameStateId,
+                           rowNumber,
+                           columnNumber,
+                           rowsCount,
+                           columnsCount,
+                           node: {current, visited, availablePathways}
+                       }) => {
 
     const isStart = rowNumber === 0 && columnNumber === 0
     const isFinish = rowNumber === rowsCount - 1 && columnNumber === columnsCount - 1
@@ -50,7 +51,7 @@ const MazeNode = ({
             </Box>
         </Grid>
     );
-}
+})
 
 
 export default MazeNode

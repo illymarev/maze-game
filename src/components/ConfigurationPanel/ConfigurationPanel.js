@@ -8,7 +8,6 @@ const ConfigurationPanel = memo(({
                                      solvingAlgorithmOptions,
                                      generationFunction
                                  }) => {
-
     const generationAlgorithmMenuItems = []
     for (const [key, value] of Object.entries(generationAlgorithmOptions)) {
         generationAlgorithmMenuItems.push(

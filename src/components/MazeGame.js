@@ -1,12 +1,13 @@
 import ConfigurationPanel from "./ConfigurationPanel/ConfigurationPanel";
 import Maze from "./Maze/Maze";
-import {useReducer, useState, useCallback} from "react";
+import {useState, useCallback} from "react";
+import {useImmerReducer} from "use-immer"
 import recursiveBacktrackingCaller from '../algorithms/generation/recursiveBacktracking'
 
-// const COLUMNS_NUMBER = 30;
-// const ROWS_NUMBER = 12;
-const COLUMNS_NUMBER = 5;
-const ROWS_NUMBER = 4;
+const COLUMNS_NUMBER = 30;
+const ROWS_NUMBER = 12;
+// const COLUMNS_NUMBER = 5;
+// const ROWS_NUMBER = 4;
 const INITIAL_MAZE = []
 for (let i = 0; i < ROWS_NUMBER; i++) {
     const mazeRow = []
@@ -20,24 +21,25 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     INITIAL_MAZE.push(mazeRow)
 }
 
-const mazeNodesReducer = (state, action) => {
-    const stateCopy = structuredClone(state)
-
+const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
         case 'markCurrent':
-            stateCopy[action.payload.row][action.payload.column].current = true
-            return stateCopy
+            draft[action.payload.row][action.payload.column].current = true
+            break
         case 'markVisited':
-            stateCopy[action.payload.row][action.payload.column].visited = true
-            return stateCopy
+            draft[action.payload.row][action.payload.column].visited = true
+            break
         case 'clearCurrent':
-            stateCopy[action.payload.row][action.payload.column].current = false
-            return stateCopy
+            draft[action.payload.row][action.payload.column].current = false
+            break
         case 'markPath':
-            stateCopy[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
-            return stateCopy
+            draft[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
+            break
         case 'setMaze':
-            return action.payload.newMaze
+            for (let rowNumber = 0; rowNumber < action.payload.newMaze.length; rowNumber++) {
+                draft[rowNumber] = action.payload.newMaze[rowNumber]
+            }
+            break
         default:
             throw Error('Not Implemented')
     }
@@ -93,7 +95,7 @@ const solvingAlgorithmOptions = {
 }
 
 const MazeGame = () => {
-    const [maze, dispatchMaze] = useReducer(mazeNodesReducer, INITIAL_MAZE)
+    const [maze, dispatchMaze] = useImmerReducer(mazeNodesReducer, INITIAL_MAZE)
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
@@ -109,14 +111,14 @@ const MazeGame = () => {
     }, [])
 
     const visualizeGeneration = useCallback(async actionsToVisualize => {
-        const delayTime = (100 - algorithmsSettings.visualizationSpeed) * 2
+        const delayTime = 0
         for (const action of actionsToVisualize) {
             await delay(delayTime)
             dispatchMaze(action)
         }
 
         setGameState(gameStateOptions[2])
-    }, [algorithmsSettings.visualizationSpeed])
+    },[algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const generateMaze = useCallback(() => {
         dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
@@ -124,7 +126,7 @@ const MazeGame = () => {
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
         visualizeGeneration(actionsToVisualize)
-    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration])
+    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration, dispatchMaze])
 
     return (
         <>
