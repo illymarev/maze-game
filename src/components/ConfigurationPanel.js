@@ -1,6 +1,25 @@
 import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
 import {memo} from "react";
 
+const marks = [
+    {
+        value: 0,
+        label: 'Slow'
+    },
+    {
+        value: 1,
+        label: 'Medium'
+    },
+    {
+        value: 2,
+        label: 'Fast'
+    },
+    {
+        value: 3,
+        label: 'immediate'
+    }
+]
+
 const ConfigurationPanel = memo(({
                                      algorithmsSettings,
                                      onAlgorithmSettingChange,
@@ -66,12 +85,14 @@ const ConfigurationPanel = memo(({
             <Stack direction='column' justifyContent='center' alignItems='center'>
                 <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
                 <Slider
+                    step={null}
+                    marks={marks}
                     labelId="visualization_speed_label"
                     id='visualization_speed_slider'
                     value={algorithmsSettings.visualizationSpeed}
-                    valueLabelDisplay="auto"
+                    valueLabelDisplay="off"
                     size='medium'
-                    min={0} max={100}
+                    min={0} max={3}
                     sx={{width: '625px'}}
                     onChange={e => onAlgorithmSettingChange('visualizationSpeed', e.target.value)}
                 />

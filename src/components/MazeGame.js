@@ -1,11 +1,14 @@
-import ConfigurationPanel from "./ConfigurationPanel/ConfigurationPanel";
-import Maze from "./Maze/Maze";
+import ConfigurationPanel from "./ConfigurationPanel";
+import Maze from "./Maze";
 import {useState, useCallback} from "react";
 import {useImmerReducer} from "use-immer"
 import recursiveBacktrackingCaller from '../algorithms/generation/recursiveBacktracking'
+import {Stack} from "@mui/material";
+import {GameState} from "./GameState";
+import MazeLegend from "./MazeLegend";
 
-const COLUMNS_NUMBER = 30;
-const ROWS_NUMBER = 12;
+const COLUMNS_NUMBER = 25;
+const ROWS_NUMBER = 10;
 // const COLUMNS_NUMBER = 5;
 // const ROWS_NUMBER = 4;
 const INITIAL_MAZE = []
@@ -20,6 +23,8 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     }
     INITIAL_MAZE.push(mazeRow)
 }
+
+const delayTimeMapping = {3: 0, 2: 1, 1: 50, 0: 150}
 
 const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
@@ -100,7 +105,7 @@ const MazeGame = () => {
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
         solvingAlgorithm: 'dijkstras_algorithm',
-        visualizationSpeed: 50
+        visualizationSpeed: 2
     })
 
     // Use callback should be used in all the following functions because they are either props passed to
@@ -110,22 +115,26 @@ const MazeGame = () => {
         setAlgorithmsSettings(prevState => ({...prevState, [fieldName]: newValue}))
     }, [])
 
-    const visualizeGeneration = useCallback(async actionsToVisualize => {
-        const delayTime = 0
-        for (const action of actionsToVisualize) {
-            await delay(delayTime)
-            dispatchMaze(action)
+    const visualizeGeneration = useCallback(async (newMaze, actionsToVisualize) => {
+        const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
+        if (delayTime === 0) {
+            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
+        } else {
+            for (const action of actionsToVisualize) {
+                await delay(delayTime)
+                dispatchMaze(action)
+            }
         }
 
         setGameState(gameStateOptions[2])
-    },[algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const generateMaze = useCallback(() => {
         dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
         setGameState(gameStateOptions[1])
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
-        visualizeGeneration(actionsToVisualize)
+        visualizeGeneration(newMaze, actionsToVisualize)
     }, [algorithmsSettings.generationAlgorithm, visualizeGeneration, dispatchMaze])
 
     return (
@@ -137,10 +146,11 @@ const MazeGame = () => {
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
                 generationFunction={generateMaze}
             />
-            <Maze
-                gameState={gameState}
-                mazeNodes={maze}
-            />
+            <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
+                <GameState title={gameState.title} description={gameState.description}/>
+                <MazeLegend/>
+                <Maze gameStateId={gameState.id} mazeNodes={maze}/>
+            </Stack>
         </>
     )
 }
