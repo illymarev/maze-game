@@ -46,8 +46,12 @@ PART 3:
 2) Handle algorithms settings change / done
 3) Work on first generation algorithm / done
 4) Work on generation visualization / done
-    4.1) Add useImmer
-    4.2) Debug performance
+    4.1) Add useImmer / done
+    4.2) Debug performance / done
+    4.3) Performance optimizations / done
+    4.4) Take a look at atom, read how can I use it to avoid issues with list component
+    https://www.reatom.dev/packages/npm-react#prevent-rerenders
+    4.5) If it helps, remove all the memo() and use callback
 4) Cleanup everything at this point; review variable naming in recursive backtracking
 5) Work on user's input to solve
 6) Verify that the cycle "generate > solve by user" works
