@@ -16,7 +16,11 @@ const marks = [
     },
     {
         value: 3,
-        label: 'immediate'
+        label: 'Lightning fast'
+    },
+    {
+        value: 4,
+        label: 'Immediate'
     }
 ]
 
@@ -92,7 +96,7 @@ const ConfigurationPanel = memo(({
                     value={algorithmsSettings.visualizationSpeed}
                     valueLabelDisplay="off"
                     size='medium'
-                    min={0} max={3}
+                    min={0} max={4}
                     sx={{width: '625px'}}
                     onChange={e => onAlgorithmSettingChange('visualizationSpeed', e.target.value)}
                 />

@@ -24,7 +24,7 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     INITIAL_MAZE.push(mazeRow)
 }
 
-const delayTimeMapping = {3: 0, 2: 1, 1: 50, 0: 150}
+const delayTimeMapping = {0: 150, 1: 50, 2: 10, 3: 0.1, 4: 0}
 
 const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
@@ -105,7 +105,7 @@ const MazeGame = () => {
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
         solvingAlgorithm: 'dijkstras_algorithm',
-        visualizationSpeed: 2
+        visualizationSpeed: 3
     })
 
     // Use callback should be used in all the following functions because they are either props passed to
