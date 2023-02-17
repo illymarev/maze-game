@@ -1,13 +1,13 @@
 import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
+import {memo} from "react";
 
-
-const ConfigurationPanel = ({
-                                algorithmsSettings,
-                                setAlgorithmsSettings,
-                                generationAlgorithmOptions,
-                                solvingAlgorithmOptions,
-                                generationFunction
-                            }) => {
+const ConfigurationPanel = memo(({
+                                     algorithmsSettings,
+                                     onAlgorithmSettingChange,
+                                     generationAlgorithmOptions,
+                                     solvingAlgorithmOptions,
+                                     generationFunction
+                                 }) => {
 
     const generationAlgorithmMenuItems = []
     for (const [key, value] of Object.entries(generationAlgorithmOptions)) {
@@ -34,9 +34,7 @@ const ConfigurationPanel = ({
                         id="generation_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
                         value={algorithmsSettings.generationAlgorithm}
-                        onChange={e => setAlgorithmsSettings(
-                            prevState => ({...prevState, generationAlgorithm: e.target.value})
-                        )}
+                        onChange={e => onAlgorithmSettingChange('generationAlgorithm', e.target.value)}
                     >
                         {generationAlgorithmMenuItems}
                     </Select>
@@ -58,9 +56,7 @@ const ConfigurationPanel = ({
                         id="solving_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
                         value={algorithmsSettings.solvingAlgorithm}
-                        onChange={e => setAlgorithmsSettings(
-                            prevState => ({...prevState, solvingAlgorithm: e.target.value})
-                        )}
+                        onChange={e => onAlgorithmSettingChange('solvingAlgorithm', e.target.value)}
                     >
                         {solvingAlgorithmMenuItems}
                     </Select>
@@ -78,14 +74,12 @@ const ConfigurationPanel = ({
                     size='medium'
                     min={0} max={100}
                     sx={{width: '625px'}}
-                    onChange={e => setAlgorithmsSettings(
-                        prevState => ({...prevState, visualizationSpeed: e.target.value})
-                    )}
+                    onChange={e => onAlgorithmSettingChange('visualizationSpeed', e.target.value)}
                 />
             </Stack>
 
         </Stack>
     )
-}
+})
 
 export default ConfigurationPanel;

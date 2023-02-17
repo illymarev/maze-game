@@ -1,6 +1,6 @@
 import ConfigurationPanel from "./ConfigurationPanel/ConfigurationPanel";
 import Maze from "./Maze/Maze";
-import {useReducer, useState} from "react";
+import {useReducer, useState, useCallback} from "react";
 import recursiveBacktrackingCaller from '../algorithms/generation/recursiveBacktracking'
 
 // const COLUMNS_NUMBER = 30;
@@ -101,33 +101,36 @@ const MazeGame = () => {
         visualizationSpeed: 50
     })
 
-    const visualizeGeneration = async (newMaze, actionsToVisualize) => {
+    // Use callback should be used in all the following functions because they are either props passed to
+    // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
+    // node update is very heavy on performance and should be avoided
+    const onAlgorithmSettingChange = useCallback((fieldName, newValue) => {
+        setAlgorithmsSettings(prevState => ({...prevState, [fieldName]: newValue}))
+    }, [])
+
+    const visualizeGeneration = useCallback(async actionsToVisualize => {
         const delayTime = (100 - algorithmsSettings.visualizationSpeed) * 2
-        if (delayTime === 0) {
-            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
-        } else {
-            for (const action of actionsToVisualize) {
-                await delay(delayTime)
-                dispatchMaze(action)
-            }
+        for (const action of actionsToVisualize) {
+            await delay(delayTime)
+            dispatchMaze(action)
         }
 
         setGameState(gameStateOptions[2])
-    }
+    }, [algorithmsSettings.visualizationSpeed])
 
-    const generateMaze = () => {
+    const generateMaze = useCallback(() => {
         dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
         setGameState(gameStateOptions[1])
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
-        visualizeGeneration(newMaze, actionsToVisualize)
-    }
+        visualizeGeneration(actionsToVisualize)
+    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration])
 
     return (
         <>
             <ConfigurationPanel
                 algorithmsSettings={algorithmsSettings}
-                setAlgorithmsSettings={setAlgorithmsSettings}
+                onAlgorithmSettingChange={onAlgorithmSettingChange}
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
                 generationFunction={generateMaze}
