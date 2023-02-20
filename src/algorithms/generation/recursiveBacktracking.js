@@ -1,7 +1,7 @@
 import {directions, reversedDirections, getRandomDirectionsKeys} from "../directions";
 
 
-const recursiveBacktrackingCaller = emptyMaze => {
+const recursiveBacktracking = emptyMaze => {
     const mazeCopy = structuredClone(emptyMaze)
 
     const visitedStack = []
@@ -52,17 +52,19 @@ const recursivePart = (
     if (nextNode.exists) {
         // Mark the path from the current node to the next node
         maze[currentRow][currentColumn].availablePathways[nextNode.path] = true
-        actionsToVisualize.push({
-            type: 'markPath',
-            payload: {row: currentRow, column: currentColumn, path: nextNode.path}
-        })
 
         // Mark the path from the next node to the current node
         const reversedDirection = reversedDirections[nextNode.path]
         maze[nextNode.row][nextNode.column].availablePathways[reversedDirection] = true
+
+
+        // Visualize both paths at the same time.
         actionsToVisualize.push({
-            type: 'markPath',
-            payload: {row: nextNode.row, column: nextNode.column, path: reversedDirection}
+            type: 'bulkMarkPath',
+            payload: [
+                {row: currentRow, column: currentColumn, path: nextNode.path},
+                {row: nextNode.row, column: nextNode.column, path: reversedDirection}
+            ]
         })
 
         actionsToVisualize.push({
@@ -90,4 +92,4 @@ const recursivePart = (
     }
 }
 
-export default recursiveBacktrackingCaller
+export default recursiveBacktracking

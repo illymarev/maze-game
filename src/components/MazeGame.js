@@ -2,7 +2,7 @@ import ConfigurationPanel from "./ConfigurationPanel";
 import Maze from "./Maze";
 import {useState, useCallback} from "react";
 import {useImmerReducer} from "use-immer"
-import recursiveBacktrackingCaller from '../algorithms/generation/recursiveBacktracking'
+import recursiveBacktracking from '../algorithms/generation/recursiveBacktracking'
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
@@ -24,7 +24,7 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     INITIAL_MAZE.push(mazeRow)
 }
 
-const delayTimeMapping = {0: 150, 1: 50, 2: 10, 3: 0.1, 4: 0}
+const delayTimeMapping = {0: 500, 1: 50, 2: 0.1, 3: 0}
 
 const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
@@ -37,8 +37,20 @@ const mazeNodesReducer = (draft, action) => {
         case 'clearCurrent':
             draft[action.payload.row][action.payload.column].current = false
             break
-        case 'markPath':
-            draft[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
+        // case 'markPath':
+        //     draft[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
+        //     break
+        case 'bulkMarkPath':
+            for (let item of action.payload) {
+                draft[item.row][item.column].availablePathways[item.path] = true
+            }
+            break
+        case 'resetVisited':
+            for (let row of draft) {
+                for (let node of row) {
+                    node.visited = false
+                }
+            }
             break
         case 'setMaze':
             for (let rowNumber = 0; rowNumber < action.payload.newMaze.length; rowNumber++) {
@@ -88,7 +100,7 @@ const gameStateOptions = {
 }
 
 const generationAlgorithmOptions = {
-    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktrackingCaller},
+    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
     'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
     'TODO': {title: 'TODO', relatedFunction: null}
 }
@@ -105,7 +117,7 @@ const MazeGame = () => {
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
         solvingAlgorithm: 'dijkstras_algorithm',
-        visualizationSpeed: 3
+        visualizationSpeed: 2
     })
 
     // Use callback should be used in all the following functions because they are either props passed to
@@ -125,7 +137,7 @@ const MazeGame = () => {
                 dispatchMaze(action)
             }
         }
-
+        dispatchMaze({type: 'resetVisited'})
         setGameState(gameStateOptions[2])
     }, [algorithmsSettings.visualizationSpeed, dispatchMaze])
 

@@ -49,11 +49,8 @@ PART 3:
     4.1) Add useImmer / done
     4.2) Debug performance / done
     4.3) Performance optimizations / done
-    4.4) Take a look at reatom, read how can I use it to avoid issues with list component
-    https://www.reatom.dev/packages/npm-react#prevent-rerenders
-    https://www.reatom.dev/packages/npm-react
-    4.5) If it helps, remove all the memo() and use callback
-4) Cleanup everything at this point; review variable naming in recursive backtracking
+4) Cleanup everything at this point; review variable naming in recursive backtracking / done
+5) Handle logic related to buttons & states (prevent from generating the 2nd time while gen in process, etc.)
 5) Work on user's input to solve
 6) Verify that the cycle "generate > solve by user" works
 7) Add first solving algorithm
@@ -62,6 +59,7 @@ PART 3:
 10) Add the modal with instructions on first open
 11) Add more algorithms
 12) Redesign the UI with a grid?
+13) Consider optimizations using mobx library in order to avoid rerendering of the maze component on node change
 
 
 IDEAS:

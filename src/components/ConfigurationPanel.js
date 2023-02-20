@@ -16,10 +16,6 @@ const marks = [
     },
     {
         value: 3,
-        label: 'Lightning fast'
-    },
-    {
-        value: 4,
         label: 'Immediate'
     }
 ]
@@ -85,7 +81,6 @@ const ConfigurationPanel = memo(({
                 </Stack>
             </Stack>
 
-            {/*TODO optimize using useMemo or useCallback (dont recall which one to use in this scenario)*/}
             <Stack direction='column' justifyContent='center' alignItems='center'>
                 <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
                 <Slider
@@ -96,7 +91,7 @@ const ConfigurationPanel = memo(({
                     value={algorithmsSettings.visualizationSpeed}
                     valueLabelDisplay="off"
                     size='medium'
-                    min={0} max={4}
+                    min={0} max={3}
                     sx={{width: '625px'}}
                     onChange={e => onAlgorithmSettingChange('visualizationSpeed', e.target.value)}
                 />
