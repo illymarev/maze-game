@@ -50,11 +50,11 @@ PART 3:
     4.2) Debug performance / done
     4.3) Performance optimizations / done
 4) Cleanup everything at this point; review variable naming in recursive backtracking / done
-5) Handle logic related to buttons & states (prevent from generating the 2nd time while gen in process, etc.)
 5) Work on user's input to solve
 6) Verify that the cycle "generate > solve by user" works
 7) Add first solving algorithm
 8) Add solving visualization
+5) Handle logic related to buttons & states (prevent from generating the 2nd time while gen in process, etc.)
 9) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work, try mixing them
 10) Add the modal with instructions on first open
 11) Add more algorithms
