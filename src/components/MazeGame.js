@@ -1,11 +1,12 @@
 import ConfigurationPanel from "./ConfigurationPanel";
 import Maze from "./Maze";
-import {useState, useCallback, useEffect} from "react";
+import {useState, useCallback, useEffect, useRef} from "react";
 import {useImmerReducer} from "use-immer"
 import recursiveBacktracking from '../algorithms/generation/recursiveBacktracking'
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
+import {checkIfValidStep} from "../algorithms/helpers";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
@@ -120,10 +121,21 @@ const MazeGame = () => {
         visualizationSpeed: 2
     })
     const [mouseIsDown, setMouseIsDown] = useState(false)
-    
-    const markNodeVisited = useCallback((coordinates, force=false) => {
-        if (force || mouseIsDown){
-            dispatchMaze({type: 'markVisited', payload: coordinates})
+    const mazeRef = useRef(maze)
+
+    useEffect(() => {
+        mazeRef.current = maze
+    }, [maze])
+
+
+    const markNodeVisited = useCallback((row, column, force = false) => {
+        if ((force || mouseIsDown) && checkIfValidStep(mazeRef.current, row, column)) {
+            dispatchMaze({type: 'markVisited', payload: {row: row, column: column}})
+            if (row === 0 && column === 0) {
+                setGameState(gameStateOptions[3])
+            } else if (row === ROWS_NUMBER - 1 && column === COLUMNS_NUMBER - 1) {
+                setGameState(gameStateOptions[5])
+            }
         }
     }, [mouseIsDown, dispatchMaze])
 

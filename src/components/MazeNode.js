@@ -38,8 +38,9 @@ const MazeNode = memo(({
     }
 
     return (
-        <Grid item={true} xs={1} onMouseDown={() => handleMouseEnter({row: rowNumber, column: columnNumber}, true)}
-              onMouseEnter={() => handleMouseEnter({row: rowNumber, column: columnNumber})}>
+        <Grid item={true} xs={1}
+              onMouseDown={() => handleMouseEnter(rowNumber, columnNumber, true)}
+              onMouseEnter={() => handleMouseEnter(rowNumber, columnNumber)}>
             <Box sx={{
                 aspectRatio: '1/1', display: 'flex',
                 alignItems: 'center', justifyContent: 'center',
