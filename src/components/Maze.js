@@ -1,7 +1,7 @@
 import {Grid} from "@mui/material";
 import MazeNode from "./MazeNode";
 
-const Maze = ({mazeNodes, gameStateId}) => {
+const Maze = ({mazeNodes, gameStateId, markNodeVisited}) => {
     const [rowsCount, columnsCount] = [mazeNodes.length, mazeNodes[0].length]
 
     return (
@@ -17,6 +17,7 @@ const Maze = ({mazeNodes, gameStateId}) => {
                             rowsCount={rowsCount}
                             columnsCount={columnsCount}
                             gameStateId={gameStateId}
+                            handleMouseEnter={markNodeVisited}
                         />
                 )
             )}

@@ -1,14 +1,14 @@
 import ConfigurationPanel from "./ConfigurationPanel";
 import Maze from "./Maze";
-import {useState, useCallback} from "react";
+import {useState, useCallback, useEffect} from "react";
 import {useImmerReducer} from "use-immer"
 import recursiveBacktracking from '../algorithms/generation/recursiveBacktracking'
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
 
-const COLUMNS_NUMBER = 25;
-const ROWS_NUMBER = 10;
+const COLUMNS_NUMBER = 20;
+const ROWS_NUMBER = 8;
 // const COLUMNS_NUMBER = 5;
 // const ROWS_NUMBER = 4;
 const INITIAL_MAZE = []
@@ -119,6 +119,13 @@ const MazeGame = () => {
         solvingAlgorithm: 'dijkstras_algorithm',
         visualizationSpeed: 2
     })
+    const [mouseIsDown, setMouseIsDown] = useState(false)
+    
+    const markNodeVisited = useCallback((coordinates, force=false) => {
+        if (force || mouseIsDown){
+            dispatchMaze({type: 'markVisited', payload: coordinates})
+        }
+    }, [mouseIsDown, dispatchMaze])
 
     // Use callback should be used in all the following functions because they are either props passed to
     // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
@@ -150,7 +157,8 @@ const MazeGame = () => {
     }, [algorithmsSettings.generationAlgorithm, visualizeGeneration, dispatchMaze])
 
     return (
-        <>
+        <div onMouseDown={() => setMouseIsDown(true)}
+             onMouseUp={() => setMouseIsDown(false)}>
             <ConfigurationPanel
                 algorithmsSettings={algorithmsSettings}
                 onAlgorithmSettingChange={onAlgorithmSettingChange}
@@ -161,9 +169,13 @@ const MazeGame = () => {
             <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
                 <GameState title={gameState.title} description={gameState.description}/>
                 <MazeLegend/>
-                <Maze gameStateId={gameState.id} mazeNodes={maze}/>
+                <Maze
+                    gameStateId={gameState.id}
+                    mazeNodes={maze}
+                    markNodeVisited={markNodeVisited}
+                />
             </Stack>
-        </>
+        </div>
     )
 }
 

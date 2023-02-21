@@ -4,6 +4,7 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {memo} from "react";
 
 const MazeNode = memo(({
+                           handleMouseEnter,
                            gameStateId,
                            rowNumber,
                            columnNumber,
@@ -22,8 +23,8 @@ const MazeNode = memo(({
         generationVisualizationStyle.backgroundColor = '#002c7c'
     }
 
-
-    const selectedStyle = gameStateId === 1 ? generationVisualizationStyle : {}
+    // TODO inprove styling
+    const selectedStyle = gameStateId === 1 ? generationVisualizationStyle : generationVisualizationStyle
 
     let nodeText = ''
     if (gameStateId === 1) {
@@ -37,14 +38,15 @@ const MazeNode = memo(({
     }
 
     return (
-        <Grid item={true} xs={1}>
+        <Grid item={true} xs={1} onMouseDown={() => handleMouseEnter({row: rowNumber, column: columnNumber}, true)}
+              onMouseEnter={() => handleMouseEnter({row: rowNumber, column: columnNumber})}>
             <Box sx={{
                 aspectRatio: '1/1', display: 'flex',
                 alignItems: 'center', justifyContent: 'center',
-                borderTop: availablePathways.north ? null : '1px solid #ccc',
-                borderBottom: availablePathways.south ? null : '1px solid #ccc',
-                borderLeft: availablePathways.west ? null : '1px solid #ccc',
-                borderRight: availablePathways.east ? null : '1px solid #ccc',
+                borderTop: availablePathways.north ? null : '2px solid #ccc',
+                borderBottom: availablePathways.south ? null : '2px solid #ccc',
+                borderLeft: availablePathways.west ? null : '2px solid #ccc',
+                borderRight: availablePathways.east ? null : '2px solid #ccc',
                 ...selectedStyle
             }}>
                 {nodeText}
