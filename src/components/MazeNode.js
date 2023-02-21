@@ -1,4 +1,4 @@
-import {Box, Grid} from "@mui/material";
+import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {memo} from "react";
@@ -17,10 +17,10 @@ const MazeNode = memo(({
     const isFinish = rowNumber === rowsCount - 1 && columnNumber === columnsCount - 1
 
     const generationVisualizationStyle = {
-        backgroundColor: visited ? '#3b8ef1' : null
+        backgroundColor: visited ? 'rgba(29,227,124,0.35)' : null
     }
     if (current) {
-        generationVisualizationStyle.backgroundColor = '#002c7c'
+        generationVisualizationStyle.backgroundColor = '#3b8ef1'
     }
 
     // TODO inprove styling
@@ -40,18 +40,17 @@ const MazeNode = memo(({
     return (
         <Grid item={true} xs={1}
               onMouseDown={() => handleMouseEnter(rowNumber, columnNumber, true)}
-              onMouseEnter={() => handleMouseEnter(rowNumber, columnNumber)}>
-            <Box sx={{
-                aspectRatio: '1/1', display: 'flex',
-                alignItems: 'center', justifyContent: 'center',
-                borderTop: availablePathways.north ? null : '2px solid #ccc',
-                borderBottom: availablePathways.south ? null : '2px solid #ccc',
-                borderLeft: availablePathways.west ? null : '2px solid #ccc',
-                borderRight: availablePathways.east ? null : '2px solid #ccc',
-                ...selectedStyle
-            }}>
-                {nodeText}
-            </Box>
+              onMouseEnter={() => handleMouseEnter(rowNumber, columnNumber)}
+              sx={{
+                  aspectRatio: '1/1', display: 'flex',
+                  alignItems: 'center', justifyContent: 'center',
+                  borderTop: availablePathways.north ? null : '2px solid #ccc',
+                  borderBottom: availablePathways.south ? null : '2px solid #ccc',
+                  borderLeft: availablePathways.west ? null : '2px solid #ccc',
+                  borderRight: availablePathways.east ? null : '2px solid #ccc',
+                  ...selectedStyle
+              }}>
+            {nodeText}
         </Grid>
     );
 })
