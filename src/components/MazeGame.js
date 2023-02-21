@@ -120,16 +120,18 @@ const MazeGame = () => {
         solvingAlgorithm: 'dijkstras_algorithm',
         visualizationSpeed: 2
     })
-    const [mouseIsDown, setMouseIsDown] = useState(false)
+    const mouseIsDown = useRef(false)
     const mazeRef = useRef(maze)
 
     useEffect(() => {
         mazeRef.current = maze
     }, [maze])
 
+    const setMouseIsDown = value => mouseIsDown.current = value
+
 
     const markNodeVisited = useCallback((row, column, force = false) => {
-        if ((force || mouseIsDown) && checkIfValidStep(mazeRef.current, row, column)) {
+        if ((force || mouseIsDown.current) && checkIfValidStep(mazeRef.current, row, column)) {
             dispatchMaze({type: 'markVisited', payload: {row: row, column: column}})
             if (row === 0 && column === 0) {
                 setGameState(gameStateOptions[3])
@@ -137,7 +139,7 @@ const MazeGame = () => {
                 setGameState(gameStateOptions[5])
             }
         }
-    }, [mouseIsDown, dispatchMaze])
+    }, [dispatchMaze])
 
     // Use callback should be used in all the following functions because they are either props passed to
     // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
