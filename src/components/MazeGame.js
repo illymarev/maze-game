@@ -124,6 +124,8 @@ const MazeGame = () => {
     const mazeRef = useRef(maze)
     const stopGeneration = useRef(false)
 
+    // Create a mutable ref to maze in order to use it in functions like markNodeVisited (more specifically - for the
+    // check if valid step inside it) and not cause re-rendering after maze state change
     useEffect(() => {
         mazeRef.current = maze
     }, [maze])
@@ -132,6 +134,9 @@ const MazeGame = () => {
     const setMouseIsDown = value => mouseIsDown.current = value
 
 
+    // Use callback should be used in all the following functions because they are either props passed to
+    // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
+    // node update is very heavy on performance and should be avoided
     const markNodeVisited = useCallback((row, column, force = false) => {
         if (
             (force || mouseIsDown.current) &&
@@ -147,9 +152,6 @@ const MazeGame = () => {
         }
     }, [gameState.id, dispatchMaze])
 
-    // Use callback should be used in all the following functions because they are either props passed to
-    // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
-    // node update is very heavy on performance and should be avoided
     const onAlgorithmSettingChange = useCallback((fieldName, newValue) => {
         setAlgorithmsSettings(prevState => ({...prevState, [fieldName]: newValue}))
     }, [])
