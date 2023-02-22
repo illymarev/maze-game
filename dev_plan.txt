@@ -50,8 +50,8 @@ PART 3:
     4.2) Debug performance / done
     4.3) Performance optimizations / done
 4) Cleanup everything at this point; review variable naming in recursive backtracking / done
-5) Work on user's input to solve // done
-6) Add controls related to game state in the control panel and maze solution // TODO finish tomorrow
+5) Work on user's input to solve / done
+6) Add controls related to game state in the control panel and maze solution / done
 6) Verify that the cycle "generate > solve by user" works; refactor and cleanup // TODO finish tomorrow
 6) Debug the bug with the globe icon when clicking in the middle of the node
 7) Add first solving algorithm

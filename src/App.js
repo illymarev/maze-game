@@ -17,6 +17,10 @@ const theme = createTheme({
             main: '#64748B',
             contrastText: '#fff',
         },
+        danger: {
+            main: '#b71212',
+            contrastText: '#fff',
+        }
     },
 });
 

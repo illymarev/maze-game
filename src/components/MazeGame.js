@@ -122,16 +122,22 @@ const MazeGame = () => {
     })
     const mouseIsDown = useRef(false)
     const mazeRef = useRef(maze)
+    const stopGeneration = useRef(false)
 
     useEffect(() => {
         mazeRef.current = maze
     }, [maze])
 
+    const setStopGeneration = useCallback(value => stopGeneration.current = value, [])
     const setMouseIsDown = value => mouseIsDown.current = value
 
 
     const markNodeVisited = useCallback((row, column, force = false) => {
-        if ((force || mouseIsDown.current) && checkIfValidStep(mazeRef.current, row, column)) {
+        if (
+            (force || mouseIsDown.current) &&
+            checkIfValidStep(mazeRef.current, row, column) &&
+            [2, 3].includes(gameState.id)
+        ) {
             dispatchMaze({type: 'markVisited', payload: {row: row, column: column}})
             if (row === 0 && column === 0) {
                 setGameState(gameStateOptions[3])
@@ -139,7 +145,7 @@ const MazeGame = () => {
                 setGameState(gameStateOptions[5])
             }
         }
-    }, [dispatchMaze])
+    }, [gameState.id, dispatchMaze])
 
     // Use callback should be used in all the following functions because they are either props passed to
     // the configuration panel or functions that props depend on. Rendering configuration panel after every maze
@@ -154,13 +160,22 @@ const MazeGame = () => {
             dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
         } else {
             for (const action of actionsToVisualize) {
-                await delay(delayTime)
-                dispatchMaze(action)
+                // After every action, check whether the generation is stopped by user. If yes, reset the
+                // stopGeneration to false, set the game state to 0 and exit from loop & function
+                if (stopGeneration.current) {
+                    setStopGeneration(false)
+                    setGameState(gameStateOptions[0])
+                    dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+                    return
+                } else {
+                    await delay(delayTime)
+                    dispatchMaze(action)
+                }
             }
         }
         dispatchMaze({type: 'resetVisited'})
         setGameState(gameStateOptions[2])
-    }, [algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const generateMaze = useCallback(() => {
         dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
@@ -179,6 +194,8 @@ const MazeGame = () => {
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
                 generationFunction={generateMaze}
+                gameStateId={gameState.id}
+                setStopGeneration={setStopGeneration}
             />
             <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
                 <GameState title={gameState.title} description={gameState.description}/>
