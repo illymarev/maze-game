@@ -107,9 +107,8 @@ const generationAlgorithmOptions = {
 }
 
 const solvingAlgorithmOptions = {
-    'dijkstras_algorithm': {title: "Dijkstra's Algorithm", relatedFunction: null},
-    'bellman_ford': {title: "Bellman Form Algorithm", relatedFunction: null},
-    'TODO': {title: 'TODO', relatedFunction: null}
+    'breadth_first_search': {title: "Breadth First Search", relatedFunction: null},
+    'depth_first_search': {title: "Depth First Search", relatedFunction: null},
 }
 
 const MazeGame = () => {
@@ -117,7 +116,7 @@ const MazeGame = () => {
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'recursive_backtracking',
-        solvingAlgorithm: 'dijkstras_algorithm',
+        solvingAlgorithm: 'breadth_first_search',
         visualizationSpeed: 2
     })
     const mouseIsDown = useRef(false)
