@@ -10,7 +10,7 @@ const MazeNode = memo(({
                            columnNumber,
                            rowsCount,
                            columnsCount,
-                           node: {current, visited, availablePathways}
+                           node: {current, visited, availablePathways, isRoute}
                        }) => {
 
     const isStart = rowNumber === 0 && columnNumber === 0
@@ -21,6 +21,9 @@ const MazeNode = memo(({
     }
     if (current) {
         generationVisualizationStyle.backgroundColor = '#3b8ef1'
+    }
+    if (isRoute){
+        generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
 
     // TODO inprove styling

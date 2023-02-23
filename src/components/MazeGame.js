@@ -3,6 +3,7 @@ import Maze from "./Maze";
 import {useState, useCallback, useEffect, useRef} from "react";
 import {useImmerReducer} from "use-immer"
 import recursiveBacktracking from '../algorithms/generation/recursiveBacktracking'
+import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
@@ -19,7 +20,10 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
         mazeRow.push({
             availablePathways: {north: false, south: false, west: false, east: false},
             visited: false,
-            current: false
+            current: false,
+            isRoute: false,
+            row: i,
+            column: j
         })
     }
     INITIAL_MAZE.push(mazeRow)
@@ -56,6 +60,11 @@ const mazeNodesReducer = (draft, action) => {
         case 'setMaze':
             for (let rowNumber = 0; rowNumber < action.payload.newMaze.length; rowNumber++) {
                 draft[rowNumber] = action.payload.newMaze[rowNumber]
+            }
+            break
+        case 'markRoute':
+            for (let item of action.payload) {
+                draft[item.row][item.column].isRoute = true
             }
             break
         default:
@@ -107,7 +116,7 @@ const generationAlgorithmOptions = {
 }
 
 const solvingAlgorithmOptions = {
-    'breadth_first_search': {title: "Breadth First Search", relatedFunction: null},
+    'breadth_first_search': {title: "Breadth First Search", relatedFunction: breadthFirstSearch},
     'depth_first_search': {title: "Depth First Search", relatedFunction: null},
 }
 
@@ -123,11 +132,8 @@ const MazeGame = () => {
     const mazeRef = useRef(maze)
     const stopGeneration = useRef(false)
 
-    // Create a mutable ref to maze in order to use it in functions like markNodeVisited (more specifically - for the
-    // check if valid step inside it) and not cause re-rendering after maze state change
-    useEffect(() => {
-        mazeRef.current = maze
-    }, [maze])
+    const startSolving = useRef(false)
+    const startGenerating = useRef(false)
 
     const setStopGeneration = useCallback(value => stopGeneration.current = value, [])
     const setMouseIsDown = value => mouseIsDown.current = value
@@ -178,6 +184,7 @@ const MazeGame = () => {
         setGameState(gameStateOptions[2])
     }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
+    // TODO same as in solveMaze
     const generateMaze = useCallback(() => {
         dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
         setGameState(gameStateOptions[1])
@@ -185,6 +192,57 @@ const MazeGame = () => {
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
         visualizeGeneration(newMaze, actionsToVisualize)
     }, [algorithmsSettings.generationAlgorithm, visualizeGeneration, dispatchMaze])
+
+    const visualizeSolving = useCallback(async (newMaze, actionsToVisualize) => {
+        const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
+        if (delayTime === 0) {
+            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
+        } else {
+            for (const action of actionsToVisualize) {
+                // After every action, check whether the generation is stopped by user. If yes, reset the
+                // stopGeneration to false, set the game state to 0 and exit from loop & function
+                if (stopGeneration.current) {
+                    // TODO
+                    setStopGeneration(false)
+                    setGameState(gameStateOptions[0])
+                    dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+                    return
+                } else {
+                    await delay(delayTime)
+                    dispatchMaze(action)
+                }
+            }
+        }
+        setGameState(gameStateOptions[5])
+    }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
+
+    const solveMaze = useCallback(() => {
+        const solvingFunction = solvingAlgorithmOptions[algorithmsSettings.solvingAlgorithm].relatedFunction
+        const {newMaze, actionsToVisualize} = solvingFunction(mazeRef.current)
+        visualizeSolving(newMaze, actionsToVisualize)
+    }, [algorithmsSettings.solvingAlgorithm, visualizeSolving])
+
+    const startSolvingFunction = useCallback(() => {
+        setGameState(gameStateOptions[4])
+        startSolving.current = true
+        if (mazeRef.current[0][0].visited) {
+            dispatchMaze({type: 'resetVisited'})
+        } else {
+            solveMaze()
+        }
+
+    }, [dispatchMaze, solveMaze])
+
+
+    useEffect(() => {
+        // Create a mutable ref to maze in order to use it in functions like markNodeVisited (more specifically - for the
+        // check if valid step inside it) and not cause re-rendering after maze state change
+        mazeRef.current = maze
+        if (startSolving.current) {
+            solveMaze()
+            startSolving.current = false
+        }
+    }, [maze, solveMaze])
 
     return (
         <div onMouseDown={() => setMouseIsDown(true)}
@@ -195,6 +253,7 @@ const MazeGame = () => {
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
                 generationFunction={generateMaze}
+                solvingFunction={startSolvingFunction}
                 gameStateId={gameState.id}
                 setStopGeneration={setStopGeneration}
             />

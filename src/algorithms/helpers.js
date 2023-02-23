@@ -14,14 +14,17 @@ export const checkIfValidStep = (maze, row, column) => {
         return true
     } else {
         const node = maze[row][column]
-        const validPathways = Object.keys(node.availablePathways).filter(k => node.availablePathways[k])
-        for (const pathKey of validPathways) {
-            const [neighborsRow, neighborsColumn] = directions[pathKey](row, column)
-            const neighborVisited = maze[neighborsRow][neighborsColumn].visited
-            if (neighborVisited) {
-                return true
-            }
-        }
-        return false
+        const neighborNodes = getNeighborNodes(maze, node)
+        return neighborNodes.some(node => node.visited)
     }
+}
+
+export const getNeighborNodes = (maze, node) => {
+    const validPathways = Object.keys(node.availablePathways).filter(k => node.availablePathways[k])
+    const neighborNodes = []
+    for (const pathKey of validPathways) {
+        const [neighborsRow, neighborsColumn] = directions[pathKey](node.row, node.column)
+        neighborNodes.push(maze[neighborsRow][neighborsColumn])
+    }
+    return neighborNodes
 }

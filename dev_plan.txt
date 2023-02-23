@@ -54,8 +54,8 @@ PART 3:
 6) Add controls related to game state in the control panel and maze solution / done
 7) Verify that the cycle "generate > solve by user" works; refactor and cleanup / done
 8) Debug the bug with the globe icon when clicking in the middle of the node / done
-9) Add first solving algorithm (breadth first) // TODO tomorrow
-10) Add solving visualization // TODO tomorrow
+9) Add first solving algorithm (breadth first) / done
+10) Add solving visualization / done
 11) Handle controls related to game state when solving // TODO tomorrow
 12) Add stop solving button // TODO tomorrow
 13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work // TODO tomorrow
@@ -68,4 +68,7 @@ PART 3:
 
 
 IDEAS:
+ Add a different view option: graph
+ Pause feature
  Consider adding weighted nodes in the future in order to demonstrate weighted path-finding algorithms
+

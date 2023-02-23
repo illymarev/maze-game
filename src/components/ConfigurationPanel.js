@@ -26,6 +26,7 @@ const ConfigurationPanel = memo(({
                                      generationAlgorithmOptions,
                                      solvingAlgorithmOptions,
                                      generationFunction,
+                                     solvingFunction,
                                      gameStateId,
                                      setStopGeneration
                                  }) => {
@@ -70,7 +71,8 @@ const ConfigurationPanel = memo(({
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
                         {disableChanges ? 'Stop Generation' : 'Generate'}
                     </Button>
-                    <Button disabled={disableChanges} variant="contained" color='primary' size='large'
+                    <Button onClick={() => solvingFunction()}
+                        disabled={disableChanges} variant="contained" color='primary' size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
                         Solve
                     </Button>
