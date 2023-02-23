@@ -50,10 +50,24 @@ const mazeNodesReducer = (draft, action) => {
                 draft[item.row][item.column].availablePathways[item.path] = true
             }
             break
+        case 'resetRoute':
+            for (let row of draft){
+                for (let node of row){
+                    node.isRoute = false
+                }
+            }
+            break
         case 'resetVisited':
             for (let row of draft) {
                 for (let node of row) {
                     node.visited = false
+                }
+            }
+            break
+        case 'resetCurrent':
+            for (let row of draft) {
+                for (let node of row) {
+                    node.current = false
                 }
             }
             break
@@ -130,12 +144,12 @@ const MazeGame = () => {
     })
     const mouseIsDown = useRef(false)
     const mazeRef = useRef(maze)
-    const stopGeneration = useRef(false)
+    const stopVisualization = useRef(false)
 
     const startSolving = useRef(false)
     const startGenerating = useRef(false)
 
-    const setStopGeneration = useCallback(value => stopGeneration.current = value, [])
+    const setStopVisualization = useCallback(value => stopVisualization.current = value, [])
     const setMouseIsDown = value => mouseIsDown.current = value
 
 
@@ -170,8 +184,8 @@ const MazeGame = () => {
             for (const action of actionsToVisualize) {
                 // After every action, check whether the generation is stopped by user. If yes, reset the
                 // stopGeneration to false, set the game state to 0 and exit from loop & function
-                if (stopGeneration.current) {
-                    setStopGeneration(false)
+                if (stopVisualization.current) {
+                    setStopVisualization(false)
                     setGameState(gameStateOptions[0])
                     dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
                     return
@@ -183,7 +197,7 @@ const MazeGame = () => {
         }
         dispatchMaze({type: 'resetVisited'})
         setGameState(gameStateOptions[2])
-    }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [setStopVisualization, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const generateMaze = useCallback(() => {
         startGenerating.current = false
@@ -215,11 +229,11 @@ const MazeGame = () => {
             for (const action of actionsToVisualize) {
                 // After every action, check whether the generation is stopped by user. If yes, reset the
                 // stopGeneration to false, set the game state to 0 and exit from loop & function
-                if (stopGeneration.current) {
-                    // TODO
-                    setStopGeneration(false)
-                    setGameState(gameStateOptions[0])
-                    dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+                if (stopVisualization.current) {
+                    setStopVisualization(false)
+                    setGameState(gameStateOptions[2])
+                    dispatchMaze({type: 'resetVisited'})
+                    dispatchMaze({type: 'resetCurrent'})
                     return
                 } else {
                     await delay(delayTime)
@@ -228,7 +242,7 @@ const MazeGame = () => {
             }
         }
         setGameState(gameStateOptions[5])
-    }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [setStopVisualization, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const solveMaze = useCallback(() => {
         startSolving.current = false
@@ -239,6 +253,8 @@ const MazeGame = () => {
 
     const startSolvingFunction = useCallback(() => {
         setGameState(gameStateOptions[4])
+        // In case already solved, but the user wants to solve again (maybe with different speed, etc.)
+        dispatchMaze({type: 'resetRoute'})
         startSolving.current = true
         if (mazeRef.current[0][0].visited) {
             dispatchMaze({type: 'resetVisited'})
@@ -272,7 +288,7 @@ const MazeGame = () => {
                 generationFunction={startGenerationFunction}
                 solvingFunction={startSolvingFunction}
                 gameStateId={gameState.id}
-                setStopGeneration={setStopGeneration}
+                setStopVisualization={setStopVisualization}
             />
             <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
                 <GameState title={gameState.title} description={gameState.description}/>

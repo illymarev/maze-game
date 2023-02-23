@@ -56,11 +56,11 @@ PART 3:
 8) Debug the bug with the globe icon when clicking in the middle of the node / done
 9) Add first solving algorithm (breadth first) / done
 10) Add solving visualization / done
-- Fix generation visualization / done
-- Add route visualization on user's input // TODO Thursday
-11) Handle controls related to game state when solving // TODO Thursday
-12) Add stop solving button // TODO Thursday
-13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work // TODO Thursday
+- Refactor generation visualization / done
+11) Handle controls related to game state when solving / done
+12) Add stop solving button / done
+13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work / done
+- Fix maze legend / done
 - Cleanup & refactor
 14) Add the modal with instructions on first open // TODO Thursday
 15) Add 1 more generation algorithm // TODO on weekends
@@ -71,6 +71,7 @@ PART 3:
 
 
 IDEAS:
+ Add route visualization on user's input
  Add a different view option: graph
  Pause feature
  Consider adding weighted nodes in the future in order to demonstrate weighted path-finding algorithms

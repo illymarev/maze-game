@@ -28,11 +28,15 @@ const ConfigurationPanel = memo(({
                                      generationFunction,
                                      solvingFunction,
                                      gameStateId,
-                                     setStopGeneration
+                                     setStopVisualization
                                  }) => {
-    const disableChanges = gameStateId === 1
-    const onGenerationButtonClick = () => disableChanges ? setStopGeneration(true) : generationFunction()
-    const generationButtonColor = disableChanges ? 'danger' : 'secondary'
+    const visualizationInProgress = [1, 4].includes(gameStateId)
+
+    const onGenerationButtonClick = () => gameStateId === 1 ? setStopVisualization(true) : generationFunction()
+    const generationButtonColor = gameStateId === 1 ? 'danger' : 'secondary'
+
+    const onSolvingButtonClick = () => gameStateId === 4 ? setStopVisualization(true) : solvingFunction()
+    const solvingButtonColor = gameStateId === 4 ? 'danger' : 'primary'
 
     const generationAlgorithmMenuItems = []
     for (const [key, value] of Object.entries(generationAlgorithmOptions)) {
@@ -55,7 +59,7 @@ const ConfigurationPanel = memo(({
                 <Stack width={'200px'}>
                     <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
                     <Select
-                        disabled={disableChanges}
+                        disabled={visualizationInProgress}
                         labelId="generation_algorithm_label"
                         id="generation_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
@@ -67,20 +71,21 @@ const ConfigurationPanel = memo(({
                 </Stack>
                 <Stack spacing={2}>
                     <Button onClick={() => onGenerationButtonClick()}
+                            disabled={gameStateId === 4}
                             variant="contained" color={generationButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {disableChanges ? 'Stop Generation' : 'Generate'}
+                        {gameStateId === 1 ? 'Stop Generation' : 'Generate'}
                     </Button>
-                    <Button onClick={() => solvingFunction()}
-                        disabled={disableChanges} variant="contained" color='primary' size='large'
+                    <Button onClick={() => onSolvingButtonClick()}
+                            disabled={gameStateId === 1} variant="contained" color={solvingButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        Solve
+                        {gameStateId === 4 ? 'Stop Solving' : 'Solve'}
                     </Button>
                 </Stack>
                 <Stack width={'200px'}>
                     <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
                     <Select
-                        disabled={disableChanges}
+                        disabled={visualizationInProgress}
                         labelId="solving_algorithm_label"
                         id="solving_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
@@ -95,7 +100,7 @@ const ConfigurationPanel = memo(({
             <Stack direction='column' justifyContent='center' alignItems='center'>
                 <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
                 <Slider
-                    disabled={disableChanges}
+                    disabled={visualizationInProgress}
                     step={null}
                     marks={marks}
                     labelId="visualization_speed_label"
