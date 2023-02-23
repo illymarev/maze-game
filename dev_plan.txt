@@ -56,9 +56,12 @@ PART 3:
 8) Debug the bug with the globe icon when clicking in the middle of the node / done
 9) Add first solving algorithm (breadth first) / done
 10) Add solving visualization / done
-11) Handle controls related to game state when solving // TODO tomorrow
-12) Add stop solving button // TODO tomorrow
-13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work // TODO tomorrow
+- Fix generation visualization / done
+- Add route visualization on user's input // TODO Thursday
+11) Handle controls related to game state when solving // TODO Thursday
+12) Add stop solving button // TODO Thursday
+13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work // TODO Thursday
+- Cleanup & refactor
 14) Add the modal with instructions on first open // TODO Thursday
 15) Add 1 more generation algorithm // TODO on weekends
 16) Add generation algorithm with multiple paths in order to demonstrate shortest path in solution // TODO Monday

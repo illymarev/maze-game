@@ -7,7 +7,7 @@ import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
-import {checkIfValidStep} from "../algorithms/helpers";
+import {checkIfValidStep, getNeighborNodes} from "../algorithms/helpers";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
@@ -161,6 +161,7 @@ const MazeGame = () => {
         setAlgorithmsSettings(prevState => ({...prevState, [fieldName]: newValue}))
     }, [])
 
+    // ------------------------ MAZE GENERATION FUNCTIONS -------------------------------
     const visualizeGeneration = useCallback(async (newMaze, actionsToVisualize) => {
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
         if (delayTime === 0) {
@@ -184,15 +185,28 @@ const MazeGame = () => {
         setGameState(gameStateOptions[2])
     }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
-    // TODO same as in solveMaze
     const generateMaze = useCallback(() => {
-        dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
-        setGameState(gameStateOptions[1])
+        startGenerating.current = false
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
         visualizeGeneration(newMaze, actionsToVisualize)
-    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration, dispatchMaze])
+    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration])
 
+    const startGenerationFunction = useCallback(() => {
+        setGameState(gameStateOptions[1])
+        startGenerating.current = true
+        // Maze might be empty. In this scenario, resetting the maze to initial_maze will not change the state,
+        // thus - useEffect will not be called and the maze will not be generated. To handle this, if first
+        // node has no neighbours (=no availablePathways), we should start the generation manually
+        if (!getNeighborNodes(mazeRef.current, mazeRef.current[0][0]).length) {
+            generateMaze()
+        } else {
+            dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+
+        }
+    }, [generateMaze, dispatchMaze])
+
+    // ------------------------ MAZE SOLVING FUNCTIONS ----------------------------------
     const visualizeSolving = useCallback(async (newMaze, actionsToVisualize) => {
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
         if (delayTime === 0) {
@@ -217,6 +231,7 @@ const MazeGame = () => {
     }, [setStopGeneration, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
     const solveMaze = useCallback(() => {
+        startSolving.current = false
         const solvingFunction = solvingAlgorithmOptions[algorithmsSettings.solvingAlgorithm].relatedFunction
         const {newMaze, actionsToVisualize} = solvingFunction(mazeRef.current)
         visualizeSolving(newMaze, actionsToVisualize)
@@ -240,9 +255,11 @@ const MazeGame = () => {
         mazeRef.current = maze
         if (startSolving.current) {
             solveMaze()
-            startSolving.current = false
         }
-    }, [maze, solveMaze])
+        if (startGenerating.current) {
+            generateMaze()
+        }
+    }, [maze, solveMaze, generateMaze])
 
     return (
         <div onMouseDown={() => setMouseIsDown(true)}
@@ -252,7 +269,7 @@ const MazeGame = () => {
                 onAlgorithmSettingChange={onAlgorithmSettingChange}
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
-                generationFunction={generateMaze}
+                generationFunction={startGenerationFunction}
                 solvingFunction={startSolvingFunction}
                 gameStateId={gameState.id}
                 setStopGeneration={setStopGeneration}
