@@ -45,7 +45,7 @@ const MazeLegend = memo(() => (
                       'aspectRatio': '1/1',
                       'width': '15px'
                   }}></Card>
-            <span>Shortest Path</span>
+            <span>Solving Algorithm's Path</span>
         </Stack>
     </Stack>
 ))

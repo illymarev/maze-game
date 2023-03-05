@@ -17,6 +17,18 @@ export const directions = {
 }
 
 /**
+ * Determines the direction between two nodes based on the difference in their coordinates
+ * @param startNode
+ * @param targetNode
+ */
+export const determineDirection = (startNode, targetNode) => {
+    for (const [direction, calcFunction] of Object.entries(directions)) {
+        const [row, column] = calcFunction(startNode.row, startNode.column)
+        if (row === targetNode.row && column === targetNode.column) return direction
+    }
+}
+
+/**
  Can be used in order to determine the path from the next node to the current node by passing the pass from the
  current node to the next node
  */

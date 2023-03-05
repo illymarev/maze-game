@@ -74,7 +74,7 @@ const ConfigurationPanel = memo(({
                             disabled={gameStateId === 4}
                             variant="contained" color={generationButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {gameStateId === 1 ? 'Stop Generation' : 'Generate'}
+                        {gameStateId === 1 ? 'Stop Generating' : 'Generate'}
                     </Button>
                     <Button onClick={() => onSolvingButtonClick()}
                             disabled={gameStateId === 1} variant="contained" color={solvingButtonColor} size='large'

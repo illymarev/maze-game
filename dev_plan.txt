@@ -61,16 +61,16 @@ PART 3:
 12) Add stop solving button / done
 13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work / done
 - Fix maze legend / done
-- Cleanup & refactor
-14) Add the modal with instructions on first open // TODO Thursday
-15) Add 1 more generation algorithm // TODO on weekends
-16) Add generation algorithm with multiple paths in order to demonstrate shortest path in solution // TODO Monday
-17) Add 1 more solution algorithm (depth first) // TODO Tuesday
-17) Redesign the UI with a grid? // TODO Tuesday
-18) Consider optimizations using mobx library in order to avoid re-rendering of the maze component on node change // TODO either on Wednesday or after the surgery. Most likely after the surgery
-
+14) Add hunt and kill algorithm / done
+15) Add kruskal's algorithm
+17) Add 1 more solution algorithm (depth first)
+14) Add the modal with instructions on first open
+- Thorough cleanup & refactoring
 
 IDEAS:
+ Consider optimizations using mobx library in order to avoid re-rendering of the maze component on node change
+ Redesign the UI with a grid
+ Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
  Add route visualization on user's input
  Add a different view option: graph
  Pause feature

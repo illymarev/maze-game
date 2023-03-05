@@ -7,7 +7,8 @@ import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
-import {checkIfValidStep, getNeighborNodes} from "../algorithms/helpers";
+import {checkIfValidStep, getReachableNeighborNodes} from "../algorithms/helpers";
+import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
@@ -125,8 +126,8 @@ const gameStateOptions = {
 
 const generationAlgorithmOptions = {
     'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
+    'hunt_and_kill_algorithm': {title: 'Hunt and Kill Algorithm', relatedFunction: huntAndKillAlgorithm},
     'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
-    'TODO': {title: 'TODO', relatedFunction: null}
 }
 
 const solvingAlgorithmOptions = {
@@ -212,7 +213,7 @@ const MazeGame = () => {
         // Maze might be empty. In this scenario, resetting the maze to initial_maze will not change the state,
         // thus - useEffect will not be called and the maze will not be generated. To handle this, if first
         // node has no neighbours (=no availablePathways), we should start the generation manually
-        if (!getNeighborNodes(mazeRef.current, mazeRef.current[0][0]).length) {
+        if (!getReachableNeighborNodes(mazeRef.current, mazeRef.current[0][0]).length) {
             generateMaze()
         } else {
             dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})

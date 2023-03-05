@@ -1,4 +1,4 @@
-import {getNeighborNodes} from "../helpers";
+import {getReachableNeighborNodes} from "../helpers";
 
 const breadthFirstSearch = maze => {
     const mazeCopy = structuredClone(maze)
@@ -22,7 +22,7 @@ const breadthFirstSearch = maze => {
             payload: {row: currentNode.row, column: currentNode.column}
         })
 
-        const neighbourNodes = getNeighborNodes(mazeCopy, currentNode)
+        const neighbourNodes = getReachableNeighborNodes(mazeCopy, currentNode)
         for (const neighbourNode of neighbourNodes) {
             if (!neighbourNode.visited) {
                 neighbourNode.visited = true
