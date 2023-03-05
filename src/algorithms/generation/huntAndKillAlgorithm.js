@@ -23,8 +23,12 @@ const huntAndKillAlgorithm = emptyMaze => {
 }
 
 const hunt = (maze, actionsToVisualize) => {
-    for (let row of maze) {
-        for (let node of row) {
+    const columns = maze[0].length
+
+    for (let column = 0; column < columns; column++) {
+        for (let row of maze) {
+            const node = row[column]
+
             actionsToVisualize.push({
                 type: 'markCurrent',
                 payload: {row: node.row, column: node.column}

@@ -17,7 +17,7 @@ export const directions = {
 }
 
 /**
- * Determines the direction between two nodes based on the difference in their coordinates
+ * Determines the direction between two nodes based on their coordinates
  * @param startNode
  * @param targetNode
  */

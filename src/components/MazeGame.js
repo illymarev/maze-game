@@ -52,8 +52,8 @@ const mazeNodesReducer = (draft, action) => {
             }
             break
         case 'resetRoute':
-            for (let row of draft){
-                for (let node of row){
+            for (let row of draft) {
+                for (let node of row) {
                     node.isRoute = false
                 }
             }
@@ -125,8 +125,8 @@ const gameStateOptions = {
 }
 
 const generationAlgorithmOptions = {
-    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
     'hunt_and_kill_algorithm': {title: 'Hunt and Kill Algorithm', relatedFunction: huntAndKillAlgorithm},
+    'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
     'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
 }
 
@@ -139,7 +139,7 @@ const MazeGame = () => {
     const [maze, dispatchMaze] = useImmerReducer(mazeNodesReducer, INITIAL_MAZE)
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
-        generationAlgorithm: 'recursive_backtracking',
+        generationAlgorithm: 'hunt_and_kill_algorithm',
         solvingAlgorithm: 'breadth_first_search',
         visualizationSpeed: 2
     })
