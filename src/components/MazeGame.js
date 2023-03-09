@@ -9,6 +9,7 @@ import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
 import {checkIfValidStep, getReachableNeighborNodes} from "../algorithms/helpers";
 import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm";
+import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
@@ -127,12 +128,11 @@ const gameStateOptions = {
 const generationAlgorithmOptions = {
     'hunt_and_kill_algorithm': {title: 'Hunt and Kill Algorithm', relatedFunction: huntAndKillAlgorithm},
     'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
-    'kruskals_algorithm': {title: "Kruskal's Algorithm", relatedFunction: null},
 }
 
 const solvingAlgorithmOptions = {
     'breadth_first_search': {title: "Breadth First Search", relatedFunction: breadthFirstSearch},
-    'depth_first_search': {title: "Depth First Search", relatedFunction: null},
+    'depth_first_search': {title: "Depth First Search", relatedFunction: depthFirstSearch},
 }
 
 const MazeGame = () => {

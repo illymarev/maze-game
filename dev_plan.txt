@@ -62,13 +62,12 @@ PART 3:
 13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work / done
 - Fix maze legend / done
 14) Add hunt and kill algorithm / done
-15) Add kruskal's algorithm
-17) Add depth first solution algorithm
-14) Add the modal with instructions on first open
-- Thorough cleanup & refactoring
+17) Add depth first solution algorithm / done
+14) Add the modal with instructions on first open // TODO th-friday
+- Thorough cleanup & refactoring // TODO saturday!
 
 IDEAS:
- Consider adding prim's algorithm
+ Consider adding kruskal's and prim's algorithms
  Consider optimizations using mobx library in order to avoid re-rendering of the maze component on node change
  Redesign the UI with a grid
  Add generation algorithm with multiple paths in order to demonstrate shortest path in solution

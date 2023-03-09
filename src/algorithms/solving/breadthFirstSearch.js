@@ -1,4 +1,5 @@
 import {getReachableNeighborNodes} from "../helpers";
+import {trackRoute} from "./common";
 
 const breadthFirstSearch = maze => {
     const mazeCopy = structuredClone(maze)
@@ -65,17 +66,6 @@ const breadthFirstSearch = maze => {
     }
 }
 
-const trackRoute = endNode => {
-    const route = []
-    let node = endNode
-    while (node) {
-        route.push(node)
-        node.isRoute = true
-        node = node.previousNode
-    }
-    route.reverse()
-    return route
-}
 
 export default breadthFirstSearch
 
