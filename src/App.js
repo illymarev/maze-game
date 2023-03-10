@@ -2,6 +2,7 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import MazeGame from './components/MazeGame'
 import './App.css';
+import WelcomeModal from "./components/WelcomeModal";
 
 const theme = createTheme({
     palette: {
@@ -28,6 +29,7 @@ function App() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
+            <WelcomeModal/>
             <MazeGame/>
         </ThemeProvider>
     );
