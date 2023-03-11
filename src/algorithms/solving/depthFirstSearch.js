@@ -1,23 +1,50 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./utils";
+import {removePreviousNodes, trackRoute} from "./utils";
+import {pickRandomItem} from "../generation/utils";
 
 const depthFirstSearch = maze => {
     const actionsToVisualize = []
+
+    const endNode = maze[maze.length - 1][maze[0].length - 1]
+    const startNode = maze[0][0]
+
+    findRoute(maze, startNode, endNode, actionsToVisualize)
+    const route = trackRoute(endNode)
+    actionsToVisualize.push({
+        type: 'markRoute',
+        payload: route.map(node => ({row: node.row, column: node.column}))
+    })
+    removePreviousNodes(maze)
+
+    return {
+        newMaze: maze,
+        actionsToVisualize: actionsToVisualize
+    }
+}
+
+const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
     const visitedStack = []
+    let node = startNode
 
-    let pathFound = false
-    let endNode = maze[maze.length - 1][maze[0].length - 1]
-    let node = maze[0][0]
-
-    while (pathFound !== true) {
-        if (node === endNode) {
-            pathFound = true
-        }
-
+    while (true) {
         actionsToVisualize.push({
             type: 'markCurrent',
             payload: {row: node.row, column: node.column}
         })
+
+        if (node === endNode) {
+            node.visited = true
+            node.previousNode = visitedStack[visitedStack.length - 1]
+            actionsToVisualize.push({
+                type: 'markVisited',
+                payload: {row: node.row, column: node.column}
+            })
+            actionsToVisualize.push({
+                type: 'clearCurrent',
+                payload: {row: node.row, column: node.column}
+            })
+            break
+        }
 
 
         if (!node.visited) {
@@ -30,44 +57,23 @@ const depthFirstSearch = maze => {
             })
         }
 
-        let nextNode = null
-        const notVisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited)
-        if (notVisitedNeighbours.length) {
-            nextNode = notVisitedNeighbours[Math.floor(Math.random() * notVisitedNeighbours.length)]
-        }
-
-        if (nextNode) {
+        const unvisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited)
+        if (unvisitedNeighbours.length) {
+            const nextNode = pickRandomItem(unvisitedNeighbours)
             actionsToVisualize.push({
                 type: 'clearCurrent',
                 payload: {row: node.row, column: node.column}
             })
             node = nextNode
-            continue
+        } else {
+            // Start backtracking
+            visitedStack.pop()
+            actionsToVisualize.push({
+                type: 'clearCurrent',
+                payload: {row: node.row, column: node.column}
+            })
+            node = visitedStack[visitedStack.length - 1]
         }
-
-        visitedStack.pop()
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: node.row, column: node.column}
-        })
-        node = visitedStack[visitedStack.length - 1]
-    }
-
-    const route = trackRoute(endNode)
-    actionsToVisualize.push({
-        type: 'markRoute',
-        payload: route.map(node => ({row: node.row, column: node.column}))
-    })
-
-    for (const row of maze) {
-        for (const node of row) {
-            delete node.previousNode
-        }
-    }
-
-    return {
-        newMaze: maze,
-        actionsToVisualize: actionsToVisualize
     }
 }
 

@@ -9,3 +9,11 @@ export const trackRoute = endNode => {
     route.reverse()
     return route
 }
+
+export const removePreviousNodes = maze => {
+    for (const row of maze) {
+        for (const node of row) {
+            delete node.previousNode
+        }
+    }
+}
