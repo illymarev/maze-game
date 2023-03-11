@@ -1,5 +1,5 @@
-import {reversedDirections, determineDirection} from "../directions";
 import {getAllNeighbourNodes} from "../helpers";
+import {determineDirectionAndMarkPath, pickRandomItem} from "./utils";
 
 
 const recursiveBacktracking = maze => {
@@ -38,23 +38,8 @@ const recursivePart = (
     const unvisitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => !item.visited)
     if (unvisitedNeighbours.length) {
         // Randomly select an unvisited neighbour
-        const nextNode = unvisitedNeighbours[Math.floor(Math.random() * unvisitedNeighbours.length)]
-        const directionToNextNode = determineDirection(node, nextNode)
-        const reversedDirection = reversedDirections[directionToNextNode]
-
-        // Mark the path from the current node to the next node
-        node.availablePathways[directionToNextNode] = true
-        // Mark the path from the next node to the current node
-        nextNode.availablePathways[reversedDirection] = true
-
-        // Visualize both paths at the same time.
-        actionsToVisualize.push({
-            type: 'bulkMarkPath',
-            payload: [
-                {row: node.row, column: node.column, path: directionToNextNode},
-                {row: nextNode.row, column: nextNode.column, path: reversedDirection}
-            ]
-        })
+        const nextNode = pickRandomItem(unvisitedNeighbours)
+        determineDirectionAndMarkPath(node, nextNode, actionsToVisualize)
 
         actionsToVisualize.push({
             type: 'clearCurrent',
