@@ -1,15 +1,13 @@
 import {directions, reversedDirections, getRandomDirectionsKeys} from "../directions";
 
 
-const recursiveBacktracking = emptyMaze => {
-    const mazeCopy = structuredClone(emptyMaze)
-
+const recursiveBacktracking = maze => {
     const visitedStack = []
     const actionsToVisualize = []
 
-    recursivePart(mazeCopy, [0, 0], visitedStack, actionsToVisualize)
+    recursivePart(maze, [0, 0], visitedStack, actionsToVisualize)
     return {
-        newMaze: mazeCopy,
+        newMaze: maze,
         actionsToVisualize: actionsToVisualize
     }
 }

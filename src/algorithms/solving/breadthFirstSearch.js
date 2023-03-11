@@ -1,10 +1,9 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./common";
+import {trackRoute} from "./utils";
 
 const breadthFirstSearch = maze => {
-    const mazeCopy = structuredClone(maze)
-    const startNode = mazeCopy[0][0]
-    const endNode = mazeCopy[mazeCopy.length - 1][mazeCopy[0].length - 1]
+    const startNode = maze[0][0]
+    const endNode = maze[maze.length - 1][maze[0].length - 1]
     const actionsToVisualize = []
 
     const queue = [startNode]
@@ -23,7 +22,7 @@ const breadthFirstSearch = maze => {
             payload: {row: currentNode.row, column: currentNode.column}
         })
 
-        const neighbourNodes = getReachableNeighborNodes(mazeCopy, currentNode)
+        const neighbourNodes = getReachableNeighborNodes(maze, currentNode)
         for (const neighbourNode of neighbourNodes) {
             if (!neighbourNode.visited) {
                 neighbourNode.visited = true
@@ -54,14 +53,14 @@ const breadthFirstSearch = maze => {
         payload: route.map(node => ({row: node.row, column: node.column}))
     })
 
-    for (const row of mazeCopy) {
+    for (const row of maze) {
         for (const node of row) {
             delete node.previousNode
         }
     }
 
     return {
-        newMaze: mazeCopy,
+        newMaze: maze,
         actionsToVisualize: actionsToVisualize
     }
 }

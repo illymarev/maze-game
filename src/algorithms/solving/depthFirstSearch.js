@@ -1,14 +1,13 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./common";
+import {trackRoute} from "./utils";
 
 const depthFirstSearch = maze => {
-    const mazeCopy = structuredClone(maze)
     const actionsToVisualize = []
     const visitedStack = []
 
     let pathFound = false
-    let endNode = mazeCopy[mazeCopy.length - 1][mazeCopy[0].length - 1]
-    let node = mazeCopy[0][0]
+    let endNode = maze[maze.length - 1][maze[0].length - 1]
+    let node = maze[0][0]
 
     while (pathFound !== true) {
         if (node === endNode) {
@@ -32,7 +31,7 @@ const depthFirstSearch = maze => {
         }
 
         let nextNode = null
-        const notVisitedNeighbours = getReachableNeighborNodes(mazeCopy, node).filter(neighbour => !neighbour.visited)
+        const notVisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited)
         if (notVisitedNeighbours.length) {
             nextNode = notVisitedNeighbours[Math.floor(Math.random() * notVisitedNeighbours.length)]
         }
@@ -60,14 +59,14 @@ const depthFirstSearch = maze => {
         payload: route.map(node => ({row: node.row, column: node.column}))
     })
 
-    for (const row of mazeCopy) {
+    for (const row of maze) {
         for (const node of row) {
             delete node.previousNode
         }
     }
 
     return {
-        newMaze: mazeCopy,
+        newMaze: maze,
         actionsToVisualize: actionsToVisualize
     }
 }

@@ -1,22 +1,20 @@
 import {determineDirection, directions, getRandomDirectionsKeys, reversedDirections} from "../directions";
 import {getAllNeighbourNodes, shuffleArray} from "../helpers";
 
-const huntAndKillAlgorithm = emptyMaze => {
-    const mazeCopy = structuredClone(emptyMaze)
+const huntAndKillAlgorithm = maze => {
     const actionsToVisualize = []
-
-    let node = mazeCopy[0][0]
+    let node = maze[0][0]
 
     while (true) {
-        node = walk(mazeCopy, node, actionsToVisualize)
+        node = walk(maze, node, actionsToVisualize)
         if (!node) {
-            node = hunt(mazeCopy, actionsToVisualize)
+            node = hunt(maze, actionsToVisualize)
             if (!node) break
         }
     }
 
     return {
-        newMaze: mazeCopy,
+        newMaze: maze,
         actionsToVisualize: actionsToVisualize
     }
 

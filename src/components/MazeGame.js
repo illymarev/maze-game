@@ -203,7 +203,8 @@ const MazeGame = () => {
     const generateMaze = useCallback(() => {
         startGenerating.current = false
         const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
-        const {newMaze, actionsToVisualize} = generationFunction(INITIAL_MAZE)
+        const mazeCopy = structuredClone(INITIAL_MAZE)
+        const {newMaze, actionsToVisualize} = generationFunction(mazeCopy)
         visualizeGeneration(newMaze, actionsToVisualize)
     }, [algorithmsSettings.generationAlgorithm, visualizeGeneration])
 
@@ -248,7 +249,8 @@ const MazeGame = () => {
     const solveMaze = useCallback(() => {
         startSolving.current = false
         const solvingFunction = solvingAlgorithmOptions[algorithmsSettings.solvingAlgorithm].relatedFunction
-        const {newMaze, actionsToVisualize} = solvingFunction(mazeRef.current)
+        const mazeCopy = structuredClone(mazeRef.current)
+        const {newMaze, actionsToVisualize} = solvingFunction(mazeCopy)
         visualizeSolving(newMaze, actionsToVisualize)
     }, [algorithmsSettings.solvingAlgorithm, visualizeSolving])
 

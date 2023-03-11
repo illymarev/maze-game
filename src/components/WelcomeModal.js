@@ -13,13 +13,13 @@ const pages = {
     1: {
         title: 'Starting the game',
         content: `Click the green "generate" button on top of the screen to start the generation process. 
-        Once the generation is finished - you can either start solving the maze or let it be solved automatically 
-        by clicking the "solve" button.`,
+        Once the generation is finished - you can either start solving the maze or let it be solved automatically`,
     },
     2: {
         title: 'Solving the maze by yourself',
         content: `To solve the maze by yourself, click on the maze cell. 
-        You can also hold your left mouse button and drag over maze cells.`,
+        You can also press & hold your left mouse button and drag over maze cells. Remember to always start from the 
+        cell that is marked as "start"!`,
     },
     3: {
         title: 'Solving the maze automatically',
@@ -34,7 +34,8 @@ const pages = {
     },
     5: {
         title: "That's it! You are ready!",
-        content: `This is the end of the tutorial, thank you for reading the rules, hope they help! Have fun!`,
+        content: `This is the end of the tutorial, thank you for reading the rules, hope they help! Thanks again for 
+        visiting and have fun!!`,
     }
 }
 
