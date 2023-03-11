@@ -63,7 +63,7 @@ PART 3:
 - Fix maze legend / done
 14) Add hunt and kill algorithm / done
 17) Add depth first solution algorithm / done
-14) Add the modal with instructions on first open
+14) Add the modal with instructions on first open / done
 - Thorough cleanup & refactoring
 - Deploy
 // TODO finish WITH deployment by Saturday!

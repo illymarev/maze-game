@@ -4,16 +4,17 @@ import {Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogAct
 const pages = {
     0: {
         title: 'Welcome!',
-        content: `<p>Hi! Nice to see you here!</p>
-                <p>If you would like a quick guide about this game - follow this tutorial. 
-                At the end of this tutorial you will also be able to find information about the author, 
-                his motivations to create this project, and the source code link.</p>`,
+        content: `Hi! Nice to see you here!
+                If you would like a quick guide about this game - follow this tutorial. 
+                The <a href="https://github.com/illymarev/maze-game" target="_blank" style="color: blue">source code</a> 
+                is available in 
+                <a href="https://github.com/illymarev" target="_blank" style="color: blue">the author's github</a>.`,
     },
     1: {
         title: 'Starting the game',
         content: `Click the green "generate" button on top of the screen to start the generation process. 
         Once the generation is finished - you can either start solving the maze or let it be solved automatically 
-        by clicking the "solve" button`,
+        by clicking the "solve" button.`,
     },
     2: {
         title: 'Solving the maze by yourself',
@@ -33,28 +34,16 @@ const pages = {
     },
     5: {
         title: "That's it! You are ready!",
-        content: `Now you know the rules! This is the end of the tutorial. If you would like to learn more about the 
-        author and view the source code - go to the next page. Otherwise, close this tutorial and start playing!`,
-    },
-    6: {
-        title: 'About the author',
-        content: `Hey there! Write something about me and include github page. Also, make a fixed width & height!`,
-    },
+        content: `This is the end of the tutorial, thank you for reading the rules, hope they help! Have fun!`,
+    }
 }
 
 const WelcomeModal = () => {
     const [open, setOpen] = useState(true);
     const [pageNumber, setPageNumber] = useState(0)
 
-    const isNextPageAvailable = pageNumber < 7
+    const isNextPageAvailable = pageNumber < 5
     const isPreviousPageAvailable = pageNumber > 0
-
-    console.log(pageNumber)
-    console.log(isPreviousPageAvailable)
-
-    // const handleClickOpen = (scrollType) => () => {
-    //     setOpen(true);
-    // };
 
     const handleClose = () => {
         setOpen(false);
@@ -90,6 +79,7 @@ const WelcomeModal = () => {
                         id="scroll-dialog-description"
                         ref={descriptionElementRef}
                         tabIndex={-1}
+                        height={'75px'}
                     >
                         <div dangerouslySetInnerHTML={{__html: pages[pageNumber].content}}/>
                     </DialogContentText>
