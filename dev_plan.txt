@@ -42,18 +42,42 @@ It will be much easier to flatten the array if it's not needed
 - Check onmouthup, onmouthenter, onmouthdown when handling the user's input logic
 
 PART 3:
-1) Pass props & use them to all child components
-2) Handle algorithms settings change
-3) Work on first generation algorithm
-4) Work on generation visualization
-5) Work on user's input to solve
-6) Verify that the cycle "generate > solve by user" works
-7) Add first solving algorithm
-8) Add solving visualization
-9) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work, try mixing them
-10) Add the modal with instructions on first open
-11) Add more algorithms
-
+1) Pass props & use them to all child components / done
+2) Handle algorithms settings change / done
+3) Work on first generation algorithm / done
+4) Work on generation visualization / done
+    4.1) Add useImmer / done
+    4.2) Debug performance / done
+    4.3) Performance optimizations / done
+4) Cleanup everything at this point; review variable naming in recursive backtracking / done
+5) Work on user's input to solve / done
+6) Add controls related to game state in the control panel and maze solution / done
+7) Verify that the cycle "generate > solve by user" works; refactor and cleanup / done
+8) Debug the bug with the globe icon when clicking in the middle of the node / done
+9) Add first solving algorithm (breadth first) / done
+10) Add solving visualization / done
+- Refactor generation visualization / done
+11) Handle controls related to game state when solving / done
+12) Add stop solving button / done
+13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work / done
+- Fix maze legend / done
+14) Add hunt and kill algorithm / done
+17) Add depth first solution algorithm / done
+14) Add the modal with instructions on first open / done
+- Algorithms refactoring
+- Deploy
+- Comments & docstrings
+// TODO finish WITH deployment by Saturday!
 
 IDEAS:
- Consider creating non-perfect mazes with multiple solutions in order to better demonstrate pathfinding algorithms
+ MOBX + Components refactoring
+ The furthest node from the end as the start node
+ Consider adding kruskal's and prim's algorithms
+ Redesign the UI with a grid
+ Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
+ Add route visualization on user's input
+ Add a different view option: graph
+ Randomly assign weights in order and add weighted path algorithms
+ Pause feature
+ Consider adding weighted nodes in the future in order to demonstrate weighted path-finding algorithms
+
