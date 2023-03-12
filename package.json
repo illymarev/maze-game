@@ -1,6 +1,7 @@
 {
   "name": "maze_game",
   "version": "0.1.0",
+  "homepage": "https://illymarev.github.io/maze-game",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
