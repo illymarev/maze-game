@@ -1,13 +1,27 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./utils";
+import {removePreviousNodes, trackRoute} from "./utils";
 
 const breadthFirstSearch = maze => {
     const startNode = maze[0][0]
     const endNode = maze[maze.length - 1][maze[0].length - 1]
     const actionsToVisualize = []
 
-    const queue = [startNode]
+    findRoute(maze, startNode, endNode, actionsToVisualize)
+    const route = trackRoute(endNode)
+    actionsToVisualize.push({
+        type: 'markRoute',
+        payload: route.map(node => ({row: node.row, column: node.column}))
+    })
+    removePreviousNodes(maze)
 
+    return {
+        newMaze: maze,
+        actionsToVisualize: actionsToVisualize
+    }
+}
+
+const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
+    const queue = [startNode]
     startNode.visited = true
     startNode.previousNode = null
     actionsToVisualize.push({
@@ -22,46 +36,23 @@ const breadthFirstSearch = maze => {
             payload: {row: currentNode.row, column: currentNode.column}
         })
 
-        const neighbourNodes = getReachableNeighborNodes(maze, currentNode)
-        for (const neighbourNode of neighbourNodes) {
-            if (!neighbourNode.visited) {
-                neighbourNode.visited = true
-                queue.push(neighbourNode)
-                neighbourNode.previousNode = currentNode
-                actionsToVisualize.push({
-                    type: 'markVisited',
-                    payload: {row: neighbourNode.row, column: neighbourNode.column}
-                })
-                if (neighbourNode === endNode) {
-                    queue.length = 0
-                    actionsToVisualize.push({
-                        type: 'clearCurrent',
-                        payload: {row: currentNode.row, column: currentNode.column}
-                    })
-                    break
-                }
-            }
+        const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited)
+        for (const neighbour of unvisitedNeighbours) {
+            queue.push(neighbour)
+            neighbour.previousNode = currentNode
+            neighbour.visited = true
+            actionsToVisualize.push({
+                type: 'markVisited',
+                payload: {row: neighbour.row, column: neighbour.column}
+            })
+
+            if (neighbour === endNode) queue.length = 0
         }
+
         actionsToVisualize.push({
             type: 'clearCurrent',
             payload: {row: currentNode.row, column: currentNode.column}
         })
-    }
-    const route = trackRoute(endNode)
-    actionsToVisualize.push({
-        type: 'markRoute',
-        payload: route.map(node => ({row: node.row, column: node.column}))
-    })
-
-    for (const row of maze) {
-        for (const node of row) {
-            delete node.previousNode
-        }
-    }
-
-    return {
-        newMaze: maze,
-        actionsToVisualize: actionsToVisualize
     }
 }
 
