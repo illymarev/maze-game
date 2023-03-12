@@ -67,6 +67,7 @@ PART 3:
 - Algorithms refactoring / done
 - Deploy / done
 - Comments & docstrings // TODO
+- Edited README // TODO
 
 NOTES:
  To deploy changes, run npm run deploy
