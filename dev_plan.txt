@@ -64,10 +64,13 @@ PART 3:
 14) Add hunt and kill algorithm / done
 17) Add depth first solution algorithm / done
 14) Add the modal with instructions on first open / done
-- Algorithms refactoring
-- Deploy
-- Comments & docstrings
-// TODO finish WITH deployment by Saturday!
+- Algorithms refactoring / done
+- Deploy / done
+- Comments & docstrings // TODO
+- Edited README // TODO
+
+NOTES:
+ To deploy changes, run npm run deploy
 
 IDEAS:
  MOBX + Components refactoring

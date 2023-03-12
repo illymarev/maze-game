@@ -7,8 +7,8 @@ const pages = {
         content: `Hi! Nice to see you here!
                 If you would like a quick guide about this game - follow this tutorial. 
                 The <a href="https://github.com/illymarev/maze-game" target="_blank" style="color: blue">source code</a> 
-                is available in 
-                <a href="https://github.com/illymarev" target="_blank" style="color: blue">the author's github</a>.`,
+                is available in the 
+                <a href="https://github.com/illymarev" target="_blank" style="color: blue">author's github</a>.`,
     },
     1: {
         title: 'Starting the game',

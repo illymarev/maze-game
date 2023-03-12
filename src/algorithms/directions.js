@@ -38,6 +38,3 @@ export const reversedDirections = {
     west: 'east',
     east: 'west'
 }
-const directionsKeys = ['north', 'south', 'west', 'east']
-
-export const getRandomDirectionsKeys = () => shuffleArray(directionsKeys);
