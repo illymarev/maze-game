@@ -86,15 +86,11 @@ NOTES:
  To deploy changes, run npm run deploy
  https://illymarev.github.io/maze-game/
 
-NEXT PROJECT - jeep/camel/desert problem:
-1) Base it on the V2 version of the current project
-This is not necessary, but would be insanely cool: add data structures visualization (for example, visualize a heap in algorithms that involve heaps)
-
 IDEAS:
  Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
  Consider adding kruskal's and prim's algorithms
  Random weight generation + weighted path solving
- Something similar to a jeep/camel problem (desert problem)
  Add a different view option: graph
  Pause feature
+ Data structures visualizer
 
