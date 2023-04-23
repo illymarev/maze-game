@@ -66,21 +66,35 @@ PART 3:
 14) Add the modal with instructions on first open / done
 - Algorithms refactoring / done
 - Deploy / done
-- Comments & docstrings // TODO
-- Edited README // TODO
+
+TODO
+v2 plan:
+- Edited README // done
+- Changed page title // done
+- Move the maze node storage to MOBX
+- Refactor all components
+- Add documentation and comments
+- Check the grammar and spelling
+- Redesign the UI with a grid: include settings in top-right corner, and make everything scalable on large screens. Add a button to move start/end
+- Consider removing user's input to solve. It might be useless because this is not the purpose of the project
+- Move all settings to a separate tab
+- Add the option to change grid size
+- (Automatic) The furthest path as a start
+- Allow moving start/end
 
 NOTES:
  To deploy changes, run npm run deploy
+ https://illymarev.github.io/maze-game/
+
+NEXT PROJECT - jeep/camel/desert problem:
+1) Base it on the V2 version of the current project
+This is not necessary, but would be insanely cool: add data structures visualization (for example, visualize a heap in algorithms that involve heaps)
 
 IDEAS:
- MOBX + Components refactoring
- The furthest node from the end as the start node
- Consider adding kruskal's and prim's algorithms
- Redesign the UI with a grid
  Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
- Add route visualization on user's input
+ Consider adding kruskal's and prim's algorithms
+ Random weight generation + weighted path solving
+ Something similar to a jeep/camel problem (desert problem)
  Add a different view option: graph
- Randomly assign weights in order and add weighted path algorithms
  Pause feature
- Consider adding weighted nodes in the future in order to demonstrate weighted path-finding algorithms
 

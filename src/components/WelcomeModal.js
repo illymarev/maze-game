@@ -13,7 +13,7 @@ const pages = {
     1: {
         title: 'Starting the game',
         content: `Click the green "generate" button on top of the screen to start the generation process. 
-        Once the generation is finished - you can either start solving the maze or let it be solved automatically`,
+        Once the generation is finished - you can either start solving the maze or let it be solved automatically.`,
     },
     2: {
         title: 'Solving the maze by yourself',
@@ -35,7 +35,7 @@ const pages = {
     5: {
         title: "That's it! You are ready!",
         content: `This is the end of the tutorial, thank you for reading the rules, hope they help! Thanks again for 
-        visiting and have fun!!`,
+        visiting and have fun!`,
     }
 }
 
