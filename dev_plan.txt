@@ -71,7 +71,7 @@ TODO
 v2 plan:
 - Edited README // done
 - Changed page title // done
-- Move the maze node storage to MOBX
+- Move the maze node storage to MOBX https://www.robinwieruch.de/create-react-app-mobx-decorators/
 - Refactor all components
 - Add documentation and comments
 - Check the grammar and spelling
