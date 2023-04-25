@@ -1,4 +1,5 @@
 # Visualizer of the maze creation and solving
+https://illymarev.github.io/maze-game/
 
 ## Description
 

@@ -1,92 +1,30 @@
-PART 1:
-1) Create a layout on a piece of paper / done
-2) Create configuration panel layout / done
-3) Create a maze layout including cells / done
-4) Add legend for the maze / done
-5) Add game state text / done
-6) Add a separate node component / done
-7) Final layout review, change if needed / done
-
-
-PART 2:
-
-1) Take a look at some existing projects on github
-https://www.youtube.com/watch?v=msttfIHHkak&ab_channel=Cl%C3%A9mentMihailescu / done
-https://github.com/clementmihailescu/Pathfinding-Visualizer-Tutorial / done
-
-2) Consider the position of different components and states / done
-3) Write a plan for further tasks in details, including the flow of each func
-
-States:
-The main component should hold all states. States that need to be held:
-1) Object: {Maze nodes (populated to empty nodes by default), 'start', 'finish'}
-Node properties: visited, available_pathways
-2) Game states ('Waiting for generation', 'Generation in progress', 'Ready to start',
-'Game in progress', 'Solving in progress', 'Game finished')
-3) Algorithms settings {generation_algorithm, solving_algorithm, visualization_speed}
-
-Flow:
-0) User logs in. A modal with instructions is displayed
-1) 'Waiting for generation' state, "generate" button is highlighted. User clicks generate
-2) 'Generation in progress' state, all buttons are disabled, visualization is in progress
-3) Visualization finished, 'ready to start' state. Waiting for the user to click the start node / solve
-4 a) User started, recording input. "Game in progress" state.
-4 b) Solving algorithm started, visualization in progress
-5) Game finished, 'game finished' state. On top, "generate" button will be available and "solve" is disabled
-
-Couple of notes:
-- Algorithms should be separated from the UI. Return a list of visited notes or whatever is needed for the UI to display the path.
-And then use another func to visualize the path
-- Better to store "steps" in an array because it might be needed to visualize multple steps at a time.
-It will be much easier to flatten the array if it's not needed
-- Check onmouthup, onmouthenter, onmouthdown when handling the user's input logic
-
-PART 3:
-1) Pass props & use them to all child components / done
-2) Handle algorithms settings change / done
-3) Work on first generation algorithm / done
-4) Work on generation visualization / done
-    4.1) Add useImmer / done
-    4.2) Debug performance / done
-    4.3) Performance optimizations / done
-4) Cleanup everything at this point; review variable naming in recursive backtracking / done
-5) Work on user's input to solve / done
-6) Add controls related to game state in the control panel and maze solution / done
-7) Verify that the cycle "generate > solve by user" works; refactor and cleanup / done
-8) Debug the bug with the globe icon when clicking in the middle of the node / done
-9) Add first solving algorithm (breadth first) / done
-10) Add solving visualization / done
-- Refactor generation visualization / done
-11) Handle controls related to game state when solving / done
-12) Add stop solving button / done
-13) Verify that the both cycles "generate > solve by user" and "generate > solve automatically" work / done
-- Fix maze legend / done
-14) Add hunt and kill algorithm / done
-17) Add depth first solution algorithm / done
-14) Add the modal with instructions on first open / done
-- Algorithms refactoring / done
-- Deploy / done
-
-TODO
 v2 plan:
 - Edited README // done
 - Changed page title // done
-- Move the maze node storage to MOBX https://www.robinwieruch.de/create-react-app-mobx-decorators/
-- Refactor all components
+- Move the maze node storage to MOBX:
+1) Read the basic documentation
+2) Refactor a few simple states to MOBX storage
+3) Read the advanced documentation
+4) Refactor the maze component & logic
+5) Cleanup, refactor and optimize if needed
 - Add documentation and comments
 - Check the grammar and spelling
-- Redesign the UI with a grid: include settings in top-right corner, and make everything scalable on large screens. Add a button to move start/end
-- Consider removing user's input to solve. It might be useless because this is not the purpose of the project
-- Move all settings to a separate tab
+- Redesign the UI with a grid: include settings in top-right corner, and make everything scalable on large screens. Add a button to move start/end:
+1) New design on paper
+2) New design in code
+- Settings tab
 - Add the option to change grid size
-- (Automatic) The furthest path as a start
-- Allow moving start/end
+- (Automatic) Option for the furthest path as a start
+- Allow moving start/end when just generated
 
 NOTES:
  To deploy changes, run npm run deploy
  https://illymarev.github.io/maze-game/
 
 IDEAS:
+ Highlight/animation to buttons to imply that they need to be clicked
+ Add some animations to the maze
+ Add the correct path highlight after the user solves the maze
  Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
  Consider adding kruskal's and prim's algorithms
  Random weight generation + weighted path solving
