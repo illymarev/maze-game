@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import MazeGame from './components/MazeGame'
 import './App.css';
 import WelcomeModal from "./components/WelcomeModal";
+import {observer} from "mobx-react";
 
 const theme = createTheme({
     palette: {
@@ -25,14 +26,14 @@ const theme = createTheme({
     },
 });
 
-function App() {
+const App = observer(({maze}) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <WelcomeModal/>
-            <MazeGame/>
+            <MazeGame maze={maze}/>
         </ThemeProvider>
     );
-}
+})
 
 export default App;

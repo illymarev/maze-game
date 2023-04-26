@@ -1,20 +1,16 @@
 import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
-import {memo} from "react";
+import {observer} from "mobx-react";
 
-const MazeNode = memo(({
-                           handleMouseEnter,
-                           gameStateId,
-                           rowNumber,
-                           columnNumber,
-                           rowsCount,
-                           columnsCount,
-                           node: {current, visited, availablePathways, isRoute}
-                       }) => {
+const MazeNode = observer(({
+                               handleMouseEnter,
+                               gameStateId,
+                               node: {nodesStore, row, column, current, visited, availablePathways, isRoute}
+                           }) => {
 
-    const isStart = rowNumber === 0 && columnNumber === 0
-    const isFinish = rowNumber === rowsCount - 1 && columnNumber === columnsCount - 1
+    const isStart = row === 0 && column === 0
+    const isFinish = row === nodesStore.rows - 1 && column === nodesStore.columns - 1
 
     const generationVisualizationStyle = {
         backgroundColor: visited ? 'rgba(29,227,124,0.35)' : null
@@ -22,12 +18,9 @@ const MazeNode = memo(({
     if (current) {
         generationVisualizationStyle.backgroundColor = '#3b8ef1'
     }
-    if (isRoute){
+    if (isRoute) {
         generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
-
-    // TODO inprove styling
-    const selectedStyle = gameStateId === 1 ? generationVisualizationStyle : generationVisualizationStyle
 
     let nodeText = ''
     if (gameStateId === 1) {
@@ -44,9 +37,9 @@ const MazeNode = memo(({
         <Grid item={true} xs={1}
               onMouseDown={(e) => {
                   e.preventDefault()
-                  handleMouseEnter(rowNumber, columnNumber, true)
+                  handleMouseEnter(row, column, true)
               }}
-              onMouseEnter={() => handleMouseEnter(rowNumber, columnNumber)}
+              onMouseEnter={() => handleMouseEnter(row, column)}
               sx={{
                   aspectRatio: '1/1', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
@@ -54,7 +47,7 @@ const MazeNode = memo(({
                   borderBottom: availablePathways.south ? null : '2px solid #ccc',
                   borderLeft: availablePathways.west ? null : '2px solid #ccc',
                   borderRight: availablePathways.east ? null : '2px solid #ccc',
-                  ...selectedStyle
+                  ...generationVisualizationStyle
               }}>
             {nodeText}
         </Grid>

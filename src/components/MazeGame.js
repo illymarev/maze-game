@@ -10,6 +10,7 @@ import MazeLegend from "./MazeLegend";
 import {checkIfValidStep, getReachableNeighborNodes} from "../algorithms/helpers";
 import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
+import {observer} from "mobx-react";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
@@ -31,7 +32,7 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     INITIAL_MAZE.push(mazeRow)
 }
 
-const delayTimeMapping = {0: 500, 1: 50, 2: 0.1, 3: 0}
+const delayTimeMapping = {0: 500, 1: 50, 2: 0.00000001, 3: 0}
 
 const mazeNodesReducer = (draft, action) => {
     switch (action.type) {
@@ -125,6 +126,8 @@ const gameStateOptions = {
     }
 }
 
+const mazeActions = new Set(['bulkMarkPath', 'resetRoute', 'resetVisited', 'resetCurrent', 'markRoute'])
+
 const generationAlgorithmOptions = {
     'hunt_and_kill_algorithm': {title: 'Hunt and Kill Algorithm', relatedFunction: huntAndKillAlgorithm},
     'recursive_backtracking': {title: 'Recursive Backtracking', relatedFunction: recursiveBacktracking},
@@ -135,8 +138,10 @@ const solvingAlgorithmOptions = {
     'depth_first_search': {title: "Depth First Search", relatedFunction: depthFirstSearch},
 }
 
-const MazeGame = () => {
-    const [maze, dispatchMaze] = useImmerReducer(mazeNodesReducer, INITIAL_MAZE)
+const MazeGame = observer(({maze}) => {
+    // const [maze, dispatchMaze] = useImmerReducer(mazeNodesReducer, INITIAL_MAZE)
+    const dispatchMaze = useCallback(function () {
+    }, [])
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'hunt_and_kill_algorithm',
@@ -192,11 +197,32 @@ const MazeGame = () => {
                     return
                 } else {
                     await delay(delayTime)
-                    dispatchMaze(action)
+                    if (mazeActions.has(action.type)) {
+                        if (action.type === 'bulkMarkPath') {
+                            maze.bulkMarkPath(action)
+                        } else {
+                            console.log(action)
+                            maze.getAttribute(action.type)()
+                        }
+                    } else {
+                        if (action.type === 'markPath') {
+                            maze.nodes[action.payload.row][action.payload.column].markPath(action.payload.path)
+                        } else {
+                            const node = maze.nodes[action.payload.row][action.payload.column]
+                            if (action.type === 'markCurrent') {
+                                node.markCurrent()
+                            } else if (action.type === 'markVisited') {
+                                node.markVisited()
+                            } else if (action.type === 'clearCurrent') {
+                                node.clearCurrent()
+                            }
+                        }
+                    }
+                    // dispatchMaze(action)
                 }
             }
         }
-        dispatchMaze({type: 'resetVisited'})
+        maze.resetVisited()
         setGameState(gameStateOptions[2])
     }, [setStopVisualization, algorithmsSettings.visualizationSpeed, dispatchMaze])
 
@@ -214,7 +240,7 @@ const MazeGame = () => {
         // Maze might be empty. In this scenario, resetting the maze to initial_maze will not change the state,
         // thus - useEffect will not be called and the maze will not be generated. To handle this, if first
         // node has no neighbours (=no availablePathways), we should start the generation manually
-        if (!getReachableNeighborNodes(mazeRef.current, mazeRef.current[0][0]).length) {
+        if (!getReachableNeighborNodes(mazeRef.current.nodes, mazeRef.current.nodes[0][0]).length) {
             generateMaze()
         } else {
             dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
@@ -298,12 +324,12 @@ const MazeGame = () => {
                 <MazeLegend/>
                 <Maze
                     gameStateId={gameState.id}
-                    mazeNodes={maze}
+                    maze={maze}
                     markNodeVisited={markNodeVisited}
                 />
             </Stack>
         </div>
     )
-}
+})
 
 export default MazeGame
