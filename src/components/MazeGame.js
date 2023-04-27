@@ -1,21 +1,20 @@
 import ConfigurationPanel from "./ConfigurationPanel";
 import Maze from "./Maze";
-import {useState, useCallback, useEffect, useRef} from "react";
-import {useImmerReducer} from "use-immer"
+import {useState, useCallback, useRef} from "react";
 import recursiveBacktracking from '../algorithms/generation/recursiveBacktracking'
 import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
-import {checkIfValidStep, getReachableNeighborNodes} from "../algorithms/helpers";
+import {checkIfValidStep} from "../algorithms/helpers";
 import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 import {observer} from "mobx-react";
+import {toJS} from "mobx";
 
 const COLUMNS_NUMBER = 20;
 const ROWS_NUMBER = 8;
-// const COLUMNS_NUMBER = 5;
-// const ROWS_NUMBER = 4;
+
 const INITIAL_MAZE = []
 for (let i = 0; i < ROWS_NUMBER; i++) {
     const mazeRow = []
@@ -32,56 +31,54 @@ for (let i = 0; i < ROWS_NUMBER; i++) {
     INITIAL_MAZE.push(mazeRow)
 }
 
-const delayTimeMapping = {0: 500, 1: 50, 2: 0.00000001, 3: 0}
+const delayTimeMapping = {0: 500, 1: 50, 2: 0.1, 3: 0}
 
-const mazeNodesReducer = (draft, action) => {
+// TODO move to the maze store and rename to "apply_action"
+const visualizeStep = (maze, action) => {
     switch (action.type) {
         case 'markCurrent':
-            draft[action.payload.row][action.payload.column].current = true
+            maze.nodes[action.payload.row][action.payload.column].markCurrent()
             break
         case 'markVisited':
-            draft[action.payload.row][action.payload.column].visited = true
+            maze.nodes[action.payload.row][action.payload.column].markVisited()
             break
         case 'clearCurrent':
-            draft[action.payload.row][action.payload.column].current = false
+            maze.nodes[action.payload.row][action.payload.column].clearCurrent()
             break
-        // case 'markPath':
-        //     draft[action.payload.row][action.payload.column].availablePathways[action.payload.path] = true
-        //     break
         case 'bulkMarkPath':
             for (let item of action.payload) {
-                draft[item.row][item.column].availablePathways[item.path] = true
+                maze.nodes[item.row][item.column].markPath(item.path)
             }
             break
         case 'resetRoute':
-            for (let row of draft) {
+            for (let row of maze.nodes) {
                 for (let node of row) {
-                    node.isRoute = false
+                    node.clearRoute()
                 }
             }
             break
         case 'resetVisited':
-            for (let row of draft) {
+            for (let row of maze.nodes) {
                 for (let node of row) {
-                    node.visited = false
+                    node.clearVisited()
                 }
             }
             break
         case 'resetCurrent':
-            for (let row of draft) {
+            for (let row of maze.nodes) {
                 for (let node of row) {
-                    node.current = false
+                    node.clearCurrent()
                 }
             }
             break
         case 'setMaze':
             for (let rowNumber = 0; rowNumber < action.payload.newMaze.length; rowNumber++) {
-                draft[rowNumber] = action.payload.newMaze[rowNumber]
-            }
+                maze.nodes[rowNumber] = action.payload.newMaze[rowNumber]
+            } // TODO
             break
         case 'markRoute':
             for (let item of action.payload) {
-                draft[item.row][item.column].isRoute = true
+                maze.nodes[item.row][item.column].markRoute()
             }
             break
         default:
@@ -126,7 +123,6 @@ const gameStateOptions = {
     }
 }
 
-const mazeActions = new Set(['bulkMarkPath', 'resetRoute', 'resetVisited', 'resetCurrent', 'markRoute'])
 
 const generationAlgorithmOptions = {
     'hunt_and_kill_algorithm': {title: 'Hunt and Kill Algorithm', relatedFunction: huntAndKillAlgorithm},
@@ -139,9 +135,6 @@ const solvingAlgorithmOptions = {
 }
 
 const MazeGame = observer(({maze}) => {
-    // const [maze, dispatchMaze] = useImmerReducer(mazeNodesReducer, INITIAL_MAZE)
-    const dispatchMaze = useCallback(function () {
-    }, [])
     const [gameState, setGameState] = useState(gameStateOptions[0])
     const [algorithmsSettings, setAlgorithmsSettings] = useState({
         generationAlgorithm: 'hunt_and_kill_algorithm',
@@ -149,11 +142,7 @@ const MazeGame = observer(({maze}) => {
         visualizationSpeed: 2
     })
     const mouseIsDown = useRef(false)
-    const mazeRef = useRef(maze)
     const stopVisualization = useRef(false)
-
-    const startSolving = useRef(false)
-    const startGenerating = useRef(false)
 
     const setStopVisualization = useCallback(value => stopVisualization.current = value, [])
     const setMouseIsDown = value => mouseIsDown.current = value
@@ -165,17 +154,17 @@ const MazeGame = observer(({maze}) => {
     const markNodeVisited = useCallback((row, column, force = false) => {
         if (
             (force || mouseIsDown.current) &&
-            checkIfValidStep(mazeRef.current, row, column) &&
+            checkIfValidStep(maze.nodes, row, column) &&
             [2, 3].includes(gameState.id)
         ) {
-            dispatchMaze({type: 'markVisited', payload: {row: row, column: column}})
+            visualizeStep(maze, {type: 'markVisited', payload: {row: row, column: column}})
             if (row === 0 && column === 0) {
                 setGameState(gameStateOptions[3])
             } else if (row === ROWS_NUMBER - 1 && column === COLUMNS_NUMBER - 1) {
                 setGameState(gameStateOptions[5])
             }
         }
-    }, [gameState.id, dispatchMaze])
+    }, [gameState.id])
 
     const onAlgorithmSettingChange = useCallback((fieldName, newValue) => {
         setAlgorithmsSettings(prevState => ({...prevState, [fieldName]: newValue}))
@@ -185,7 +174,7 @@ const MazeGame = observer(({maze}) => {
     const visualizeGeneration = useCallback(async (newMaze, actionsToVisualize) => {
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
         if (delayTime === 0) {
-            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
+            visualizeStep(maze, {type: 'setMaze', payload: {newMaze: newMaze}})
         } else {
             for (const action of actionsToVisualize) {
                 // After every action, check whether the generation is stopped by user. If yes, reset the
@@ -193,66 +182,34 @@ const MazeGame = observer(({maze}) => {
                 if (stopVisualization.current) {
                     setStopVisualization(false)
                     setGameState(gameStateOptions[0])
-                    dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+                    maze.createEmptyNodes()
                     return
                 } else {
                     await delay(delayTime)
-                    if (mazeActions.has(action.type)) {
-                        if (action.type === 'bulkMarkPath') {
-                            maze.bulkMarkPath(action)
-                        } else {
-                            console.log(action)
-                            maze.getAttribute(action.type)()
-                        }
-                    } else {
-                        if (action.type === 'markPath') {
-                            maze.nodes[action.payload.row][action.payload.column].markPath(action.payload.path)
-                        } else {
-                            const node = maze.nodes[action.payload.row][action.payload.column]
-                            if (action.type === 'markCurrent') {
-                                node.markCurrent()
-                            } else if (action.type === 'markVisited') {
-                                node.markVisited()
-                            } else if (action.type === 'clearCurrent') {
-                                node.clearCurrent()
-                            }
-                        }
-                    }
-                    // dispatchMaze(action)
+                    visualizeStep(maze, action)
                 }
             }
         }
-        maze.resetVisited()
+        visualizeStep(maze, {type: 'resetVisited'})
         setGameState(gameStateOptions[2])
-    }, [setStopVisualization, algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [setStopVisualization, algorithmsSettings.visualizationSpeed])
 
-    const generateMaze = useCallback(() => {
-        startGenerating.current = false
-        const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
-        const mazeCopy = structuredClone(INITIAL_MAZE)
-        const {newMaze, actionsToVisualize} = generationFunction(mazeCopy)
-        visualizeGeneration(newMaze, actionsToVisualize)
-    }, [algorithmsSettings.generationAlgorithm, visualizeGeneration])
 
-    const startGenerationFunction = useCallback(() => {
+    const generateMaze = () => {
         setGameState(gameStateOptions[1])
-        startGenerating.current = true
-        // Maze might be empty. In this scenario, resetting the maze to initial_maze will not change the state,
-        // thus - useEffect will not be called and the maze will not be generated. To handle this, if first
-        // node has no neighbours (=no availablePathways), we should start the generation manually
-        if (!getReachableNeighborNodes(mazeRef.current.nodes, mazeRef.current.nodes[0][0]).length) {
-            generateMaze()
-        } else {
-            dispatchMaze({type: 'setMaze', payload: {newMaze: INITIAL_MAZE}})
+        maze.createEmptyNodes()
 
-        }
-    }, [generateMaze, dispatchMaze])
+        const generationFunction = generationAlgorithmOptions[algorithmsSettings.generationAlgorithm].relatedFunction
+        const {newMaze, actionsToVisualize} = generationFunction(maze.nodesToJS)
+        visualizeGeneration(newMaze, actionsToVisualize)
+    }
 
     // ------------------------ MAZE SOLVING FUNCTIONS ----------------------------------
     const visualizeSolving = useCallback(async (newMaze, actionsToVisualize) => {
+        // TODO why is this a separate function with visualizeGeneration? Merge it
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
         if (delayTime === 0) {
-            dispatchMaze({type: 'setMaze', payload: {newMaze: newMaze}})
+            visualizeStep({type: 'setMaze', payload: {newMaze: newMaze}})
         } else {
             for (const action of actionsToVisualize) {
                 // After every action, check whether the generation is stopped by user. If yes, reset the
@@ -260,51 +217,28 @@ const MazeGame = observer(({maze}) => {
                 if (stopVisualization.current) {
                     setStopVisualization(false)
                     setGameState(gameStateOptions[2])
-                    dispatchMaze({type: 'resetVisited'})
-                    dispatchMaze({type: 'resetCurrent'})
+                    visualizeStep(maze, {type: 'resetVisited'})
+                    visualizeStep(maze, {type: 'resetCurrent'})
                     return
                 } else {
                     await delay(delayTime)
-                    dispatchMaze(action)
+                    visualizeStep(maze, action)
                 }
             }
         }
         setGameState(gameStateOptions[5])
-    }, [setStopVisualization, algorithmsSettings.visualizationSpeed, dispatchMaze])
+    }, [setStopVisualization, algorithmsSettings.visualizationSpeed])
 
-    const solveMaze = useCallback(() => {
-        startSolving.current = false
-        const solvingFunction = solvingAlgorithmOptions[algorithmsSettings.solvingAlgorithm].relatedFunction
-        const mazeCopy = structuredClone(mazeRef.current)
-        const {newMaze, actionsToVisualize} = solvingFunction(mazeCopy)
-        visualizeSolving(newMaze, actionsToVisualize)
-    }, [algorithmsSettings.solvingAlgorithm, visualizeSolving])
-
-    const startSolvingFunction = useCallback(() => {
+    const startSolvingFunction = () => {
         setGameState(gameStateOptions[4])
         // In case already solved, but the user wants to solve again (maybe with different speed, etc.)
-        dispatchMaze({type: 'resetRoute'})
-        startSolving.current = true
-        if (mazeRef.current[0][0].visited) {
-            dispatchMaze({type: 'resetVisited'})
-        } else {
-            solveMaze()
-        }
+        visualizeStep(maze, {type: 'resetRoute'})
+        visualizeStep(maze, {type: 'resetVisited'})
 
-    }, [dispatchMaze, solveMaze])
-
-
-    useEffect(() => {
-        // Create a mutable ref to maze in order to use it in functions like markNodeVisited (more specifically - for the
-        // check if valid step inside it) and not cause re-rendering after maze state change
-        mazeRef.current = maze
-        if (startSolving.current) {
-            solveMaze()
-        }
-        if (startGenerating.current) {
-            generateMaze()
-        }
-    }, [maze, solveMaze, generateMaze])
+        const solvingFunction = solvingAlgorithmOptions[algorithmsSettings.solvingAlgorithm].relatedFunction
+        const {newMaze, actionsToVisualize} = solvingFunction(maze.nodesToJS)
+        visualizeSolving(newMaze, actionsToVisualize)
+    }
 
     return (
         <div onMouseDown={() => setMouseIsDown(true)}
@@ -314,7 +248,7 @@ const MazeGame = observer(({maze}) => {
                 onAlgorithmSettingChange={onAlgorithmSettingChange}
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
-                generationFunction={startGenerationFunction}
+                generationFunction={generateMaze}
                 solvingFunction={startSolvingFunction}
                 gameStateId={gameState.id}
                 setStopVisualization={setStopVisualization}

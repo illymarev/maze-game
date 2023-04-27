@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx";
+import {toJS} from "mobx";
 
 // https://mobx.js.org/defining-data-stores.html
 // TODO read again about Root Store later and decide whether it's needed in this project
@@ -8,16 +9,11 @@ export class MazeNodesStore {
     nodes = []
 
     constructor() {
-        makeAutoObservable(this, {
-            bulkMarkPath: false,
-            resetRoute: false,
-            resetVisited: false,
-            resetCurrent: false
-        })
-        this.createNodes()
+        makeAutoObservable(this)
+        this.createEmptyNodes()
     }
 
-    createNodes() {
+    createEmptyNodes() {
         const newNodes = []
         for (let i = 0; i < this.rows; i++) {
             const mazeRow = []
@@ -30,40 +26,12 @@ export class MazeNodesStore {
         this.nodes = newNodes
     }
 
-    markRoute(action) {
-        for (let item of action.payload) {
-            this.nodes[item.row][item.column].markRoute()
-        }
+    get firstNodeVisited() {
+        return this.nodes[0][0].visited
     }
 
-    bulkMarkPath(action) {
-        for (let item of action.payload) {
-            this.nodes[item.row][item.column].markPath(item.path)
-        }
-    }
-
-    resetRoute() {
-        for (let row of this.nodes) {
-            for (let node of row) {
-                node.clearRoute()
-            }
-        }
-    }
-
-    resetVisited() {
-        for (let row of this.nodes) {
-            for (let node of row) {
-                node.clearVisited()
-            }
-        }
-    }
-
-    resetCurrent() {
-        for (let row of this.nodes) {
-            for (let node of row) {
-                node.clearCurrent()
-            }
-        }
+    get nodesToJS() {
+        return toJS(this).nodes
     }
 
 }
