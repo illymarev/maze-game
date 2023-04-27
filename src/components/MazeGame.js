@@ -10,28 +10,8 @@ import {checkIfValidStep} from "../algorithms/helpers";
 import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 import {observer} from "mobx-react";
-import {toJS} from "mobx";
 
-const COLUMNS_NUMBER = 20;
-const ROWS_NUMBER = 8;
-
-const INITIAL_MAZE = []
-for (let i = 0; i < ROWS_NUMBER; i++) {
-    const mazeRow = []
-    for (let j = 0; j < COLUMNS_NUMBER; j++) {
-        mazeRow.push({
-            availablePathways: {north: false, south: false, west: false, east: false},
-            visited: false,
-            current: false,
-            isRoute: false,
-            row: i,
-            column: j
-        })
-    }
-    INITIAL_MAZE.push(mazeRow)
-}
-
-const delayTimeMapping = {0: 500, 1: 50, 2: 0.1, 3: 0}
+const delayTimeMapping = {0: 500, 1: 25, 2: 3, 3: 0}
 
 // TODO move to the maze store and rename to "apply_action"
 const visualizeStep = (maze, action) => {
@@ -72,9 +52,7 @@ const visualizeStep = (maze, action) => {
             }
             break
         case 'setMaze':
-            for (let rowNumber = 0; rowNumber < action.payload.newMaze.length; rowNumber++) {
-                maze.nodes[rowNumber] = action.payload.newMaze[rowNumber]
-            } // TODO
+            maze.setNodes(action.payload.newMaze)
             break
         case 'markRoute':
             for (let item of action.payload) {
@@ -160,7 +138,7 @@ const MazeGame = observer(({maze}) => {
             visualizeStep(maze, {type: 'markVisited', payload: {row: row, column: column}})
             if (row === 0 && column === 0) {
                 setGameState(gameStateOptions[3])
-            } else if (row === ROWS_NUMBER - 1 && column === COLUMNS_NUMBER - 1) {
+            } else if (row === maze.rows - 1 && column === maze.columns - 1) {
                 setGameState(gameStateOptions[5])
             }
         }
@@ -173,25 +151,39 @@ const MazeGame = observer(({maze}) => {
     // ------------------------ MAZE GENERATION FUNCTIONS -------------------------------
     const visualizeGeneration = useCallback(async (newMaze, actionsToVisualize) => {
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
-        if (delayTime === 0) {
-            visualizeStep(maze, {type: 'setMaze', payload: {newMaze: newMaze}})
-        } else {
-            for (const action of actionsToVisualize) {
-                // After every action, check whether the generation is stopped by user. If yes, reset the
-                // stopGeneration to false, set the game state to 0 and exit from loop & function
-                if (stopVisualization.current) {
-                    setStopVisualization(false)
-                    setGameState(gameStateOptions[0])
-                    maze.createEmptyNodes()
-                    return
-                } else {
-                    await delay(delayTime)
-                    visualizeStep(maze, action)
-                }
-            }
+        let initialDelay = delayTime
+        for (const action of actionsToVisualize) {
+            setTimeout(() => {
+                maze.applySingleAction(action)
+            }, initialDelay)
+            initialDelay = delayTime + initialDelay
         }
-        visualizeStep(maze, {type: 'resetVisited'})
-        setGameState(gameStateOptions[2])
+        setTimeout(() => {
+            maze.applySingleAction({type: 'resetVisited'})
+            setGameState(gameStateOptions[2])
+        }, initialDelay + delayTime)
+
+        // TODO handle the logic below and maybe add resetVisited as a last step of each generation?
+        // TODO think about how to implement a stop and setGameState
+        // if (delayTime === 0) {
+        //     visualizeStep(maze, {type: 'setMaze', payload: {newMaze: newMaze}})
+        // } else {
+        //     for (const action of actionsToVisualize) {
+        //         // After every action, check whether the generation is stopped by user. If yes, reset the
+        //         // stopGeneration to false, set the game state to 0 and exit from loop & function
+        //         if (stopVisualization.current) {
+        //             setStopVisualization(false)
+        //             setGameState(gameStateOptions[0])
+        //             maze.createEmptyNodes()
+        //             return
+        //         } else {
+        //             await delay(delayTime)
+        //             visualizeStep(maze, action)
+        //         }
+        //     }
+        // }
+        // visualizeStep(maze, {type: 'resetVisited'})
+        // setGameState(gameStateOptions[2])
     }, [setStopVisualization, algorithmsSettings.visualizationSpeed])
 
 
@@ -209,7 +201,7 @@ const MazeGame = observer(({maze}) => {
         // TODO why is this a separate function with visualizeGeneration? Merge it
         const delayTime = delayTimeMapping[algorithmsSettings.visualizationSpeed]
         if (delayTime === 0) {
-            visualizeStep({type: 'setMaze', payload: {newMaze: newMaze}})
+            maze.setNodes(newMaze)
         } else {
             for (const action of actionsToVisualize) {
                 // After every action, check whether the generation is stopped by user. If yes, reset the
@@ -229,7 +221,7 @@ const MazeGame = observer(({maze}) => {
         setGameState(gameStateOptions[5])
     }, [setStopVisualization, algorithmsSettings.visualizationSpeed])
 
-    const startSolvingFunction = () => {
+    const solveMaze = () => {
         setGameState(gameStateOptions[4])
         // In case already solved, but the user wants to solve again (maybe with different speed, etc.)
         visualizeStep(maze, {type: 'resetRoute'})
@@ -249,7 +241,7 @@ const MazeGame = observer(({maze}) => {
                 generationAlgorithmOptions={generationAlgorithmOptions}
                 solvingAlgorithmOptions={solvingAlgorithmOptions}
                 generationFunction={generateMaze}
-                solvingFunction={startSolvingFunction}
+                solvingFunction={solveMaze}
                 gameStateId={gameState.id}
                 setStopVisualization={setStopVisualization}
             />
