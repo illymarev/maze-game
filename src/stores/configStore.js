@@ -4,6 +4,7 @@ import recursiveBacktracking from "../algorithms/generation/recursiveBacktrackin
 import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 
+// TODO consider removing this in order to allow free selection
 export const visualizationSpeedOptions = {
     0: {
         id: 0,
@@ -27,6 +28,11 @@ export const visualizationSpeedOptions = {
     },
     4: {
         id: 4,
+        delay: 0.75,
+        label: 'Lightning Fast'
+    },
+    5: {
+        id: 5,
         delay: 0,
         label: 'Immediate'
     }
@@ -92,8 +98,8 @@ export const solvingAlgorithmOptions = {
 }
 
 export class ConfigStore {
-    rows = 8
-    columns = 20
+    rows = 8 // 25
+    columns = 20 // 50
     gameState = gameStateOptions[0]
     visualizationSpeed = visualizationSpeedOptions[2]
     generationAlgorithm = generationAlgorithmOptions[0]

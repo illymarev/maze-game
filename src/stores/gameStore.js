@@ -52,9 +52,9 @@ export class GameStore {
                 currentDelay = currentDelay + this.config.visualizationDelay
             }
 
+            // Although the function setTimeout does not guarantee the specific delay in case the stack
+            // is full, it does guarantee the order of execution
             this.timeouts.push(setTimeout(() => {
-                // Although the function setTimeout does not guarantee the specific delay in case the stack
-                // is full, it does guarantee the order of execution
                 this.config.setGameState(2)
                 this.timeouts = []
             }, currentDelay + this.config.visualizationDelay))
@@ -83,6 +83,8 @@ export class GameStore {
                 currentDelay = currentDelay + this.config.visualizationDelay
             }
 
+            // Although the function setTimeout does not guarantee the specific delay in case the stack
+            // is full, it does guarantee the order of execution
             this.timeouts.push(setTimeout(() => {
                 this.config.setGameState(5)
                 this.timeouts = []
