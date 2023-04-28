@@ -5,8 +5,8 @@ import {observer} from "mobx-react";
 
 const MazeNode = observer(({
                                handleMouseEnter,
-                               gameStateId,
-                               node: {nodesStore, row, column, current, visited, availablePathways, isRoute}
+                               node: {nodesStore, row, column, current, visited, availablePathways, isRoute},
+                               config: {gameState}
                            }) => {
 
     const isStart = row === 0 && column === 0
@@ -23,7 +23,7 @@ const MazeNode = observer(({
     }
 
     let nodeText = ''
-    if (gameStateId === 1) {
+    if (gameState.id === 1) {
         nodeText = ''
     } else if (isStart) {
         nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>

@@ -13,6 +13,13 @@ const huntAndKillAlgorithm = maze => {
         }
     }
 
+    for (const row of maze) {
+        for (const node of row) {
+            node.visited = false
+        }
+    }
+    actionsToVisualize.push({type: 'resetVisited'})
+
     return {
         newMaze: maze,
         actionsToVisualize: actionsToVisualize

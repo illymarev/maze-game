@@ -1,39 +1,42 @@
 import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
 import {observer} from "mobx-react";
+import {
+    visualizationSpeedOptions,
+    generationAlgorithmOptions,
+    solvingAlgorithmOptions
+} from "../stores/configStore";
 
-// TODO read about UI stores. It seems like it's a good use case here
-// TODO automate generation/solving algorithm options and selecting from the store
-// TODO move generation/solving funcs from mazeGame to maze store
 const ConfigurationPanel = observer(({
+                                         gameStore,
                                          config,
-                                         algorithmsSettings,
-                                         onAlgorithmSettingChange,
-                                         generationAlgorithmOptions,
-                                         solvingAlgorithmOptions,
-                                         generationFunction,
-                                         solvingFunction,
                                          setStopVisualization
                                      }) => {
+    const visualizationSpeedUIOptions = []
+    const generationAlgorithmUIOptions = []
+    const solvingAlgorithmUIOptions = []
 
-    const onGenerationButtonClick = () => config.gameState.id === 1 ? setStopVisualization(true) : generationFunction()
+    for (const option of Object.values(visualizationSpeedOptions)) {
+        visualizationSpeedUIOptions.push({value: option.id, label: option.label})
+    }
+
+    for (const option of Object.values(generationAlgorithmOptions)) {
+        generationAlgorithmUIOptions.push(
+            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
+        )
+    }
+
+    for (const option of Object.values(solvingAlgorithmOptions)) {
+        solvingAlgorithmUIOptions.push(
+            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
+        )
+    }
+
+    const onGenerationButtonClick = () => config.gameState.id === 1 ? gameStore.stopVisualization() : gameStore.generateMaze()
     const generationButtonColor = config.gameState.id === 1 ? 'danger' : 'secondary'
 
-    const onSolvingButtonClick = () => config.gameState.id === 4 ? setStopVisualization(true) : solvingFunction()
+    const onSolvingButtonClick = () => config.gameState.id === 4 ? gameStore.stopVisualization() : gameStore.solveMaze()
     const solvingButtonColor = config.gameState.id === 4 ? 'danger' : 'primary'
 
-    const generationAlgorithmMenuItems = []
-    for (const [key, value] of Object.entries(generationAlgorithmOptions)) {
-        generationAlgorithmMenuItems.push(
-            <MenuItem key={key} value={key}>{value.title}</MenuItem>
-        )
-    }
-
-    const solvingAlgorithmMenuItems = []
-    for (const [key, value] of Object.entries(solvingAlgorithmOptions)) {
-        solvingAlgorithmMenuItems.push(
-            <MenuItem key={key} value={key}>{value.title}</MenuItem>
-        )
-    }
 
     return (
         <Stack spacing={1} alignItems='center' marginTop={'1rem'}>
@@ -46,10 +49,10 @@ const ConfigurationPanel = observer(({
                         labelId="generation_algorithm_label"
                         id="generation_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
-                        value={algorithmsSettings.generationAlgorithm}
-                        onChange={e => onAlgorithmSettingChange('generationAlgorithm', e.target.value)}
+                        value={config.generationAlgorithm.id}
+                        onChange={e => config.setGenerationAlgorithm(e.target.value)}
                     >
-                        {generationAlgorithmMenuItems}
+                        {generationAlgorithmUIOptions}
                     </Select>
                 </Stack>
                 <Stack spacing={2}>
@@ -73,10 +76,10 @@ const ConfigurationPanel = observer(({
                         labelId="solving_algorithm_label"
                         id="solving_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
-                        value={algorithmsSettings.solvingAlgorithm}
-                        onChange={e => onAlgorithmSettingChange('solvingAlgorithm', e.target.value)}
+                        value={config.solvingAlgorithm.id}
+                        onChange={e => config.setSolvingAlgorithm(e.target.value)}
                     >
-                        {solvingAlgorithmMenuItems}
+                        {solvingAlgorithmUIOptions}
                     </Select>
                 </Stack>
             </Stack>
@@ -86,10 +89,10 @@ const ConfigurationPanel = observer(({
                 <Slider
                     disabled={config.visualizationInProgress}
                     step={null}
-                    marks={config.visualizationDelayMarks}
+                    marks={visualizationSpeedUIOptions}
                     labelId="visualization_speed_label"
                     id='visualization_speed_slider'
-                    value={config.visualizationDelay.id}
+                    value={config.visualizationSpeed.id}
                     valueLabelDisplay="off"
                     size='medium'
                     min={0} max={4}

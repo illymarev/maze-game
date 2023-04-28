@@ -23,6 +23,7 @@ NOTES:
 
 IDEAS:
  Highlight/animation to buttons to imply that they need to be clicked
+ requestAnimationFrame speed instead of "fast" delay
  Add some animations to the maze
  Add the correct path highlight after the user solves the maze
  Add generation algorithm with multiple paths in order to demonstrate shortest path in solution

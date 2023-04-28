@@ -4,43 +4,21 @@ import {toJS} from "mobx";
 // https://mobx.js.org/defining-data-stores.html
 // TODO read again about Root Store later and decide whether it's needed in this project
 // TODO rename?
-export class MazeNodesStore {
-    rootStore
+export class MazeStore {
+    gameStore
     config
     nodes = []
 
-    constructor(rootStore) {
+    constructor(gameStore) {
         makeAutoObservable(this, {
             // todo read whether this should be overriden
-            applyMultipleActions: false,
             applySingleAction: false,
-            rootStore: false,
+            gameStore: false,
             config: false
         })
-        this.rootStore = rootStore
-        this.config = rootStore.config
+        this.gameStore = gameStore
+        this.config = gameStore.config
         this.createEmptyNodes()
-    }
-
-    applyMultipleActions(actions, mode) {
-        let currentDelay = this.config.visualizationDelay.ms
-
-        for (const action of actions) {
-            setTimeout(() => {
-                this.applySingleAction(action)
-            }, currentDelay)
-            currentDelay = currentDelay + this.config.visualizationDelay.ms
-        }
-
-        setTimeout(() => {
-            if (mode === 'generation') {
-                this.applySingleAction({type: 'resetVisited'})
-                this.config.setGameState(2)
-            } else if (mode === 'solving') {
-                this.config.setGameState(5)
-            }
-        }, currentDelay + this.config.visualizationDelay.ms)
-
     }
 
     // TODO

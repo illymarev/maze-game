@@ -8,6 +8,13 @@ const recursiveBacktracking = maze => {
     const node = maze[0][0]
 
     recursivePart(maze, node, visitedStack, actionsToVisualize)
+    for (const row of maze) {
+        for (const node of row) {
+            node.visited = false
+        }
+    }
+    actionsToVisualize.push({type: 'resetVisited'})
+
     return {
         newMaze: maze,
         actionsToVisualize: actionsToVisualize
