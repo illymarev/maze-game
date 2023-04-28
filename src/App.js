@@ -26,12 +26,12 @@ const theme = createTheme({
     },
 });
 
-const App = observer(({maze}) => {
+const App = observer(({rootStore}) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
             <WelcomeModal/>
-            <MazeGame maze={maze}/>
+            <MazeGame rootStore={rootStore}/>
         </ThemeProvider>
     );
 })

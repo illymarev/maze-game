@@ -1,13 +1,13 @@
 import {Stack, Typography} from "@mui/material";
-import {memo} from "react";
+import {observer} from "mobx-react";
 
-export const GameState = memo(({title, description}) => (
+export const GameState = observer(({config}) => (
     <Stack marginBottom={'0.5rem'}>
         <Typography variant="h4" component="h4">
-            {title}
+            {config.gameState.title}
         </Typography>
         <Typography variant='body2' component='h4' fontWeight={300}>
-            {description}
+            {config.gameState.description}
         </Typography>
     </Stack>
 ))

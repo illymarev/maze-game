@@ -5,36 +5,42 @@ import {toJS} from "mobx";
 // TODO read again about Root Store later and decide whether it's needed in this project
 // TODO rename?
 export class MazeNodesStore {
-    rows = 8
-    columns = 20
+    rootStore
+    config
     nodes = []
 
-    constructor() {
+    constructor(rootStore) {
         makeAutoObservable(this, {
             // todo read whether this should be overriden
             applyMultipleActions: false,
-            applySingleAction: false
+            applySingleAction: false,
+            rootStore: false,
+            config: false
         })
+        this.rootStore = rootStore
+        this.config = rootStore.config
         this.createEmptyNodes()
     }
 
-    // TODO move delayTime somewhere here
-    applyMultipleActions(delayTime, actions, mode) {
-        // let currentDelay = delayTime
-        //
-        // for (const action of actions){
-        //     setTimeout(() => {
-        //         this.applySingleAction(action)
-        //     }, currentDelay)
-        //     currentDelay = currentDelay + delayTime
-        // }
-        //
-        // if (mode === 'generation'){
-        //     setTimeout(() => {
-        //         this.applySingleAction({type: 'resetVisited'})
-        //         setGameState(gameStateOptions[2])
-        //     }, initialDelay + delayTime)
-        // }
+    applyMultipleActions(actions, mode) {
+        let currentDelay = this.config.visualizationDelay.ms
+
+        for (const action of actions) {
+            setTimeout(() => {
+                this.applySingleAction(action)
+            }, currentDelay)
+            currentDelay = currentDelay + this.config.visualizationDelay.ms
+        }
+
+        setTimeout(() => {
+            if (mode === 'generation') {
+                this.applySingleAction({type: 'resetVisited'})
+                this.config.setGameState(2)
+            } else if (mode === 'solving') {
+                this.config.setGameState(5)
+            }
+        }, currentDelay + this.config.visualizationDelay.ms)
+
     }
 
     // TODO
@@ -88,9 +94,9 @@ export class MazeNodesStore {
 
     createEmptyNodes() {
         const newNodes = []
-        for (let i = 0; i < this.rows; i++) {
+        for (let i = 0; i < this.config.rows; i++) {
             const mazeRow = []
-            for (let j = 0; j < this.columns; j++) {
+            for (let j = 0; j < this.config.columns; j++) {
                 const node = new MazeNode(this, i, j)
                 mazeRow.push(node)
             }

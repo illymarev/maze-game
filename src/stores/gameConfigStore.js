@@ -5,10 +5,31 @@ import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 
 const delayTimeOptions = {
-    0: 500,
-    1: 25,
-    2: 3,
-    3: 0
+    0: {
+        id: 0,
+        ms: 500,
+        label: 'Slow'
+    },
+    1: {
+        id: 1,
+        ms: 100,
+        label: 'Medium'
+    },
+    2: {
+        id: 2,
+        ms: 5,
+        label: 'Fast'
+    },
+    3: {
+        id: 3,
+        ms: 1,
+        label: 'Very Fast'
+    },
+    4: {
+        id: 4,
+        ms: 0,
+        label: 'Immediate'
+    }
 }
 
 const gameStateOptions = {
@@ -58,17 +79,38 @@ export class GameConfigStore {
     rows = 8
     columns = 20
     gameState = gameStateOptions[0]
-    delayTime = delayTimeOptions[2]
+    visualizationDelay = delayTimeOptions[2]
     generationAlgorithm = generationAlgorithmOptions['hunt_and_kill_algorithm']
     solvingAlgorithm = solvingAlgorithmOptions['breadth_first_search']
-    maze
+    rootStore
 
 
-    constructor() {
+    constructor(rootStore) {
         makeAutoObservable(this, {
-            maze: false
+            rootStore: false,
+            visualizationDelayMarks: false
         })
+        this.rootStore = rootStore
     }
 
+    get visualizationDelayMarks() {
+        const marks = []
+        for (const item of Object.values(delayTimeOptions)) {
+            marks.push({value: item.id, label: item.label})
+        }
+        return marks
+    }
 
+    setVisualizationDelay(delayOption) {
+        this.visualizationDelay = delayTimeOptions[delayOption]
+    }
+
+    // Try setter
+    setGameState(gameStateOptionKey) {
+        this.gameState = gameStateOptions[gameStateOptionKey]
+    }
+
+    get visualizationInProgress() {
+        return [1, 4].includes(this.gameState.id)
+    }
 }

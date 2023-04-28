@@ -1,42 +1,24 @@
 import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
-import {memo} from "react";
+import {observer} from "mobx-react";
 
-const marks = [
-    {
-        value: 0,
-        label: 'Slow'
-    },
-    {
-        value: 1,
-        label: 'Medium'
-    },
-    {
-        value: 2,
-        label: 'Fast'
-    },
-    {
-        value: 3,
-        label: 'Immediate'
-    }
-]
+// TODO automate generation/solving algorithm options and selecting from the store
+// TODO move generation/solving funcs from mazeGame to maze store
+const ConfigurationPanel = observer(({
+                                         config,
+                                         algorithmsSettings,
+                                         onAlgorithmSettingChange,
+                                         generationAlgorithmOptions,
+                                         solvingAlgorithmOptions,
+                                         generationFunction,
+                                         solvingFunction,
+                                         setStopVisualization
+                                     }) => {
 
-const ConfigurationPanel = memo(({
-                                     algorithmsSettings,
-                                     onAlgorithmSettingChange,
-                                     generationAlgorithmOptions,
-                                     solvingAlgorithmOptions,
-                                     generationFunction,
-                                     solvingFunction,
-                                     gameStateId,
-                                     setStopVisualization
-                                 }) => {
-    const visualizationInProgress = [1, 4].includes(gameStateId)
+    const onGenerationButtonClick = () => config.gameState.id === 1 ? setStopVisualization(true) : generationFunction()
+    const generationButtonColor = config.gameState.id === 1 ? 'danger' : 'secondary'
 
-    const onGenerationButtonClick = () => gameStateId === 1 ? setStopVisualization(true) : generationFunction()
-    const generationButtonColor = gameStateId === 1 ? 'danger' : 'secondary'
-
-    const onSolvingButtonClick = () => gameStateId === 4 ? setStopVisualization(true) : solvingFunction()
-    const solvingButtonColor = gameStateId === 4 ? 'danger' : 'primary'
+    const onSolvingButtonClick = () => config.gameState.id === 4 ? setStopVisualization(true) : solvingFunction()
+    const solvingButtonColor = config.gameState.id === 4 ? 'danger' : 'primary'
 
     const generationAlgorithmMenuItems = []
     for (const [key, value] of Object.entries(generationAlgorithmOptions)) {
@@ -59,7 +41,7 @@ const ConfigurationPanel = memo(({
                 <Stack width={'200px'}>
                     <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
                     <Select
-                        disabled={visualizationInProgress}
+                        disabled={config.visualizationInProgress}
                         labelId="generation_algorithm_label"
                         id="generation_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
@@ -71,22 +53,22 @@ const ConfigurationPanel = memo(({
                 </Stack>
                 <Stack spacing={2}>
                     <Button onClick={() => onGenerationButtonClick()}
-                            disabled={gameStateId === 4}
+                            disabled={config.gameState.id === 4}
                             variant="contained" color={generationButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {gameStateId === 1 ? 'Stop Generating' : 'Generate'}
+                        {config.gameState.id === 1 ? 'Stop Generating' : 'Generate'}
                     </Button>
                     <Button onClick={() => onSolvingButtonClick()}
-                            disabled={[0, 1].includes(gameStateId)}
+                            disabled={[0, 1].includes(config.gameState.id)}
                             variant="contained" color={solvingButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {gameStateId === 4 ? 'Stop Solving' : 'Solve'}
+                        {config.gameState.id === 4 ? 'Stop Solving' : 'Solve'}
                     </Button>
                 </Stack>
                 <Stack width={'200px'}>
                     <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
                     <Select
-                        disabled={visualizationInProgress}
+                        disabled={config.visualizationInProgress}
                         labelId="solving_algorithm_label"
                         id="solving_algorithm_selector"
                         sx={{'border-radius': '1.25rem'}}
@@ -101,17 +83,17 @@ const ConfigurationPanel = memo(({
             <Stack direction='column' justifyContent='center' alignItems='center'>
                 <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
                 <Slider
-                    disabled={visualizationInProgress}
+                    disabled={config.visualizationInProgress}
                     step={null}
-                    marks={marks}
+                    marks={config.visualizationDelayMarks}
                     labelId="visualization_speed_label"
                     id='visualization_speed_slider'
-                    value={algorithmsSettings.visualizationSpeed}
+                    value={config.visualizationDelay.id}
                     valueLabelDisplay="off"
                     size='medium'
-                    min={0} max={3}
+                    min={0} max={4}
                     sx={{width: '625px'}}
-                    onChange={e => onAlgorithmSettingChange('visualizationSpeed', e.target.value)}
+                    onChange={e => config.setVisualizationDelay(e.target.value)}
                 />
             </Stack>
 
