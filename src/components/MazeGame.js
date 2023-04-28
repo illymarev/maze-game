@@ -167,8 +167,6 @@ const MazeGame = observer(({rootStore}) => {
         //     setGameState(gameStateOptions[2])
         // }, initialDelay + delayTime)
 
-        // TODO handle the logic below and maybe add resetVisited as a last step of each generation?
-        // TODO think about how to implement a stop and setGameState
         // if (delayTime === 0) {
         //     visualizeStep(maze, {type: 'setMaze', payload: {newMaze: newMaze}})
         // } else {

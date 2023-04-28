@@ -22,7 +22,7 @@ const delayTimeOptions = {
     },
     3: {
         id: 3,
-        ms: 1,
+        ms: 2.5,
         label: 'Very Fast'
     },
     4: {

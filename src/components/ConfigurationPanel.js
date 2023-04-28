@@ -1,6 +1,7 @@
 import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
 import {observer} from "mobx-react";
 
+// TODO read about UI stores. It seems like it's a good use case here
 // TODO automate generation/solving algorithm options and selecting from the store
 // TODO move generation/solving funcs from mazeGame to maze store
 const ConfigurationPanel = observer(({
