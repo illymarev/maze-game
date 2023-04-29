@@ -28,11 +28,6 @@ export const visualizationSpeedOptions = {
     },
     4: {
         id: 4,
-        delay: 0.75,
-        label: 'Lightning Fast'
-    },
-    5: {
-        id: 5,
         delay: 0,
         label: 'Immediate'
     }

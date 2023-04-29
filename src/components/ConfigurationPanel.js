@@ -95,7 +95,7 @@ const ConfigurationPanel = observer(({
                     value={config.visualizationSpeed.id}
                     valueLabelDisplay="off"
                     size='medium'
-                    min={0} max={5}
+                    min={0} max={4}
                     sx={{width: '625px'}}
                     onChange={e => config.setVisualizationDelay(e.target.value)}
                 />
