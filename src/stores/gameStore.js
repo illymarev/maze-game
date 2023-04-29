@@ -1,16 +1,27 @@
 import {ConfigStore} from "./configStore";
 import {MazeStore} from "./mazeStore";
+import {UiState} from "./uiStateStore";
+import {reaction} from "mobx";
 
 export class GameStore {
 
     constructor() {
+        this.uiState = new UiState(this)
         this.config = new ConfigStore(this)
         this.maze = new MazeStore(this)
+
+        reaction(
+            () => ({rows: this.config.rows, columns: this.config.columns}),
+            () => this.maze.createEmptyNodes()
+        )
+
+
         // Timeouts are significantly faster than setInterval & requestAnimationFrame when doing low delay.
         // The main purpose of extra-low delays is to ensure that large mazes can be generated in short periods of time,
         // so frame skipping is fine in this scenario and I think that it's better to skip frames than wait for minutes
         // while something like 100x100 maze is generated.
         // A separate speed that will use requestAnimationFrame might be added in future versions
+        // TODO write a note about the fact that this is an expected behaviour somewhere in the guide
         this.timeouts = [] // keep track of all timeouts in order to be able to cancel them
     }
 

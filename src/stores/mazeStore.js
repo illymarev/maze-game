@@ -1,9 +1,7 @@
 import {makeAutoObservable} from "mobx";
 import {toJS} from "mobx";
+import {getReachableNeighborNodes} from "../algorithms/helpers";
 
-// https://mobx.js.org/defining-data-stores.html
-// TODO read again about Root Store later and decide whether it's needed in this project
-// TODO rename?
 export class MazeStore {
     gameStore
     config
@@ -72,10 +70,10 @@ export class MazeStore {
 
     createEmptyNodes() {
         const newNodes = []
-        for (let i = 0; i < this.config.rows; i++) {
+        for (let row = 0; row < this.config.rows; row++) {
             const mazeRow = []
-            for (let j = 0; j < this.config.columns; j++) {
-                const node = new MazeNode(this, i, j)
+            for (let column = 0; column < this.config.columns; column++) {
+                const node = new MazeNode(this, row, column)
                 mazeRow.push(node)
             }
             newNodes.push(mazeRow)
@@ -107,23 +105,25 @@ export class MazeStore {
 }
 
 export class MazeNode {
+    maze = null
     row = null
     column = null
-    nodesStore = null
+
     availablePathways = {north: false, south: false, west: false, east: false}
     visited = false
     current = false
     isRoute = false
 
-    constructor(nodesStore, row, column) {
+    constructor(maze, row, column) {
         makeAutoObservable(this, {
             row: false,
             column: false,
-            nodesStore: false
+            maze: false
         })
+        this.maze = maze
         this.row = row
         this.column = column
-        this.nodesStore = nodesStore
+
     }
 
     markCurrent() {
@@ -152,5 +152,9 @@ export class MazeNode {
 
     markRoute() {
         this.isRoute = true
+    }
+
+    get hasVisitedNeighbour() {
+        return getReachableNeighborNodes(this.maze.nodes, this).some(node => node.visited)
     }
 }

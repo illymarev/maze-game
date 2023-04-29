@@ -6,11 +6,7 @@ import {
     solvingAlgorithmOptions
 } from "../stores/configStore";
 
-const ConfigurationPanel = observer(({
-                                         gameStore,
-                                         config,
-                                         setStopVisualization
-                                     }) => {
+const ConfigurationPanel = observer(({gameStore, config}) => {
     const visualizationSpeedUIOptions = []
     const generationAlgorithmUIOptions = []
     const solvingAlgorithmUIOptions = []
@@ -32,9 +28,11 @@ const ConfigurationPanel = observer(({
     }
 
     const onGenerationButtonClick = () => config.gameState.id === 1 ? gameStore.stopVisualization() : gameStore.generateMaze()
+    const generationButtonText = config.gameState.id === 1 ? 'Stop Generating' : 'Generate'
     const generationButtonColor = config.gameState.id === 1 ? 'danger' : 'secondary'
 
     const onSolvingButtonClick = () => config.gameState.id === 4 ? gameStore.stopVisualization() : gameStore.solveMaze()
+    const solvingButtonText = config.gameState.id === 4 ? 'Stop Solving' : 'Solve'
     const solvingButtonColor = config.gameState.id === 4 ? 'danger' : 'primary'
 
 
@@ -60,13 +58,13 @@ const ConfigurationPanel = observer(({
                             disabled={config.gameState.id === 4}
                             variant="contained" color={generationButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {config.gameState.id === 1 ? 'Stop Generating' : 'Generate'}
+                        {generationButtonText}
                     </Button>
                     <Button onClick={() => onSolvingButtonClick()}
                             disabled={[0, 1].includes(config.gameState.id)}
                             variant="contained" color={solvingButtonColor} size='large'
                             sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {config.gameState.id === 4 ? 'Stop Solving' : 'Solve'}
+                        {solvingButtonText}
                     </Button>
                 </Stack>
                 <Stack width={'200px'}>

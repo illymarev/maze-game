@@ -4,21 +4,22 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {observer} from "mobx-react";
 
 const MazeNode = observer(({
-                               handleMouseEnter,
-                               node: {nodesStore, row, column, current, visited, availablePathways, isRoute},
-                               config: {gameState}
+                               node,
+                               config: {gameState, gameStore, isUsersSolvingInputAllowed},
                            }) => {
 
-    const isStart = row === 0 && column === 0
-    const isFinish = row === nodesStore.rows - 1 && column === nodesStore.columns - 1
+    const uiState = gameStore.uiState
+
+    const isStart = node.row === 0 && node.column === 0
+    const isFinish = node.row === node.maze.config.rows - 1 && node.column === node.maze.config.columns - 1
 
     const generationVisualizationStyle = {
-        backgroundColor: visited ? 'rgba(29,227,124,0.35)' : null
+        backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
     }
-    if (current) {
+    if (node.current) {
         generationVisualizationStyle.backgroundColor = '#3b8ef1'
     }
-    if (isRoute) {
+    if (node.isRoute) {
         generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
 
@@ -37,16 +38,23 @@ const MazeNode = observer(({
         <Grid item={true} xs={1}
               onMouseDown={(e) => {
                   e.preventDefault()
-                  handleMouseEnter(row, column, true)
+
+                  if ((isStart || node.hasVisitedNeighbour) && isUsersSolvingInputAllowed) {
+                      node.markVisited()
+                  }
               }}
-              onMouseEnter={() => handleMouseEnter(row, column)}
+              onMouseEnter={() => {
+                  if (uiState.isMouseDown && node.hasVisitedNeighbour && isUsersSolvingInputAllowed) {
+                      node.markVisited()
+                  }
+              }}
               sx={{
                   aspectRatio: '1/1', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  borderTop: availablePathways.north ? null : '2px solid #ccc',
-                  borderBottom: availablePathways.south ? null : '2px solid #ccc',
-                  borderLeft: availablePathways.west ? null : '2px solid #ccc',
-                  borderRight: availablePathways.east ? null : '2px solid #ccc',
+                  borderTop: node.availablePathways.north ? null : '2px solid #ccc',
+                  borderBottom: node.availablePathways.south ? null : '2px solid #ccc',
+                  borderLeft: node.availablePathways.west ? null : '2px solid #ccc',
+                  borderRight: node.availablePathways.east ? null : '2px solid #ccc',
                   ...generationVisualizationStyle
               }}>
             {nodeText}

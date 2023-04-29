@@ -23,7 +23,7 @@ export const visualizationSpeedOptions = {
     },
     3: {
         id: 3,
-        delay: 2.5,
+        delay: 2,
         label: 'Very Fast'
     },
     4: {
@@ -107,11 +107,15 @@ export class ConfigStore {
             gameStore: false,
         })
         this.gameStore = gameStore
-        console.log(this.generationAlgorithm)
     }
 
 
     // ======================== Actions ========================
+    changeDimensions(rows, columns) {
+        this.rows = rows
+        this.columns = columns
+    }
+
     setVisualizationDelay(visualizationSpeedOptionKey) {
         this.visualizationSpeed = visualizationSpeedOptions[visualizationSpeedOptionKey]
     }
@@ -144,6 +148,10 @@ export class ConfigStore {
 
     get solvingFunction() {
         return this.solvingAlgorithm.relatedFunction
+    }
+
+    get isUsersSolvingInputAllowed() {
+        return [2, 3].includes(this.gameState.id)
     }
 
 }
