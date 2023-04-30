@@ -12,7 +12,11 @@ export class GameStore {
 
         reaction(
             () => ({rows: this.config.rows, columns: this.config.columns}),
-            () => this.maze.createEmptyNodes()
+            () => {
+                this.stopVisualization();
+                this.config.setGameState(0);
+                this.maze.createEmptyNodes()
+            }
         )
 
 

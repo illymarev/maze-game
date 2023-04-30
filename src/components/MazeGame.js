@@ -14,6 +14,11 @@ const MazeGame = observer(({gameStore}) => {
     return (
         <div onMouseDown={() => uiState.setIsMouseDown(true)}
              onMouseUp={() => uiState.setIsMouseDown(false)}>
+            <div>
+                <button onClick={() => {config.changeDimensions(8, 20)}}>Small</button>
+                <button onClick={() => {config.changeDimensions(15, 30)}}>Medium</button>
+                <button onClick={() => {config.changeDimensions(25, 50)}}>Large</button>
+            </div>
             <ConfigurationPanel
                 gameStore={gameStore}
                 config={config}
