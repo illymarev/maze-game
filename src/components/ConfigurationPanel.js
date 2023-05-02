@@ -83,13 +83,13 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                                 <Button onClick={() => onGenerationButtonClick()}
                                         disabled={config.gameState.id === 4}
                                         variant="contained" color={generationButtonColor} size='large'
-                                        sx={{'border-radius': '1.25rem', width: '90%', height: '50px', fontSize: {xl: '1.15rem'}}}>
+                                        sx={{'border-radius': '1.25rem', width: '90%', height: {md: '50px', xxl: '60px'}, fontSize: {xl: '1.15rem', xxl: '1.25rem'}}}>
                                     {generationButtonText}
                                 </Button>
                                 <Button onClick={() => onSolvingButtonClick()}
                                         disabled={[0, 1].includes(config.gameState.id)}
                                         variant="contained" color={solvingButtonColor} size='large'
-                                        sx={{'border-radius': '1.25rem', width: '90%', height: '50px', fontSize: {xl: '1.15rem'}}}>
+                                        sx={{'border-radius': '1.25rem', width: '90%', height: {md: '50px', xxl: '60px'}, fontSize: {xl: '1.15rem', xxl: '1.25rem'}}}>
                                     {solvingButtonText}
                                 </Button>
                             </Stack>
