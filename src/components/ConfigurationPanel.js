@@ -1,4 +1,5 @@
-import {Button, InputLabel, MenuItem, Slider, Stack, Select} from "@mui/material";
+import {Button, InputLabel, MenuItem, Slider, Stack, Select, Grid, Typography} from "@mui/material";
+import {SettingsOutlined, EditOutlined} from "@mui/icons-material";
 import {observer} from "mobx-react";
 import {
     visualizationSpeedOptions,
@@ -35,72 +36,174 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
     const solvingButtonText = config.gameState.id === 4 ? 'Stop Solving' : 'Solve'
     const solvingButtonColor = config.gameState.id === 4 ? 'danger' : 'primary'
 
-
     return (
-        <Stack spacing={1} alignItems='center' marginTop={'1rem'}>
+        <Grid container spacing={2} marginTop={'10px'}>
+            <Grid item xs={1.5}/>
+            <Grid item xs={1.5}>
+                <Stack height={'100%'} width={'100%'} justifyContent={'space-evenly'} alignItems={'center'} spacing={2}>
+                    <Stack alignItems={'center'}>
+                        <SettingsOutlined/>
+                        <Typography variant='body2' component='h4' fontWeight={300}>
+                            Advanced settings
+                        </Typography>
+                    </Stack>
 
-            <Stack alignItems='center' direction='row' spacing={2}>
-                <Stack width={'200px'}>
-                    <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
-                    <Select
-                        disabled={config.visualizationInProgress}
-                        labelId="generation_algorithm_label"
-                        id="generation_algorithm_selector"
-                        sx={{'border-radius': '1.25rem'}}
-                        value={config.generationAlgorithm.id}
-                        onChange={e => config.setGenerationAlgorithm(e.target.value)}
-                    >
-                        {generationAlgorithmUIOptions}
-                    </Select>
+                    <Stack alignItems={'center'}>
+                        <EditOutlined/>
+                        <Typography variant='body2' component='h4' fontWeight={300}>
+                            Move Start/Finish
+                        </Typography>
+                    </Stack>
                 </Stack>
-                <Stack spacing={2}>
-                    <Button onClick={() => onGenerationButtonClick()}
-                            disabled={config.gameState.id === 4}
-                            variant="contained" color={generationButtonColor} size='large'
-                            sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {generationButtonText}
-                    </Button>
-                    <Button onClick={() => onSolvingButtonClick()}
-                            disabled={[0, 1].includes(config.gameState.id)}
-                            variant="contained" color={solvingButtonColor} size='large'
-                            sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
-                        {solvingButtonText}
-                    </Button>
-                </Stack>
-                <Stack width={'200px'}>
-                    <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
-                    <Select
-                        disabled={config.visualizationInProgress}
-                        labelId="solving_algorithm_label"
-                        id="solving_algorithm_selector"
-                        sx={{'border-radius': '1.25rem'}}
-                        value={config.solvingAlgorithm.id}
-                        onChange={e => config.setSolvingAlgorithm(e.target.value)}
-                    >
-                        {solvingAlgorithmUIOptions}
-                    </Select>
-                </Stack>
-            </Stack>
+            </Grid>
+            <Grid item xs={0.5}/>
 
-            <Stack direction='column' justifyContent='center' alignItems='center'>
-                <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
-                <Slider
-                    disabled={config.visualizationInProgress}
-                    step={null}
-                    marks={visualizationSpeedUIOptions}
-                    labelId="visualization_speed_label"
-                    id='visualization_speed_slider'
-                    value={config.visualizationSpeed.id}
-                    valueLabelDisplay="off"
-                    size='medium'
-                    min={0} max={4}
-                    sx={{width: '625px'}}
-                    onChange={e => config.setVisualizationDelay(e.target.value)}
-                />
-            </Stack>
+            <Grid item xs={5}>
+                <Stack justifyContent={'center'} alignItems={'center'} spacing={2} width={'100%'}>
+                    <Grid container>
+                        <Grid item xs={3.5}>
+                            <Stack width={'100%'} height={'100%'}>
+                                <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
+                                <Select
+                                    disabled={config.visualizationInProgress}
+                                    labelId="generation_algorithm_label"
+                                    id="generation_algorithm_selector"
+                                    sx={{'border-radius': '1.25rem', width: '100%'}}
+                                    value={config.generationAlgorithm.id}
+                                    onChange={e => config.setGenerationAlgorithm(e.target.value)}
+                                >
+                                    {generationAlgorithmUIOptions}
+                                </Select>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={0.5}/>
+                        <Grid item xs={4}>
+                            <Stack spacing={2} width={'100%'} height={'100%'} alignItems={'center'}
+                                   justifyContent={'center'}>
+                                <Button onClick={() => onGenerationButtonClick()}
+                                        disabled={config.gameState.id === 4}
+                                        variant="contained" color={generationButtonColor} size='large'
+                                        sx={{'border-radius': '1.25rem', width: '90%', height: '50px', fontSize: {xl: '1.15rem'}}}>
+                                    {generationButtonText}
+                                </Button>
+                                <Button onClick={() => onSolvingButtonClick()}
+                                        disabled={[0, 1].includes(config.gameState.id)}
+                                        variant="contained" color={solvingButtonColor} size='large'
+                                        sx={{'border-radius': '1.25rem', width: '90%', height: '50px', fontSize: {xl: '1.15rem'}}}>
+                                    {solvingButtonText}
+                                </Button>
+                            </Stack>
+                        </Grid>
+                        <Grid item xs={0.5}/>
+                        <Grid item xs={3.5}>
+                            <Stack height={'100%'} width={'100%'}>
+                                <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
+                                <Select
+                                    disabled={config.visualizationInProgress}
+                                    labelId="solving_algorithm_label"
+                                    id="solving_algorithm_selector"
+                                    sx={{'border-radius': '1.25rem', width: '100%'}}
+                                    value={config.solvingAlgorithm.id}
+                                    onChange={e => config.setSolvingAlgorithm(e.target.value)}
+                                >
+                                    {solvingAlgorithmUIOptions}
+                                </Select>
+                            </Stack>
+                        </Grid>
 
-        </Stack>
+                    </Grid>
+
+                    <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+                        <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
+                        <Slider
+                            disabled={config.visualizationInProgress}
+                            step={null}
+                            marks={visualizationSpeedUIOptions}
+                            labelId="visualization_speed_label"
+                            id='visualization_speed_slider'
+                            value={config.visualizationSpeed.id}
+                            valueLabelDisplay="off"
+                            size='medium'
+                            min={0} max={4}
+                            onChange={e => config.setVisualizationDelay(e.target.value)}
+                        />
+                    </Stack>
+                </Stack>
+            </Grid>
+            <Grid item xs={0.5}/>
+
+
+            <Grid item xs={3}/>
+
+        </Grid>
     )
+
+
+    // return (
+    //     <Stack spacing={1} alignItems='center' marginTop={'1rem'}>
+    //
+    //         <Stack alignItems='center' direction='row' spacing={2}>
+    //             <Stack width={'200px'}>
+    //                 <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
+    //                 <Select
+    //                     disabled={config.visualizationInProgress}
+    //                     labelId="generation_algorithm_label"
+    //                     id="generation_algorithm_selector"
+    //                     sx={{'border-radius': '1.25rem'}}
+    //                     value={config.generationAlgorithm.id}
+    //                     onChange={e => config.setGenerationAlgorithm(e.target.value)}
+    //                 >
+    //                     {generationAlgorithmUIOptions}
+    //                 </Select>
+    //             </Stack>
+    //             <Stack spacing={2}>
+    //                 <Button onClick={() => onGenerationButtonClick()}
+    //                         disabled={config.gameState.id === 4}
+    //                         variant="contained" color={generationButtonColor} size='large'
+    //                         sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
+    //                     {generationButtonText}
+    //                 </Button>
+    //                 <Button onClick={() => onSolvingButtonClick()}
+    //                         disabled={[0, 1].includes(config.gameState.id)}
+    //                         variant="contained" color={solvingButtonColor} size='large'
+    //                         sx={{width: '200px', height: '50px', 'border-radius': '1.25rem'}}>
+    //                     {solvingButtonText}
+    //                 </Button>
+    //             </Stack>
+    //             <Stack width={'200px'}>
+    //                 <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
+    //                 <Select
+    //                     disabled={config.visualizationInProgress}
+    //                     labelId="solving_algorithm_label"
+    //                     id="solving_algorithm_selector"
+    //                     sx={{'border-radius': '1.25rem'}}
+    //                     value={config.solvingAlgorithm.id}
+    //                     onChange={e => config.setSolvingAlgorithm(e.target.value)}
+    //                 >
+    //                     {solvingAlgorithmUIOptions}
+    //                 </Select>
+    //             </Stack>
+    //         </Stack>
+    //
+    //         <Stack direction='column' justifyContent='center' alignItems='center'>
+    //             <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
+    //             <Slider
+    //                 disabled={config.visualizationInProgress}
+    //                 step={null}
+    //                 marks={visualizationSpeedUIOptions}
+    //                 labelId="visualization_speed_label"
+    //                 id='visualization_speed_slider'
+    //                 value={config.visualizationSpeed.id}
+    //                 valueLabelDisplay="off"
+    //                 size='medium'
+    //                 min={0} max={4}
+    //                 sx={{width: '625px'}}
+    //                 onChange={e => config.setVisualizationDelay(e.target.value)}
+    //             />
+    //         </Stack>
+    //
+    //     </Stack>
+    // )
 })
 
 export default ConfigurationPanel;

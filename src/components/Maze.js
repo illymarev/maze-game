@@ -4,7 +4,7 @@ import {observer} from "mobx-react";
 
 const Maze = observer(({maze, config}) => {
     return (
-        <Grid columns={config.columns} container width={{xs: '80%', md: '65%', lg: '60%'}}>
+        <Grid columns={config.columns} container width={{xs: '67%', lg: '70%', xl: '75%'}}>
             {maze.nodes.map(
                 row => row.map(
                     node => <MazeNode key={`${node.row}-${node.column}`} node={node} config={config}/>

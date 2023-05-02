@@ -14,18 +14,27 @@ const MazeGame = observer(({gameStore}) => {
     return (
         <div onMouseDown={() => uiState.setIsMouseDown(true)}
              onMouseUp={() => uiState.setIsMouseDown(false)}>
-            <div>
-                <button onClick={() => {config.changeDimensions(8, 20)}}>Small</button>
-                <button onClick={() => {config.changeDimensions(15, 30)}}>Medium</button>
-                <button onClick={() => {config.changeDimensions(25, 50)}}>Large</button>
-            </div>
-            <ConfigurationPanel
-                gameStore={gameStore}
-                config={config}
-            />
-            <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
+            {/*<div>*/}
+            {/*    <button onClick={() => {*/}
+            {/*        config.changeDimensions(8, 20)*/}
+            {/*    }}>Small*/}
+            {/*    </button>*/}
+            {/*    <button onClick={() => {*/}
+            {/*        config.changeDimensions(14, 35)*/}
+            {/*    }}>Medium*/}
+            {/*    </button>*/}
+            {/*    <button onClick={() => {*/}
+            {/*        config.changeDimensions(24, 60)*/}
+            {/*    }}>Large*/}
+            {/*    </button>*/}
+            {/*</div>*/}
+            <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
+                <ConfigurationPanel gameStore={gameStore} config={config}/>
                 <GameState config={config}/>
                 <MazeLegend/>
+            </Stack>
+
+            <Stack marginBottom={'10px'} alignItems={'center'} justifyContent={'center'}>
                 <Maze
                     maze={maze}
                     config={config}
