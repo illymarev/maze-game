@@ -11,7 +11,7 @@ export class GameStore {
         this.maze = new MazeStore(this)
 
         reaction(
-            () => ({rows: this.config.rows, columns: this.config.columns}),
+            () => this.config.mazeSize.id,
             () => {
                 this.stopVisualization();
                 this.config.setGameState(0);

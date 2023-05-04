@@ -92,9 +92,29 @@ export const solvingAlgorithmOptions = {
     }
 }
 
+export const mazeSizeOptions = {
+    0: {
+        id: 0,
+        title: 'Small',
+        rows: 5,
+        columns: 10
+    },
+    1: {
+        id: 1,
+        title: 'Medium',
+        rows: 10,
+        columns: 20
+    },
+    2: {
+        id: 2,
+        title: 'Large',
+        rows: 20,
+        columns: 40
+    },
+}
+
 export class ConfigStore {
-    rows = 8 // 25
-    columns = 20 // 50
+    mazeSize = mazeSizeOptions[0]
     gameState = gameStateOptions[0]
     visualizationSpeed = visualizationSpeedOptions[2]
     generationAlgorithm = generationAlgorithmOptions[0]
@@ -111,9 +131,8 @@ export class ConfigStore {
 
 
     // ======================== Actions ========================
-    changeDimensions(rows, columns) {
-        this.rows = rows
-        this.columns = columns
+    setMazeSize(mazeSizeId) {
+        this.mazeSize = mazeSizeOptions[mazeSizeId]
     }
 
     setVisualizationDelay(visualizationSpeedOptionKey) {
@@ -133,6 +152,14 @@ export class ConfigStore {
     }
 
     // ======================== Computeds  =====================
+
+    get rows() {
+        return this.mazeSize.rows
+    }
+
+    get columns() {
+        return this.mazeSize.columns
+    }
 
     get visualizationInProgress() {
         return [1, 4].includes(this.gameState.id)
