@@ -96,14 +96,14 @@ export const mazeSizeOptions = {
     0: {
         id: 0,
         title: 'Small',
-        rows: 5,
-        columns: 10
+        rows: 7,
+        columns: 14
     },
     1: {
         id: 1,
         title: 'Medium',
-        rows: 10,
-        columns: 20
+        rows: 12,
+        columns: 24
     },
     2: {
         id: 2,
@@ -111,6 +111,12 @@ export const mazeSizeOptions = {
         rows: 20,
         columns: 40
     },
+    3: {
+        id: 3,
+        title: 'Extra Large',
+        rows: 30,
+        columns: 60
+    }
 }
 
 export class ConfigStore {
