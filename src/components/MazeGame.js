@@ -4,7 +4,11 @@ import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
 import {observer} from "mobx-react";
+import Drawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box";
+import * as React from "react";
 
+const drawerWidth = '20%'
 
 const MazeGame = observer(({gameStore}) => {
     const maze = gameStore.maze
@@ -12,35 +16,35 @@ const MazeGame = observer(({gameStore}) => {
     const uiState = gameStore.uiState
 
     return (
-        <div onMouseDown={() => uiState.setIsMouseDown(true)}
+        <Box sx={{display: 'flex'}}
+             onMouseDown={() => uiState.setIsMouseDown(true)}
              onMouseUp={() => uiState.setIsMouseDown(false)}>
-            {/*<div>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        config.changeDimensions(8, 20)*/}
-            {/*    }}>Small*/}
-            {/*    </button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        config.changeDimensions(14, 35)*/}
-            {/*    }}>Medium*/}
-            {/*    </button>*/}
-            {/*    <button onClick={() => {*/}
-            {/*        config.changeDimensions(24, 60)*/}
-            {/*    }}>Large*/}
-            {/*    </button>*/}
-            {/*</div>*/}
-            <Stack alignItems={'center'} justifyContent={'center'} spacing={2}>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+            >
                 <ConfigurationPanel gameStore={gameStore} config={config}/>
-                <GameState config={config}/>
-                <MazeLegend/>
-            </Stack>
+            </Drawer>
+            <Box
+                component="main"
+                sx={{flexGrow: 1, bgcolor: 'background.default', p: 3}}
+            >
+                <Stack justifyContent={'center'} alignItems={'center'}>
+                    <GameState config={config}/>
+                    <MazeLegend/>
+                    <Maze maze={maze} config={config}/>
+                </Stack>
 
-            <Stack marginBottom={'10px'} alignItems={'center'} justifyContent={'center'}>
-                <Maze
-                    maze={maze}
-                    config={config}
-                />
-            </Stack>
-        </div>
+            </Box>
+        </Box>
     )
 })
 

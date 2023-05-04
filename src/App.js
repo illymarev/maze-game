@@ -4,7 +4,6 @@ import MazeGame from './components/MazeGame'
 import './App.css';
 import WelcomeModal from "./components/WelcomeModal";
 import {observer} from "mobx-react";
-import PermanentDrawerLeft from "./components/newDesign";
 
 const theme = createTheme({
     breakpoints: {
@@ -41,9 +40,8 @@ const App = observer(({gameStore}) => {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline/>
-            <PermanentDrawerLeft config={gameStore.config} gameStore={gameStore}/>
-            {/*<WelcomeModal/>*/}
-            {/*<MazeGame gameStore={gameStore}/>*/}
+            <WelcomeModal/>
+            <MazeGame gameStore={gameStore}/>
         </ThemeProvider>
     );
 })
