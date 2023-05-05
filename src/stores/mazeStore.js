@@ -91,6 +91,8 @@ export class MazeStore {
                 node.visited = newMazeNodes[row][column].visited
                 node.current = newMazeNodes[row][column].current
                 node.isRoute = newMazeNodes[row][column].isRoute
+                node.isStart = newMazeNodes[row][column].isStart
+                node.isFinish = newMazeNodes[row][column].isFinish
                 newRow.push(node)
             }
             newNodes.push(newRow)
@@ -109,10 +111,13 @@ export class MazeNode {
     row = null
     column = null
 
-    availablePathways = {north: false, south: false, west: false, east: false}
+    availablePathways = {north: false, south: false, west: false, east: false} // TODO read more graph theory
+    // and consider renaming this to "edges"
     visited = false
     current = false
     isRoute = false
+    isStart = false
+    isFinish = false
 
     constructor(maze, row, column) {
         makeAutoObservable(this, {
@@ -124,6 +129,14 @@ export class MazeNode {
         this.row = row
         this.column = column
 
+    }
+
+    setIsStart(bool) {
+        this.isStart = bool
+    }
+
+    setIsFinish(bool) {
+        this.isFinish = bool
     }
 
     markCurrent() {

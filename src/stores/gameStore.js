@@ -43,19 +43,20 @@ export class GameStore {
             this.maze.applySingleAction({type: 'resetVisited'})
             this.maze.applySingleAction({type: 'resetCurrent'})
         }
-
     }
 
     generateMaze() {
         this.config.setGameState(1)
 
-        // In case the maze is already generated, it should be reset to a new, "raw" one
+        // In case the maze is already generated, it should be reset to a new, empty one
         this.maze.createEmptyNodes()
 
         const {newMaze, actionsToVisualize} = this.config.generationFunction(this.maze.nodesToJS)
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
+            this.maze.nodes[0][0].setIsStart(true);
+            this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
             this.config.setGameState(2)
         } else {
             let currentDelay = this.config.visualizationDelay
@@ -70,6 +71,8 @@ export class GameStore {
             // Although the function setTimeout does not guarantee the specific delay in case the stack
             // is full, it does guarantee the order of execution
             this.timeouts.push(setTimeout(() => {
+                this.maze.nodes[0][0].setIsStart(true);
+                this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
                 this.config.setGameState(2)
                 this.timeouts = []
             }, currentDelay + this.config.visualizationDelay))

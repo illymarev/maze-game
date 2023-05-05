@@ -10,6 +10,8 @@ import * as React from "react";
 
 const drawerWidth = '20%'
 
+// TODO 2) Add 2 farthest points as a default start/end
+// TODO 3) Allow drag&drop of start/end points
 const MazeGame = observer(({gameStore}) => {
     const maze = gameStore.maze
     const config = gameStore.config
