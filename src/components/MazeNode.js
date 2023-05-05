@@ -7,8 +7,15 @@ const MazeNode = observer(({node, config}) => {
 
     const uiState = config.gameStore.uiState
 
-    const isStart = node.row === 0 && node.column === 0
-    const isFinish = node.row === node.maze.config.rows - 1 && node.column === node.maze.config.columns - 1
+    const registerUsersInput = () => {
+        node.markVisited()
+        // This should be safe because other game states do not allow the input
+        if (node.isStart) {
+            config.setGameState(3)
+        } else if (node.isFinish) {
+            config.setGameState(5)
+        }
+    }
 
     const generationVisualizationStyle = {
         backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
@@ -20,12 +27,10 @@ const MazeNode = observer(({node, config}) => {
         generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
 
-    let nodeText = ''
-    if (config.gameState.id === 1) {
-        nodeText = ''
-    } else if (isStart) {
+    let nodeText
+    if (node.isStart) {
         nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>
-    } else if (isFinish) {
+    } else if (node.isFinish) {
         nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>
     } else {
         nodeText = ''
@@ -35,14 +40,16 @@ const MazeNode = observer(({node, config}) => {
         <Grid item={true} xs={1}
               onMouseDown={(e) => {
                   e.preventDefault()
-
-                  if ((isStart || node.hasVisitedNeighbour) && config.isUsersSolvingInputAllowed) {
-                      node.markVisited()
+                  if ((node.isStart || node.hasVisitedNeighbour) && config.isUsersSolvingInputAllowed) {
+                      registerUsersInput()
                   }
               }}
               onMouseEnter={() => {
-                  if (uiState.isMouseDown && node.hasVisitedNeighbour && config.isUsersSolvingInputAllowed) {
-                      node.markVisited()
+                  if (uiState.isMouseDown &&
+                      (node.isStart || node.hasVisitedNeighbour) &&
+                      config.isUsersSolvingInputAllowed
+                  ) {
+                      registerUsersInput()
                   }
               }}
               sx={{

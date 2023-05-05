@@ -4,34 +4,49 @@ import {Stack} from "@mui/material";
 import {GameState} from "./GameState";
 import MazeLegend from "./MazeLegend";
 import {observer} from "mobx-react";
+import Drawer from "@mui/material/Drawer";
+import Box from "@mui/material/Box";
+import * as React from "react";
 
+const drawerWidth = '20%'
 
+// TODO 2) Add 2 farthest points as a default start/end
+// TODO 3) Allow drag&drop of start/end points
 const MazeGame = observer(({gameStore}) => {
     const maze = gameStore.maze
     const config = gameStore.config
     const uiState = gameStore.uiState
 
     return (
-        <div onMouseDown={() => uiState.setIsMouseDown(true)}
+        <Box sx={{display: 'flex'}}
+             onMouseDown={() => uiState.setIsMouseDown(true)}
              onMouseUp={() => uiState.setIsMouseDown(false)}>
-            <div>
-                <button onClick={() => {config.changeDimensions(8, 20)}}>Small</button>
-                <button onClick={() => {config.changeDimensions(15, 30)}}>Medium</button>
-                <button onClick={() => {config.changeDimensions(25, 50)}}>Large</button>
-            </div>
-            <ConfigurationPanel
-                gameStore={gameStore}
-                config={config}
-            />
-            <Stack className="maze" alignItems='center' spacing={1} marginY={'1rem'}>
-                <GameState config={config}/>
-                <MazeLegend/>
-                <Maze
-                    maze={maze}
-                    config={config}
-                />
-            </Stack>
-        </div>
+            <Drawer
+                sx={{
+                    width: drawerWidth,
+                    flexShrink: 0,
+                    '& .MuiDrawer-paper': {
+                        width: drawerWidth,
+                        boxSizing: 'border-box',
+                    },
+                }}
+                variant="permanent"
+                anchor="left"
+            >
+                <ConfigurationPanel gameStore={gameStore} config={config}/>
+            </Drawer>
+            <Box
+                component="main"
+                sx={{flexGrow: 1, bgcolor: 'background.default', p: 3}}
+            >
+                <Stack justifyContent={'center'} alignItems={'center'}>
+                    <GameState config={config}/>
+                    <MazeLegend/>
+                    <Maze maze={maze} config={config}/>
+                </Stack>
+
+            </Box>
+        </Box>
     )
 })
 
