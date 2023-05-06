@@ -12,6 +12,7 @@ const drawerWidth = '20%'
 
 
 // TODO 3) Allow drag&drop of start/end points
+// TODO center the right part vertically for larger screens
 const MazeGame = observer(({gameStore}) => {
     const maze = gameStore.maze
     const config = gameStore.config
@@ -38,8 +39,9 @@ const MazeGame = observer(({gameStore}) => {
             <Box
                 component="main"
                 sx={{flexGrow: 1, bgcolor: 'background.default', p: 3}}
+                height={'100vh'}
             >
-                <Stack justifyContent={'center'} alignItems={'center'}>
+                <Stack height={'100%'} justifyContent={'center'} alignItems={'center'}>
                     <GameState config={config}/>
                     <MazeLegend/>
                     <Maze maze={maze} config={config}/>

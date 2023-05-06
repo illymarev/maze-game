@@ -26,7 +26,7 @@ const theme = createTheme({
             contrastText: '#fff'
         },
         neutral: {
-            main: '#64748B',
+            main: 'rgba(0, 0, 0, 0.6)',
             contrastText: '#fff',
         },
         danger: {

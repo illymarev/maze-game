@@ -1,5 +1,5 @@
 import {Button, InputLabel, MenuItem, Stack, Select, Typography} from "@mui/material";
-import {EditOutlined} from "@mui/icons-material";
+import {EditOutlined, SwipeVerticalOutlined} from "@mui/icons-material";
 import {observer} from "mobx-react";
 import {
     visualizationSpeedOptions,
@@ -41,7 +41,7 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
         )
     }
 
-    for (const option of Object.values(defaultStartAndFinishPlacementOptions)){
+    for (const option of Object.values(defaultStartAndFinishPlacementOptions)) {
         startAndFinishPlacementUIOptions.push(
             <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
         )
@@ -149,10 +149,13 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                 </Select>
             </Stack>
             <Stack alignItems={'center'}>
-                <EditOutlined/>
-                <Typography variant='body2' component='h4' fontWeight={300}>
+                <Button disabled
+                        color={'neutral'}
+                        size={'large'}
+                        variant={'text'}
+                        startIcon={<SwipeVerticalOutlined/>}>
                     Move Start/Finish
-                </Typography>
+                </Button>
             </Stack>
         </Stack>
     )
