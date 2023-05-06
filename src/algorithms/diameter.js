@@ -1,3 +1,5 @@
+// TODO This requires a huge amount of calculations and causes a freeze even on high-end pcs/laptops
+// Either transfer this to a web worker, or to the AWS lambda
 // This is not going to be visualized because visualizing it even for small maze is going to take a while
 import {getReachableNeighborNodes} from "./helpers";
 import Queue from "./dataStructures/Queue";

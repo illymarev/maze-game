@@ -5,7 +5,8 @@ import {
     visualizationSpeedOptions,
     generationAlgorithmOptions,
     solvingAlgorithmOptions,
-    mazeSizeOptions
+    mazeSizeOptions,
+    defaultStartAndFinishPlacementOptions
 } from "../stores/configStore";
 import * as React from "react";
 
@@ -14,6 +15,7 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
     const solvingAlgorithmUIOptions = []
     const visualizationSpeedUIOptions = []
     const mazeSizeUIOptions = []
+    const startAndFinishPlacementUIOptions = []
 
     for (const option of Object.values(mazeSizeOptions)) {
         mazeSizeUIOptions.push(
@@ -35,6 +37,12 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
 
     for (const option of Object.values(solvingAlgorithmOptions)) {
         solvingAlgorithmUIOptions.push(
+            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
+        )
+    }
+
+    for (const option of Object.values(defaultStartAndFinishPlacementOptions)){
+        startAndFinishPlacementUIOptions.push(
             <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
         )
     }
@@ -114,6 +122,7 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                 </Select>
             </Stack>
             <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+                {/*// TODO verify all ids*/}
                 <InputLabel id="visualization_speed_label">Maze Size</InputLabel>
                 <Select
                     disabled={config.visualizationInProgress}
@@ -124,6 +133,19 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                     onChange={e => config.setMazeSize(e.target.value)}
                 >
                     {mazeSizeUIOptions}
+                </Select>
+            </Stack>
+            <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+                <InputLabel id="visualization_speed_label">Default Start/Finish Position</InputLabel>
+                <Select
+                    disabled={config.visualizationInProgress}
+                    labelId="visualization_speed_label"
+                    id="visualization_speed_slider"
+                    sx={{'border-radius': '1.25rem', width: '90%'}}
+                    value={config.defaultStartAndFinishPlacement.id}
+                    onChange={e => config.setDefaultStartAndFinishPlacement(e.target.value)}
+                >
+                    {startAndFinishPlacementUIOptions}
                 </Select>
             </Stack>
             <Stack alignItems={'center'}>

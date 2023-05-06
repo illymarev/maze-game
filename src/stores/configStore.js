@@ -4,7 +4,6 @@ import recursiveBacktracking from "../algorithms/generation/recursiveBacktrackin
 import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
 
-// TODO consider removing this in order to allow free selection
 export const visualizationSpeedOptions = {
     0: {
         id: 0,
@@ -96,8 +95,8 @@ export const mazeSizeOptions = {
     0: {
         id: 0,
         title: 'Small',
-        rows: 7,
-        columns: 14
+        rows: 6,
+        columns: 12
     },
     1: {
         id: 1,
@@ -108,9 +107,14 @@ export const mazeSizeOptions = {
     2: {
         id: 2,
         title: 'Large',
-        rows: 20,
-        columns: 40
+        rows: 18,
+        columns: 36
     }
+}
+
+export const defaultStartAndFinishPlacementOptions = {
+    0: {id: 0, title: 'Longest shortest path edges'},
+    1: {id: 1, title: 'Top left and bottom right corners'},
 }
 
 export class ConfigStore {
@@ -119,6 +123,8 @@ export class ConfigStore {
     visualizationSpeed = visualizationSpeedOptions[2]
     generationAlgorithm = generationAlgorithmOptions[0]
     solvingAlgorithm = solvingAlgorithmOptions[0]
+    defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[0]
+
     gameStore
 
 
@@ -131,6 +137,10 @@ export class ConfigStore {
 
 
     // ======================== Actions ========================
+    setDefaultStartAndFinishPlacement(placementOptionId) {
+        this.defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[placementOptionId]
+    }
+
     setMazeSize(mazeSizeId) {
         this.mazeSize = mazeSizeOptions[mazeSizeId]
     }

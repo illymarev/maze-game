@@ -53,7 +53,17 @@ export class GameStore {
         this.maze.createEmptyNodes()
 
         const {newMaze, actionsToVisualize} = this.config.generationFunction(this.maze.nodesToJS)
-        const {startNode, endNode} = findDiameter(newMaze)
+
+        let {startNode, endNode} = {
+            startNode: {row: 0, column: 0},
+            endNode: {row: this.config.rows - 1, column: this.config.columns - 1}
+        }
+        if (this.config.defaultStartAndFinishPlacement.id === 0) {
+            const furthestNodesCombination = findDiameter(newMaze)
+            startNode = furthestNodesCombination.startNode
+            endNode = furthestNodesCombination.endNode
+        }
+
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
