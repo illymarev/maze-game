@@ -1,9 +1,9 @@
 import {getReachableNeighborNodes} from "../helpers";
 import {removePreviousNodes, trackRoute} from "./utils";
 
-const breadthFirstSearch = maze => {
-    const startNode = maze[0][0]
-    const endNode = maze[maze.length - 1][maze[0].length - 1]
+const breadthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
+    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
+    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
     const actionsToVisualize = []
 
     findRoute(maze, startNode, endNode, actionsToVisualize)
@@ -30,7 +30,7 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
     })
 
     while (queue.length) {
-        const currentNode = queue.shift()
+        const currentNode = queue.shift() // todo implement a queue
         actionsToVisualize.push({
             type: 'markCurrent',
             payload: {row: currentNode.row, column: currentNode.column}

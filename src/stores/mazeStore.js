@@ -5,6 +5,9 @@ import {getReachableNeighborNodes} from "../algorithms/helpers";
 export class MazeStore {
     gameStore
     config
+    mazeStart
+    mazeFinish
+
     nodes = []
 
     constructor(gameStore) {
@@ -12,7 +15,9 @@ export class MazeStore {
             // todo read whether this should be overriden
             applySingleAction: false,
             gameStore: false,
-            config: false
+            config: false,
+            mazeStart: false,
+            mazeFinish: false
         })
         this.gameStore = gameStore
         this.config = gameStore.config
@@ -133,10 +138,16 @@ export class MazeNode {
 
     setIsStart(bool) {
         this.isStart = bool
+        if (bool === true) {
+            this.maze.mazeStart = {row: this.row, column: this.column}
+        }
     }
 
     setIsFinish(bool) {
         this.isFinish = bool
+        if (bool === true) {
+            this.maze.mazeFinish = {row: this.row, column: this.column}
+        }
     }
 
     markCurrent() {

@@ -110,12 +110,6 @@ export const mazeSizeOptions = {
         title: 'Large',
         rows: 20,
         columns: 40
-    },
-    3: {
-        id: 3,
-        title: 'Extra Large',
-        rows: 30,
-        columns: 60
     }
 }
 

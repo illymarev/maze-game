@@ -2,6 +2,7 @@ import {ConfigStore} from "./configStore";
 import {MazeStore} from "./mazeStore";
 import {UiState} from "./uiStateStore";
 import {reaction} from "mobx";
+import {findDiameter} from "../algorithms/diameter";
 
 export class GameStore {
 
@@ -52,11 +53,16 @@ export class GameStore {
         this.maze.createEmptyNodes()
 
         const {newMaze, actionsToVisualize} = this.config.generationFunction(this.maze.nodesToJS)
+        const {startNode, endNode} = findDiameter(newMaze)
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
-            this.maze.nodes[0][0].setIsStart(true);
-            this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
+            // TODO make optional setting
+            // this.maze.nodes[0][0].setIsStart(true);
+            // this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
+            this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
+            this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
+
             this.config.setGameState(2)
         } else {
             let currentDelay = this.config.visualizationDelay
@@ -71,8 +77,10 @@ export class GameStore {
             // Although the function setTimeout does not guarantee the specific delay in case the stack
             // is full, it does guarantee the order of execution
             this.timeouts.push(setTimeout(() => {
-                this.maze.nodes[0][0].setIsStart(true);
-                this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
+                // this.maze.nodes[0][0].setIsStart(true);
+                // this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
+                this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
+                this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
                 this.config.setGameState(2)
                 this.timeouts = []
             }, currentDelay + this.config.visualizationDelay))
@@ -86,7 +94,10 @@ export class GameStore {
         this.maze.applySingleAction({type: 'resetRoute'})
         this.maze.applySingleAction({type: 'resetVisited'})
 
-        const {newMaze, actionsToVisualize} = this.config.solvingFunction(this.maze.nodesToJS)
+        const {
+            newMaze,
+            actionsToVisualize
+        } = this.config.solvingFunction(this.maze.nodesToJS, this.maze.mazeStart, this.maze.mazeFinish)
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
