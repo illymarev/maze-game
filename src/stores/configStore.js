@@ -32,39 +32,6 @@ export const visualizationSpeedOptions = {
     }
 }
 
-export const gameStateOptions = {
-    0: {
-        id: 0,
-        title: 'Maze Generation Pending',
-        description: 'Select the generation algorithm and click "generate" to start!'
-    },
-    1: {
-        id: 1,
-        title: 'Generation In Progress',
-        description: 'Wait for the generation algorithm to finish before continuing.'
-    },
-    2: {
-        id: 2,
-        title: 'Ready To Start',
-        description: 'Click the the "solve" button on top or start solving the maze yourself!'
-    },
-    3: {
-        id: 3,
-        title: 'Game In Progress',
-        description: 'Continue playing or click the "solve" button if you need help!'
-    },
-    4: {
-        id: 4,
-        title: 'Solving In Progress',
-        description: 'Wait for the solving algorithm to finish before continuing.'
-    },
-    5: {
-        id: 5,
-        title: 'Finish! Maze Solved!',
-        description: 'Nicely done! Click "generate" to continue with a new maze!'
-    }
-}
-
 export const generationAlgorithmOptions = {
     0: {
         id: 0,
@@ -119,7 +86,6 @@ export const defaultStartAndFinishPlacementOptions = {
 
 export class ConfigStore {
     mazeSize = mazeSizeOptions[0]
-    gameState = gameStateOptions[0]
     visualizationSpeed = visualizationSpeedOptions[2]
     generationAlgorithm = generationAlgorithmOptions[0]
     solvingAlgorithm = solvingAlgorithmOptions[0]
@@ -149,10 +115,6 @@ export class ConfigStore {
         this.visualizationSpeed = visualizationSpeedOptions[visualizationSpeedOptionKey]
     }
 
-    setGameState(gameStateOptionKey) {
-        this.gameState = gameStateOptions[gameStateOptionKey]
-    }
-
     setGenerationAlgorithm(generationAlgorithmOptionKey) {
         this.generationAlgorithm = generationAlgorithmOptions[generationAlgorithmOptionKey]
     }
@@ -171,10 +133,6 @@ export class ConfigStore {
         return this.mazeSize.columns
     }
 
-    get visualizationInProgress() {
-        return [1, 4].includes(this.gameState.id)
-    }
-
     get visualizationDelay() {
         return this.visualizationSpeed.delay
     }
@@ -185,10 +143,6 @@ export class ConfigStore {
 
     get solvingFunction() {
         return this.solvingAlgorithm.relatedFunction
-    }
-
-    get isUsersSolvingInputAllowed() {
-        return [2, 3].includes(this.gameState.id)
     }
 
 }

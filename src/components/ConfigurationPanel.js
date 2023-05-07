@@ -1,6 +1,13 @@
-import {Button, InputLabel, MenuItem, Stack, Select, Typography} from "@mui/material";
-import {EditOutlined, SwipeVerticalOutlined} from "@mui/icons-material";
+import {Button, InputLabel, MenuItem, Stack, Select} from "@mui/material";
+import {SwipeVerticalOutlined} from "@mui/icons-material";
 import {observer} from "mobx-react";
+import {
+    generationPending,
+    generationInProgress,
+    solvingInProgress,
+    readyToSolve,
+    movingStartAndFinish
+} from "../stores/options/gameStates";
 import {
     visualizationSpeedOptions,
     generationAlgorithmOptions,
@@ -10,7 +17,7 @@ import {
 } from "../stores/configStore";
 import * as React from "react";
 
-const ConfigurationPanel = observer(({gameStore, config}) => {
+const ConfigurationPanel = observer(({gameStore, config, state}) => {
     const generationAlgorithmUIOptions = []
     const solvingAlgorithmUIOptions = []
     const visualizationSpeedUIOptions = []
@@ -47,19 +54,35 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
         )
     }
 
-    const onGenerationButtonClick = () => config.gameState.id === 1 ? gameStore.stopVisualization() : gameStore.generateMaze()
-    const generationButtonText = config.gameState.id === 1 ? 'Stop Generating' : 'Generate'
-    const generationButtonColor = config.gameState.id === 1 ? 'danger' : 'secondary'
+    const onGenerationButtonClick = () => {
+        state.gameState.id === generationInProgress ? gameStore.stopVisualization() : gameStore.generateMaze()
+    }
 
-    const onSolvingButtonClick = () => config.gameState.id === 4 ? gameStore.stopVisualization() : gameStore.solveMaze()
-    const solvingButtonText = config.gameState.id === 4 ? 'Stop Solving' : 'Solve'
-    const solvingButtonColor = config.gameState.id === 4 ? 'danger' : 'primary'
+    const onSolvingButtonClick = () => {
+        state.gameState.id === solvingInProgress ? gameStore.stopVisualization() : gameStore.solveMaze()
+    }
+
+    const onMoveStartFinishButtonClick = () => {
+        state.gameState.id === movingStartAndFinish ?
+            state.setGameState(readyToSolve) : state.setGameState(movingStartAndFinish)
+    }
+
+    const generationButtonText = state.gameState.id === generationInProgress ? 'Stop Generating' : 'Generate'
+    const generationButtonColor = state.gameState.id === generationInProgress ? 'danger' : 'secondary'
+
+    const solvingButtonText = state.gameState.id === solvingInProgress ? 'Stop Solving' : 'Solve'
+    const solvingButtonColor = state.gameState.id === solvingInProgress ? 'danger' : 'primary'
+
+    const moveStartFinishButtonText = state.gameState.id === movingStartAndFinish ?
+        'Stop Moving Start/Finish' : 'Move Start/Finish'
+
+    const moveStartFinishButtonColor = state.gameState.id === movingStartAndFinish ? 'danger' : 'neutral'
 
     return (
         <Stack width={'100%'} height={'100%'} alignItems={'center'}
                justifyContent={'space-evenly'}>
             <Button onClick={() => onGenerationButtonClick()}
-                    disabled={config.gameState.id === 4}
+                    disabled={state.gameState.id === solvingInProgress}
                     variant="contained" color={generationButtonColor} size='large'
                     sx={{
                         'border-radius': '1.25rem',
@@ -70,7 +93,7 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                 {generationButtonText}
             </Button>
             <Button onClick={() => onSolvingButtonClick()}
-                    disabled={[0, 1].includes(config.gameState.id)}
+                    disabled={[generationPending, generationInProgress].includes(state.gameState.id)}
                     variant="contained" color={solvingButtonColor} size='large'
                     sx={{
                         'border-radius': '1.25rem',
@@ -149,12 +172,14 @@ const ConfigurationPanel = observer(({gameStore, config}) => {
                 </Select>
             </Stack>
             <Stack alignItems={'center'}>
-                <Button disabled
-                        color={'neutral'}
+                <Button disabled={![readyToSolve, movingStartAndFinish].includes(state.gameState.id)}
+                        color={moveStartFinishButtonColor}
                         size={'large'}
                         variant={'text'}
-                        startIcon={<SwipeVerticalOutlined/>}>
-                    Move Start/Finish
+                        startIcon={<SwipeVerticalOutlined/>}
+                        onClick={() => onMoveStartFinishButtonClick()}
+                >
+                    {moveStartFinishButtonText}
                 </Button>
             </Stack>
         </Stack>

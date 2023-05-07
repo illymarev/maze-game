@@ -12,16 +12,15 @@ const drawerWidth = '20%'
 
 
 // TODO 3) Allow drag&drop of start/end points
-// TODO center the right part vertically for larger screens
 const MazeGame = observer(({gameStore}) => {
     const maze = gameStore.maze
     const config = gameStore.config
-    const uiState = gameStore.uiState
+    const state = gameStore.state
 
     return (
         <Box sx={{display: 'flex'}}
-             onMouseDown={() => uiState.setIsMouseDown(true)}
-             onMouseUp={() => uiState.setIsMouseDown(false)}>
+             onMouseDown={() => state.setIsMouseDown(true)}
+             onMouseUp={() => state.setIsMouseDown(false)}>
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -34,7 +33,7 @@ const MazeGame = observer(({gameStore}) => {
                 variant="permanent"
                 anchor="left"
             >
-                <ConfigurationPanel gameStore={gameStore} config={config}/>
+                <ConfigurationPanel gameStore={gameStore} config={config} state={state}/>
             </Drawer>
             <Box
                 component="main"
@@ -42,7 +41,7 @@ const MazeGame = observer(({gameStore}) => {
                 height={'100vh'}
             >
                 <Stack height={'100%'} justifyContent={'center'} alignItems={'center'}>
-                    <GameState config={config}/>
+                    <GameState state={state}/>
                     <MazeLegend/>
                     <Maze maze={maze} config={config}/>
                 </Stack>

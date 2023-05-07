@@ -1,19 +1,20 @@
 import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
+import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
 const MazeNode = observer(({node, config}) => {
 
-    const uiState = config.gameStore.uiState
+    const state = config.gameStore.state
 
     const registerUsersInput = () => {
         node.markVisited()
         // This should be safe because other game states do not allow the input
         if (node.isStart) {
-            config.setGameState(3)
+            state.setGameState(gameInProgress)
         } else if (node.isFinish) {
-            config.setGameState(5)
+            state.setGameState(finishedSolving)
         }
     }
 
@@ -40,14 +41,14 @@ const MazeNode = observer(({node, config}) => {
         <Grid item={true} xs={1}
               onMouseDown={(e) => {
                   e.preventDefault()
-                  if ((node.isStart || node.hasVisitedNeighbour) && config.isUsersSolvingInputAllowed) {
+                  if ((node.isStart || node.hasVisitedNeighbour) && state.isUsersSolvingInputAllowed) {
                       registerUsersInput()
                   }
               }}
               onMouseEnter={() => {
-                  if (uiState.isMouseDown &&
+                  if (state.isMouseDown &&
                       (node.isStart || node.hasVisitedNeighbour) &&
-                      config.isUsersSolvingInputAllowed
+                      state.isUsersSolvingInputAllowed
                   ) {
                       registerUsersInput()
                   }

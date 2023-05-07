@@ -1,13 +1,20 @@
 import {ConfigStore} from "./configStore";
 import {MazeStore} from "./mazeStore";
-import {UiState} from "./uiStateStore";
+import {StateStore} from "./stateStore";
 import {reaction} from "mobx";
 import {findDiameter} from "../algorithms/diameter";
+import {
+    generationPending,
+    generationInProgress,
+    solvingInProgress,
+    readyToSolve,
+    finishedSolving
+} from "./options/gameStates";
 
 export class GameStore {
 
     constructor() {
-        this.uiState = new UiState(this)
+        this.state = new StateStore(this)
         this.config = new ConfigStore(this)
         this.maze = new MazeStore(this)
 
@@ -15,7 +22,7 @@ export class GameStore {
             () => this.config.mazeSize.id,
             () => {
                 this.stopVisualization();
-                this.config.setGameState(0);
+                this.state.setGameState(generationPending);
                 this.maze.createEmptyNodes()
             }
         )
@@ -36,18 +43,18 @@ export class GameStore {
         }
         this.timeouts = []
 
-        if (this.config.gameState.id === 1) {
-            this.config.setGameState(0)
+        if (this.state.gameState.id === generationInProgress) {
+            this.state.setGameState(generationPending)
             this.maze.createEmptyNodes()
-        } else if (this.config.gameState.id === 4) {
-            this.config.setGameState(2)
+        } else if (this.state.gameState.id === solvingInProgress) {
+            this.state.setGameState(readyToSolve)
             this.maze.applySingleAction({type: 'resetVisited'})
             this.maze.applySingleAction({type: 'resetCurrent'})
         }
     }
 
     generateMaze() {
-        this.config.setGameState(1)
+        this.state.setGameState(generationInProgress)
 
         // In case the maze is already generated, it should be reset to a new, empty one
         this.maze.createEmptyNodes()
@@ -67,13 +74,10 @@ export class GameStore {
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
-            // TODO make optional setting
-            // this.maze.nodes[0][0].setIsStart(true);
-            // this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
             this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
             this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
 
-            this.config.setGameState(2)
+            this.state.setGameState(readyToSolve)
         } else {
             let currentDelay = this.config.visualizationDelay
 
@@ -91,14 +95,14 @@ export class GameStore {
                 // this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
                 this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
                 this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
-                this.config.setGameState(2)
+                this.state.setGameState(readyToSolve)
                 this.timeouts = []
             }, currentDelay + this.config.visualizationDelay))
         }
     }
 
     solveMaze() {
-        this.config.setGameState(4)
+        this.state.setGameState(solvingInProgress)
 
         // In case already solved, but the user wants to solve again (maybe with different speed, etc.)
         this.maze.applySingleAction({type: 'resetRoute'})
@@ -111,7 +115,7 @@ export class GameStore {
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
-            this.config.setGameState(5)
+            this.state.setGameState(finishedSolving)
         } else {
             let currentDelay = this.config.visualizationDelay
 
@@ -125,7 +129,7 @@ export class GameStore {
             // Although the function setTimeout does not guarantee the specific delay in case the stack
             // is full, it does guarantee the order of execution
             this.timeouts.push(setTimeout(() => {
-                this.config.setGameState(5)
+                this.state.setGameState(finishedSolving)
                 this.timeouts = []
             }, currentDelay + this.config.visualizationDelay))
         }
