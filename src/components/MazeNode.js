@@ -37,6 +37,7 @@ const MazeNode = observer(({node, config}) => {
         nodeText = ''
     }
 
+    // TODO read about react material ui + drag and drop
     return (
         <Grid item={true} xs={1}
               onMouseDown={(e) => {
