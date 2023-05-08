@@ -5,13 +5,13 @@ import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
 // TODO route bug when nodes are close
+// TODO make the drag and drop more visual
 const MazeNode = observer(({node, config}) => {
 
     const state = config.gameStore.state
 
     const registerUsersInput = () => {
         node.markVisited()
-        // This should be safe because other game states do not allow the input
         if (node.isStart) {
             state.setGameState(gameInProgress)
         } else if (node.isFinish) {
@@ -83,7 +83,6 @@ const MazeNode = observer(({node, config}) => {
         nodeText = ''
     }
 
-    // TODO read about react material ui + drag and drop
     return (
         <Grid item={true} xs={1}
               onMouseDown={e => {
