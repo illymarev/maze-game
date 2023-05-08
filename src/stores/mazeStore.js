@@ -137,17 +137,25 @@ export class MazeNode {
     }
 
     setIsStart(bool) {
-        this.isStart = bool
         if (bool === true) {
+            const previousStart = this.maze.mazeStart
+            if (previousStart) {
+                this.maze.nodes[previousStart.row][previousStart.column].setIsStart(false)
+            }
             this.maze.mazeStart = {row: this.row, column: this.column}
         }
+        this.isStart = bool
     }
 
     setIsFinish(bool) {
-        this.isFinish = bool
         if (bool === true) {
+            const previousFinish = this.maze.mazeFinish
+            if (previousFinish) {
+                this.maze.nodes[previousFinish.row][previousFinish.column].setIsFinish(false)
+            }
             this.maze.mazeFinish = {row: this.row, column: this.column}
         }
+        this.isFinish = bool
     }
 
     markCurrent() {
