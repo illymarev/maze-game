@@ -4,8 +4,6 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
-// TODO solve bug (details in gameStore)
-// TODO route visualization
 // TODO consider combining "markPath" into 1 action with mark Visited so that it does not create an impression of
 // animation lag
 
@@ -14,6 +12,7 @@ import {observer} from "mobx-react";
 // TODO comments
 const MazeNode = observer(({node, config}) => {
 
+    const gameStore = config.gameStore
     const state = config.gameStore.state
 
     const registerUsersInput = () => {
@@ -21,6 +20,7 @@ const MazeNode = observer(({node, config}) => {
         if (node.isStart) {
             state.setGameState(gameInProgress)
         } else if (node.isFinish) {
+            gameStore.showCorrectPath()
             state.setGameState(finishedSolving)
         }
     }

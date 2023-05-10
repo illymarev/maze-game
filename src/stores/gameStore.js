@@ -147,4 +147,11 @@ export class GameStore {
             }
         }
     }
+
+    showCorrectPath() {
+        const nodes = this.maze.nodesToJS
+        nodes.map(row => row.map(item => item.visited = false))
+        const {route} = this.config.solvingFunction(nodes, this.maze.mazeStart, this.maze.mazeFinish)
+        this.maze.applySingleAction({type: 'markRoute', payload: route})
+    }
 }
