@@ -8,15 +8,12 @@ const breadthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
 
     findRoute(maze, startNode, endNode, actionsToVisualize)
     const route = trackRoute(endNode)
-    actionsToVisualize.push({
-        type: 'markRoute',
-        payload: route.map(node => ({row: node.row, column: node.column}))
-    })
     removePreviousNodes(maze)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize
+        actionsToVisualize: actionsToVisualize,
+        route: route
     }
 }
 
@@ -46,7 +43,10 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
                 payload: {row: neighbour.row, column: neighbour.column}
             })
 
-            if (neighbour === endNode) queue.length = 0
+            if (neighbour === endNode) {
+                queue.length = 0;
+                break;
+            }
         }
 
         actionsToVisualize.push({

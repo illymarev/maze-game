@@ -17,13 +17,12 @@ export const visualizationSpeedOptions = {
     },
     2: {
         id: 2,
-        delay: 5,
         label: 'Fast'
     },
     3: {
         id: 3,
-        delay: 2,
-        label: 'Very Fast'
+        delay: 1.5,
+        label: 'Very fast'
     },
     4: {
         id: 4,

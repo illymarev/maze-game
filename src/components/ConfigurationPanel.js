@@ -107,7 +107,7 @@ const ConfigurationPanel = observer(({gameStore, config, state}) => {
             <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
                 <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
                 <Select
-                    disabled={config.visualizationInProgress}
+                    disabled={state.visualizationInProgress}
                     labelId="generation_algorithm_label"
                     id="generation_algorithm_selector"
                     sx={{'border-radius': '1.25rem', width: '90%'}}
@@ -121,7 +121,7 @@ const ConfigurationPanel = observer(({gameStore, config, state}) => {
             <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
                 <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
                 <Select
-                    disabled={config.visualizationInProgress}
+                    disabled={state.visualizationInProgress}
                     labelId="solving_algorithm_label"
                     id="solving_algorithm_selector"
                     sx={{'border-radius': '1.25rem', width: '90%'}}
@@ -134,7 +134,7 @@ const ConfigurationPanel = observer(({gameStore, config, state}) => {
             <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
                 <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
                 <Select
-                    disabled={config.visualizationInProgress}
+                    disabled={state.visualizationInProgress}
                     labelId="visualization_speed_label"
                     id="visualization_speed_slider"
                     sx={{'border-radius': '1.25rem', width: '90%'}}
@@ -148,7 +148,7 @@ const ConfigurationPanel = observer(({gameStore, config, state}) => {
                 {/*// TODO verify all ids*/}
                 <InputLabel id="visualization_speed_label">Maze Size</InputLabel>
                 <Select
-                    disabled={config.visualizationInProgress}
+                    disabled={state.visualizationInProgress}
                     labelId="visualization_speed_label"
                     id="visualization_speed_slider"
                     sx={{'border-radius': '1.25rem', width: '90%'}}
@@ -161,7 +161,7 @@ const ConfigurationPanel = observer(({gameStore, config, state}) => {
             <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
                 <InputLabel id="visualization_speed_label">Default Start/Finish Position</InputLabel>
                 <Select
-                    disabled={config.visualizationInProgress}
+                    disabled={state.visualizationInProgress}
                     labelId="visualization_speed_label"
                     id="visualization_speed_slider"
                     sx={{'border-radius': '1.25rem', width: '90%'}}

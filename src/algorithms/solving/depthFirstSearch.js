@@ -10,15 +10,12 @@ const depthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
 
     findRoute(maze, startNode, endNode, actionsToVisualize)
     const route = trackRoute(endNode)
-    actionsToVisualize.push({
-        type: 'markRoute',
-        payload: route.map(node => ({row: node.row, column: node.column}))
-    })
     removePreviousNodes(maze)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize
+        actionsToVisualize: actionsToVisualize,
+        route: route
     }
 }
 

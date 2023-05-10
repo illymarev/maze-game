@@ -4,8 +4,14 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
-// TODO route bug when nodes are close
-// TODO make the drag and drop more visual
+// TODO solve bug (details in gameStore)
+// TODO route visualization
+// TODO consider combining "markPath" into 1 action with mark Visited so that it does not create an impression of
+// animation lag
+
+// TODO kruskal's algorithm
+// TODO cleanup
+// TODO comments
 const MazeNode = observer(({node, config}) => {
 
     const state = config.gameStore.state
