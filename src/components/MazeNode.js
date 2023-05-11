@@ -4,9 +4,6 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
-// TODO consider combining "markPath" into 1 action with mark Visited so that it does not create an impression of
-// animation lag
-
 // TODO kruskal's algorithm
 // TODO cleanup
 // TODO comments
