@@ -12,6 +12,7 @@ import {
 export class StateStore {
     gameStore
 
+    movableItem = null
     isMouseDown = false
     gameState = gameStateOptions[generationPending]
 
@@ -30,6 +31,10 @@ export class StateStore {
 
     setIsMouseDown(bool) {
         this.isMouseDown = bool
+    }
+
+    setMovableItem(item){
+        this.movableItem = item
     }
 
     // Computeds

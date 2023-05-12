@@ -1,5 +1,7 @@
 import {directions} from "./directions";
 
+// TODO why is it called helpers, but there's utils in generation? Keep consistency
+
 // returns neighbour nodes if path to them exists
 export const getReachableNeighborNodes = (maze, node) => {
     const validPathways = Object.keys(node.availablePathways).filter(k => node.availablePathways[k])

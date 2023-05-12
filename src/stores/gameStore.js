@@ -21,27 +21,28 @@ export class GameStore {
         reaction(
             () => this.config.mazeSize.id,
             () => {
-                this.stopVisualization();
                 this.state.setGameState(generationPending);
                 this.maze.createEmptyNodes()
             }
         )
 
-
-        // Timeouts are significantly faster than setInterval & requestAnimationFrame when doing low delay.
-        // The main purpose of extra-low delays is to ensure that large mazes can be generated in short periods of time,
-        // so frame skipping is fine in this scenario and I think that it's better to skip frames than wait for minutes
-        // while something like 100x100 maze is generated.
-        // A separate speed that will use requestAnimationFrame might be added in future versions
-        // TODO write a note about the fact that this is an expected behaviour somewhere in the guide
-        this.timeouts = [] // keep track of all timeouts in order to be able to cancel them
+        this.interval = null
+        this.actionsToVisualize = []
+        this.startNode = null
+        this.endNode = null
+        this.correctRoute = null
+        this.blockVisualization = false
     }
 
     stopVisualization() {
-        for (const timeoutId of this.timeouts) {
-            clearTimeout(timeoutId)
+        if (this.config.visualizationSpeed.id === 2) {
+            this.blockVisualization = true
+        } else {
+            clearInterval(this.interval)
+            this.interval = null
         }
-        this.timeouts = []
+        this.actionsToVisualize = []
+
 
         if (this.state.gameState.id === generationInProgress) {
             this.state.setGameState(generationPending)
@@ -53,51 +54,69 @@ export class GameStore {
         }
     }
 
+    visualizeSingleStep() {
+        if (this.config.visualizationSpeed.id === 2 && this.blockVisualization) {
+            this.blockVisualization = false
+            return
+        }
+
+        if (this.actionsToVisualize.length) {
+            const action = this.actionsToVisualize.pop()
+            this.maze.applySingleAction(action)
+
+            if (this.config.visualizationSpeed.id === 2) {
+                return window.requestAnimationFrame(this.visualizeSingleStep.bind(this))
+            } else {
+                return
+            }
+        }
+
+        this.applyFinalVisualizationActions()
+        clearInterval(this.interval)
+        this.interval = null
+    }
+
+    applyFinalVisualizationActions() {
+        if (this.state.gameState.id === generationInProgress) {
+            this.state.setGameState(readyToSolve)
+            this.maze.nodes[this.startNode.row][this.startNode.column].setIsStart(true)
+            this.maze.nodes[this.endNode.row][this.endNode.column].setIsFinish(true)
+        } else if (this.state.gameState.id === solvingInProgress) {
+            this.state.setGameState(finishedSolving)
+            this.maze.applySingleAction({type: 'markRoute', payload: this.correctRoute})
+        }
+    }
+
     generateMaze() {
         this.state.setGameState(generationInProgress)
-
         // In case the maze is already generated, it should be reset to a new, empty one
         this.maze.createEmptyNodes()
 
+        // Reset these values because these point to an old maze, not the new one
+        this.maze.mazeStart = null
+        this.maze.mazeFinish = null
+
         const {newMaze, actionsToVisualize} = this.config.generationFunction(this.maze.nodesToJS)
 
-        let {startNode, endNode} = {
-            startNode: {row: 0, column: 0},
-            endNode: {row: this.config.rows - 1, column: this.config.columns - 1}
-        }
         if (this.config.defaultStartAndFinishPlacement.id === 0) {
-            const furthestNodesCombination = findDiameter(newMaze)
-            startNode = furthestNodesCombination.startNode
-            endNode = furthestNodesCombination.endNode
+            const {startNode, endNode} = findDiameter(newMaze)
+            this.startNode = startNode
+            this.endNode = endNode
+        } else {
+            this.startNode = {row: 0, column: 0}
+            this.endNode = {row: this.config.rows - 1, column: this.config.columns - 1}
         }
-
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
-            this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
-            this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
-
-            this.state.setGameState(readyToSolve)
+            this.applyFinalVisualizationActions()
         } else {
-            let currentDelay = this.config.visualizationDelay
-
-            for (const action of actionsToVisualize) {
-                this.timeouts.push(setTimeout(() => {
-                    this.maze.applySingleAction(action)
-                }, currentDelay))
-                currentDelay = currentDelay + this.config.visualizationDelay
+            this.actionsToVisualize = actionsToVisualize.reverse() // reverse to avoid building a queue
+            if (this.config.visualizationSpeed.id === 2) {
+                window.requestAnimationFrame(this.visualizeSingleStep.bind(this))
+            } else {
+                this.interval = setInterval(this.visualizeSingleStep.bind(this), this.config.visualizationDelay)
             }
-
-            // Although the function setTimeout does not guarantee the specific delay in case the stack
-            // is full, it does guarantee the order of execution
-            this.timeouts.push(setTimeout(() => {
-                // this.maze.nodes[0][0].setIsStart(true);
-                // this.maze.nodes[this.config.rows - 1][this.config.columns - 1].setIsFinish(true);
-                this.maze.nodes[startNode.row][startNode.column].setIsStart(true)
-                this.maze.nodes[endNode.row][endNode.column].setIsFinish(true)
-                this.state.setGameState(readyToSolve)
-                this.timeouts = []
-            }, currentDelay + this.config.visualizationDelay))
         }
     }
 
@@ -110,28 +129,29 @@ export class GameStore {
 
         const {
             newMaze,
-            actionsToVisualize
+            actionsToVisualize,
+            route
         } = this.config.solvingFunction(this.maze.nodesToJS, this.maze.mazeStart, this.maze.mazeFinish)
+
+        this.correctRoute = route
 
         if (this.config.visualizationDelay === 0) {
             this.maze.setNodes(newMaze)
-            this.state.setGameState(finishedSolving)
+            this.applyFinalVisualizationActions()
         } else {
-            let currentDelay = this.config.visualizationDelay
-
-            for (const action of actionsToVisualize) {
-                this.timeouts.push(setTimeout(() => {
-                    this.maze.applySingleAction(action)
-                }, currentDelay))
-                currentDelay = currentDelay + this.config.visualizationDelay
+            this.actionsToVisualize = actionsToVisualize.reverse()
+            if (this.config.visualizationSpeed.id === 2) {
+                window.requestAnimationFrame(this.visualizeSingleStep.bind(this))
+            } else {
+                this.interval = setInterval(this.visualizeSingleStep.bind(this), this.config.visualizationDelay)
             }
-
-            // Although the function setTimeout does not guarantee the specific delay in case the stack
-            // is full, it does guarantee the order of execution
-            this.timeouts.push(setTimeout(() => {
-                this.state.setGameState(finishedSolving)
-                this.timeouts = []
-            }, currentDelay + this.config.visualizationDelay))
         }
+    }
+
+    showCorrectPath() {
+        const nodes = this.maze.nodesToJS
+        nodes.map(row => row.map(item => item.visited = false))
+        const {route} = this.config.solvingFunction(nodes, this.maze.mazeStart, this.maze.mazeFinish)
+        this.maze.applySingleAction({type: 'markRoute', payload: route})
     }
 }

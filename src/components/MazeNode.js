@@ -4,19 +4,67 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
+// TODO cleanup
+// TODO comments
 const MazeNode = observer(({node, config}) => {
 
+    const gameStore = config.gameStore
     const state = config.gameStore.state
 
     const registerUsersInput = () => {
         node.markVisited()
-        // This should be safe because other game states do not allow the input
         if (node.isStart) {
             state.setGameState(gameInProgress)
         } else if (node.isFinish) {
+            gameStore.showCorrectPath()
             state.setGameState(finishedSolving)
         }
     }
+
+    let onMouseDownFunc, onMouseEnterFunc, onMouseUpFunc
+    if (state.isUsersSolvingInputAllowed) {
+
+        onMouseDownFunc = e => {
+            e.preventDefault()
+            if (node.isStart || node.hasVisitedNeighbour) {
+                registerUsersInput()
+            }
+        }
+        onMouseEnterFunc = () => {
+            if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
+                registerUsersInput()
+            }
+        }
+        onMouseUpFunc = () => {
+        }
+
+    } else if (state.isMovingStartAndFinishedAllowed) {
+        onMouseDownFunc = (e) => {
+            e.preventDefault();
+            if (node.isStart || node.isFinish) {
+                const movableItem = node.isStart ? 'start' : 'finish'
+                state.setMovableItem(movableItem)
+            }
+        }
+        onMouseEnterFunc = () => {
+        }
+        onMouseUpFunc = () => {
+            if (state.movableItem) {
+                state.movableItem === 'start' ? node.setIsStart(true) : node.setIsFinish(true)
+                state.setMovableItem(null)
+            }
+        }
+
+    } else {
+        onMouseDownFunc = (e) => {
+            e.preventDefault()
+        }
+        onMouseEnterFunc = () => {
+        }
+        onMouseUpFunc = () => {
+        }
+    }
+
 
     const generationVisualizationStyle = {
         backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
@@ -37,22 +85,16 @@ const MazeNode = observer(({node, config}) => {
         nodeText = ''
     }
 
-    // TODO read about react material ui + drag and drop
     return (
         <Grid item={true} xs={1}
-              onMouseDown={(e) => {
-                  e.preventDefault()
-                  if ((node.isStart || node.hasVisitedNeighbour) && state.isUsersSolvingInputAllowed) {
-                      registerUsersInput()
-                  }
+              onMouseDown={e => {
+                  onMouseDownFunc(e)
               }}
               onMouseEnter={() => {
-                  if (state.isMouseDown &&
-                      (node.isStart || node.hasVisitedNeighbour) &&
-                      state.isUsersSolvingInputAllowed
-                  ) {
-                      registerUsersInput()
-                  }
+                  onMouseEnterFunc()
+              }}
+              onMouseUp={() => {
+                  onMouseUpFunc()
               }}
               sx={{
                   aspectRatio: '1/1', display: 'flex',

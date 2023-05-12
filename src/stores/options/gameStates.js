@@ -25,7 +25,7 @@ export const gameStateOptions = {
     [movingStartAndFinish]: {
         id: movingStartAndFinish,
         title: 'Moving Start And Finish',
-        description: 'Drag the start and/or finish icons in order to change their placement'
+        description: 'Drag the start and finish icons in order to change their placement'
     },
     [gameInProgress]: {
         id: gameInProgress,

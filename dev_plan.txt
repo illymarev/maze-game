@@ -12,7 +12,7 @@ v2 plan:
 2) New design in code /done
 - Add the option to change grid size /done
 - Edges of diameter as start/end /done
-- Allow moving start/end when just generated
+- Allow moving start/end when just generated /done
 - Cleanup
 - Add documentation and comments
 - Check the grammar and spelling
@@ -24,14 +24,11 @@ NOTES:
 IDEAS:
  Move the diameter calculation to the AWS lambda/web worker to avoid the freeze
  Do not change the maze on size change, but only after the "generate" button click
- Highlight/animation to buttons to imply that they need to be clicked
- requestAnimationFrame speed instead of "fast" delay
+ Highlight/animate buttons to imply that they need to be clicked
  Add some animations to the maze
- Add the correct path highlight after the user solves the maze
- Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
- Consider adding kruskal's and prim's algorithms
  Random weight generation + weighted path solving
  Add a different view option: graph
  Pause feature
  Data structures visualizer
+ Maybe add Wilson's and Eller's algorithms
 
