@@ -4,7 +4,6 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
-// TODO kruskal's algorithm
 // TODO cleanup
 // TODO comments
 const MazeNode = observer(({node, config}) => {

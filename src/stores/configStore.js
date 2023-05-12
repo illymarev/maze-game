@@ -3,7 +3,7 @@ import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm"
 import recursiveBacktracking from "../algorithms/generation/recursiveBacktracking";
 import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
-import {kruskalsAlgorithm} from "../algorithms/generation/kruskalsAlgorithm";
+import kruskalsAlgorithm from "../algorithms/generation/kruskalsAlgorithm";
 
 export const visualizationSpeedOptions = {
     0: {
@@ -40,7 +40,7 @@ export const generationAlgorithmOptions = {
     },
     1: {
         id: 1,
-        title: "Kruskal's algorithm (current highlight)",
+        title: "Kruskal's algorithm (current highlighted)",
         relatedFunction: kruskalsAlgorithm.bind(null, true)
     },
     2: {
@@ -73,14 +73,14 @@ export const mazeSizeOptions = {
     0: {
         id: 0,
         title: 'Small',
-        rows: 6,
-        columns: 12
+        rows: 8,
+        columns: 16
     },
     1: {
         id: 1,
         title: 'Medium',
-        rows: 12,
-        columns: 24
+        rows: 13,
+        columns: 26
     },
     2: {
         id: 2,

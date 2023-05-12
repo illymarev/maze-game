@@ -22,16 +22,13 @@ NOTES:
  https://illymarev.github.io/maze-game/
 
 IDEAS:
- Combining "markPath" into 1 action with mark Visited so that it does not create an impression of animation lag
  Move the diameter calculation to the AWS lambda/web worker to avoid the freeze
  Do not change the maze on size change, but only after the "generate" button click
- Highlight/animation to buttons to imply that they need to be clicked
+ Highlight/animate buttons to imply that they need to be clicked
  Add some animations to the maze
- Add the correct path highlight after the user solves the maze
- Add generation algorithm with multiple paths in order to demonstrate shortest path in solution
- Consider adding kruskal's and prim's algorithms
  Random weight generation + weighted path solving
  Add a different view option: graph
  Pause feature
  Data structures visualizer
+ Maybe add Wilson's and Eller's algorithms
 
