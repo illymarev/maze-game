@@ -3,6 +3,7 @@ import huntAndKillAlgorithm from "../algorithms/generation/huntAndKillAlgorithm"
 import recursiveBacktracking from "../algorithms/generation/recursiveBacktracking";
 import breadthFirstSearch from "../algorithms/solving/breadthFirstSearch";
 import depthFirstSearch from "../algorithms/solving/depthFirstSearch";
+import {kruskalsAlgorithm} from "../algorithms/generation/kruskalsAlgorithm";
 
 export const visualizationSpeedOptions = {
     0: {
@@ -34,14 +35,25 @@ export const visualizationSpeedOptions = {
 export const generationAlgorithmOptions = {
     0: {
         id: 0,
-        title: 'Hunt and Kill Algorithm',
-        relatedFunction: huntAndKillAlgorithm
+        title: "Kruskal's algorithm (no current highlight)",
+        relatedFunction: kruskalsAlgorithm.bind(null, false)
     },
     1: {
         id: 1,
+        title: "Kruskal's algorithm (current highlight)",
+        relatedFunction: kruskalsAlgorithm.bind(null, true)
+    },
+    2: {
+        id: 2,
+        title: 'Hunt and Kill Algorithm',
+        relatedFunction: huntAndKillAlgorithm
+    },
+    3: {
+        id: 3,
         title: 'Recursive Backtracking',
         relatedFunction: recursiveBacktracking
     },
+
 }
 
 export const solvingAlgorithmOptions = {

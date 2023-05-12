@@ -41,6 +41,16 @@ export class MazeStore {
                     this.nodes[item.row][item.column].markPath(item.path)
                 }
                 break
+            case 'bulkMarkCurrent':
+                for (let item of action.payload){
+                    this.nodes[item.row][item.column].markCurrent()
+                }
+                break
+            case 'bulkClearCurrent':
+                for (let item of action.payload){
+                    this.nodes[item.row][item.column].clearCurrent()
+                }
+                break
             case 'resetRoute':
                 for (let row of this.nodes) {
                     for (let node of row) {
