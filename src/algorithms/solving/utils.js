@@ -2,8 +2,7 @@ export const trackRoute = endNode => {
     const route = []
     let node = endNode
     while (node) {
-        route.push(node)
-        node.isRoute = true
+        route.push({row: node.row, column: node.column})
         node = node.previousNode
     }
     route.reverse()

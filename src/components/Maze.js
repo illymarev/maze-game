@@ -1,28 +1,17 @@
 import {Grid} from "@mui/material";
 import MazeNode from "./MazeNode";
+import {observer} from "mobx-react";
 
-const Maze = ({mazeNodes, gameStateId, markNodeVisited}) => {
-    const [rowsCount, columnsCount] = [mazeNodes.length, mazeNodes[0].length]
-
+const Maze = observer(({maze, config}) => {
     return (
-        <Grid columns={columnsCount} container width={{xs: '80%', md: '65%', lg: '60%'}}>
-            {mazeNodes.map(
-                (row, rowNumber) => row.map(
-                    (node, columnNumber) =>
-                        <MazeNode
-                            key={`${rowNumber}-${columnNumber}`}
-                            rowNumber={rowNumber}
-                            columnNumber={columnNumber}
-                            node={node}
-                            rowsCount={rowsCount}
-                            columnsCount={columnsCount}
-                            gameStateId={gameStateId}
-                            handleMouseEnter={markNodeVisited}
-                        />
+        <Grid columns={config.columns} container width={{xs: '90%', lg: '93%', xxl: '97%'}}>
+            {maze.nodes.map(
+                row => row.map(
+                    node => <MazeNode key={`${node.row}-${node.column}`} node={node} config={config}/>
                 )
             )}
         </Grid>
     )
-}
+})
 
 export default Maze;

@@ -1,14 +1,6 @@
 import {directions} from "./directions";
 
-export const checkIfValidStep = (maze, row, column) => {
-    if (row === 0 && column === 0) {
-        return true
-    } else {
-        const node = maze[row][column]
-        const neighborNodes = getReachableNeighborNodes(maze, node)
-        return neighborNodes.some(node => node.visited)
-    }
-}
+// TODO why is it called helpers, but there's utils in generation? Keep consistency
 
 // returns neighbour nodes if path to them exists
 export const getReachableNeighborNodes = (maze, node) => {

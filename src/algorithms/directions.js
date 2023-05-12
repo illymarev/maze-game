@@ -1,5 +1,3 @@
-import {shuffleArray} from "./helpers";
-
 /**
  These coordinates are based on the values of the matrix.
  Given the matrix:

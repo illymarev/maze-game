@@ -1,40 +1,83 @@
 import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
-import {memo} from "react";
+import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
+import {observer} from "mobx-react";
 
-const MazeNode = memo(({
-                           handleMouseEnter,
-                           gameStateId,
-                           rowNumber,
-                           columnNumber,
-                           rowsCount,
-                           columnsCount,
-                           node: {current, visited, availablePathways, isRoute}
-                       }) => {
+const MazeNode = observer(({node, config}) => {
 
-    const isStart = rowNumber === 0 && columnNumber === 0
-    const isFinish = rowNumber === rowsCount - 1 && columnNumber === columnsCount - 1
+    const gameStore = config.gameStore
+    const state = config.gameStore.state
+
+    const registerUsersInput = () => {
+        node.markVisited()
+        if (node.isStart) {
+            state.setGameState(gameInProgress)
+        } else if (node.isFinish) {
+            gameStore.showCorrectPath()
+            state.setGameState(finishedSolving)
+        }
+    }
+
+    let onMouseDownFunc, onMouseEnterFunc, onMouseUpFunc
+    if (state.isUsersSolvingInputAllowed) {
+
+        onMouseDownFunc = e => {
+            e.preventDefault()
+            if (node.isStart || node.hasVisitedNeighbour) {
+                registerUsersInput()
+            }
+        }
+        onMouseEnterFunc = () => {
+            if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
+                registerUsersInput()
+            }
+        }
+        onMouseUpFunc = () => {
+        }
+
+    } else if (state.isMovingStartAndFinishedAllowed) {
+        onMouseDownFunc = (e) => {
+            e.preventDefault();
+            if (node.isStart || node.isFinish) {
+                const movableItem = node.isStart ? 'start' : 'finish'
+                state.setMovableItem(movableItem)
+            }
+        }
+        onMouseEnterFunc = () => {
+        }
+        onMouseUpFunc = () => {
+            if (state.movableItem) {
+                state.movableItem === 'start' ? node.setIsStart(true) : node.setIsFinish(true)
+                state.setMovableItem(null)
+            }
+        }
+
+    } else {
+        onMouseDownFunc = (e) => {
+            e.preventDefault()
+        }
+        onMouseEnterFunc = () => {
+        }
+        onMouseUpFunc = () => {
+        }
+    }
+
 
     const generationVisualizationStyle = {
-        backgroundColor: visited ? 'rgba(29,227,124,0.35)' : null
+        backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
     }
-    if (current) {
+    if (node.current) {
         generationVisualizationStyle.backgroundColor = '#3b8ef1'
     }
-    if (isRoute){
+    if (node.isRoute) {
         generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
 
-    // TODO inprove styling
-    const selectedStyle = gameStateId === 1 ? generationVisualizationStyle : generationVisualizationStyle
-
-    let nodeText = ''
-    if (gameStateId === 1) {
-        nodeText = ''
-    } else if (isStart) {
+    let nodeText
+    if (node.isStart) {
         nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>
-    } else if (isFinish) {
+    } else if (node.isFinish) {
         nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>
     } else {
         nodeText = ''
@@ -42,19 +85,23 @@ const MazeNode = memo(({
 
     return (
         <Grid item={true} xs={1}
-              onMouseDown={(e) => {
-                  e.preventDefault()
-                  handleMouseEnter(rowNumber, columnNumber, true)
+              onMouseDown={e => {
+                  onMouseDownFunc(e)
               }}
-              onMouseEnter={() => handleMouseEnter(rowNumber, columnNumber)}
+              onMouseEnter={() => {
+                  onMouseEnterFunc()
+              }}
+              onMouseUp={() => {
+                  onMouseUpFunc()
+              }}
               sx={{
                   aspectRatio: '1/1', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  borderTop: availablePathways.north ? null : '2px solid #ccc',
-                  borderBottom: availablePathways.south ? null : '2px solid #ccc',
-                  borderLeft: availablePathways.west ? null : '2px solid #ccc',
-                  borderRight: availablePathways.east ? null : '2px solid #ccc',
-                  ...selectedStyle
+                  borderTop: node.availablePathways.north ? null : '2px solid #ccc',
+                  borderBottom: node.availablePathways.south ? null : '2px solid #ccc',
+                  borderLeft: node.availablePathways.west ? null : '2px solid #ccc',
+                  borderRight: node.availablePathways.east ? null : '2px solid #ccc',
+                  ...generationVisualizationStyle
               }}>
             {nodeText}
         </Grid>

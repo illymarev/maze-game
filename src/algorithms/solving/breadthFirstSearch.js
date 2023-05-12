@@ -1,22 +1,19 @@
 import {getReachableNeighborNodes} from "../helpers";
 import {removePreviousNodes, trackRoute} from "./utils";
 
-const breadthFirstSearch = maze => {
-    const startNode = maze[0][0]
-    const endNode = maze[maze.length - 1][maze[0].length - 1]
+const breadthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
+    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
+    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
     const actionsToVisualize = []
 
     findRoute(maze, startNode, endNode, actionsToVisualize)
     const route = trackRoute(endNode)
-    actionsToVisualize.push({
-        type: 'markRoute',
-        payload: route.map(node => ({row: node.row, column: node.column}))
-    })
     removePreviousNodes(maze)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize
+        actionsToVisualize: actionsToVisualize,
+        route: route
     }
 }
 
@@ -30,7 +27,7 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
     })
 
     while (queue.length) {
-        const currentNode = queue.shift()
+        const currentNode = queue.shift() // todo implement a queue
         actionsToVisualize.push({
             type: 'markCurrent',
             payload: {row: currentNode.row, column: currentNode.column}
@@ -46,7 +43,10 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
                 payload: {row: neighbour.row, column: neighbour.column}
             })
 
-            if (neighbour === endNode) queue.length = 0
+            if (neighbour === endNode) {
+                queue.length = 0;
+                break;
+            }
         }
 
         actionsToVisualize.push({

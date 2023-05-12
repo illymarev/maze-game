@@ -14,7 +14,7 @@ const MazeLegend = memo(() => (
         <Stack direction='row' justifyContent='center' alignItems='center' spacing={0.5}>
             <Card variant="outlined"
                   sx={{
-                      'background': 'rgba(29,227,124)',
+                      'background': 'rgba(29,227,124, 0.35)',
                       'aspectRatio': '1/1',
                       'width': '15px'
                   }}></Card>
@@ -45,7 +45,8 @@ const MazeLegend = memo(() => (
                       'aspectRatio': '1/1',
                       'width': '15px'
                   }}></Card>
-            <span>Solving Algorithm's Path</span>
+            {/*TODO think about the wording*/}
+            <span>Correct Path</span>
         </Stack>
     </Stack>
 ))
