@@ -5,9 +5,11 @@ export default class Queue {
         this.rear = 0
     }
 
-    enqueue(value) {
-        this.items[this.rear] = value
-        this.rear++
+    clear() {
+        while (this.front < this.rear) {
+            delete this.items[this.front]
+            this.front++
+        }
     }
 
     dequeue() {
@@ -15,6 +17,11 @@ export default class Queue {
         delete this.items[this.front]
         this.front++
         return value
+    }
+
+    enqueue(value) {
+        this.items[this.rear] = value
+        this.rear++
     }
 
     get length() {

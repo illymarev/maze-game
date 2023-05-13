@@ -1,19 +1,12 @@
 import {getReachableNeighborNodes} from "../helpers";
 import {trackRoute} from "./utils";
+import Queue from "../dataStructures/Queue";
 
 const breadthFirstSearch = (maze, startNode, endNode) => {
     const actionsToVisualize = []
-    findRoute(maze, startNode, endNode, actionsToVisualize)
+    const queue = new Queue()
 
-    return {
-        newMaze: maze,
-        route: trackRoute(endNode),
-        actionsToVisualize: actionsToVisualize
-    }
-}
-
-const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
-    const queue = [startNode]
+    queue.enqueue(startNode)
     startNode.visited = true
     startNode.previousNode = null
     actionsToVisualize.push({
@@ -22,7 +15,7 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
     })
 
     while (queue.length) {
-        const currentNode = queue.shift() // todo implement a queue
+        const currentNode = queue.dequeue()
         actionsToVisualize.push({
             type: 'markCurrent',
             payload: {row: currentNode.row, column: currentNode.column}
@@ -30,7 +23,7 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
 
         const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited)
         for (const neighbour of unvisitedNeighbours) {
-            queue.push(neighbour)
+            queue.enqueue(neighbour)
             neighbour.previousNode = currentNode
             neighbour.visited = true
             actionsToVisualize.push({
@@ -39,8 +32,9 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
             })
 
             if (neighbour === endNode) {
-                queue.length = 0;
-                break;
+                queue.clear(); // will clear all items in the queue and, as a result, stop the while loop
+                break; // break out of the unvisitedNeighbours loop, the end node has already been found, thus -
+                // there's no need in checking other neighbours
             }
         }
 
@@ -49,9 +43,12 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
             payload: {row: currentNode.row, column: currentNode.column}
         })
     }
+
+    return {
+        newMaze: maze,
+        route: trackRoute(endNode),
+        actionsToVisualize: actionsToVisualize
+    }
 }
 
-
 export default breadthFirstSearch
-
-
