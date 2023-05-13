@@ -1,21 +1,15 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {removePreviousNodes, trackRoute} from "./utils";
+import {trackRoute} from "./utils";
 import {pickRandomItem} from "../generation/utils";
 
-const depthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
-    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
-    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
+const depthFirstSearch = (maze, startNode, endNode) => {
     const actionsToVisualize = []
-
-
     findRoute(maze, startNode, endNode, actionsToVisualize)
-    const route = trackRoute(endNode)
-    removePreviousNodes(maze)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize,
-        route: route
+        route: trackRoute(endNode),
+        actionsToVisualize: actionsToVisualize
     }
 }
 

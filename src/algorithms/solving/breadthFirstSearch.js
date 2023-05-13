@@ -1,19 +1,14 @@
 import {getReachableNeighborNodes} from "../helpers";
-import {removePreviousNodes, trackRoute} from "./utils";
+import {trackRoute} from "./utils";
 
-const breadthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
-    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
-    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
+const breadthFirstSearch = (maze, startNode, endNode) => {
     const actionsToVisualize = []
-
     findRoute(maze, startNode, endNode, actionsToVisualize)
-    const route = trackRoute(endNode)
-    removePreviousNodes(maze)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize,
-        route: route
+        route: trackRoute(endNode),
+        actionsToVisualize: actionsToVisualize
     }
 }
 

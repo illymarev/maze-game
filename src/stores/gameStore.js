@@ -127,11 +127,15 @@ export class GameStore {
         this.maze.applySingleAction({type: 'resetRoute'})
         this.maze.applySingleAction({type: 'resetVisited'})
 
+        const maze = this.maze.nodesToJS
+        const startNode = maze[this.maze.mazeStart.row][this.maze.mazeStart.column]
+        const endNode = maze[this.maze.mazeFinish.row][this.maze.mazeFinish.column]
+
         const {
             newMaze,
             actionsToVisualize,
             route
-        } = this.config.solvingFunction(this.maze.nodesToJS, this.maze.mazeStart, this.maze.mazeFinish)
+        } = this.config.solvingFunction(maze, startNode, endNode)
 
         this.correctRoute = route
 
@@ -149,9 +153,11 @@ export class GameStore {
     }
 
     showCorrectPath() {
-        const nodes = this.maze.nodesToJS
-        nodes.map(row => row.map(item => item.visited = false))
-        const {route} = this.config.solvingFunction(nodes, this.maze.mazeStart, this.maze.mazeFinish)
+        const maze = this.maze.nodesToJS
+        maze.map(row => row.map(item => item.visited = false))
+        const startNode = maze[this.maze.mazeStart.row][this.maze.mazeStart.column]
+        const endNode = maze[this.maze.mazeFinish.row][this.maze.mazeFinish.column]
+        const {route} = this.config.solvingFunction(maze, startNode, endNode)
         this.maze.applySingleAction({type: 'markRoute', payload: route})
     }
 }

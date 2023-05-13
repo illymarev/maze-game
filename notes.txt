@@ -1,5 +1,10 @@
 TODO:
-- Cleanup
+- Cleanup:
+    1) Solving functions
+    2) Generation functions
+    3) utils, etc.
+    4) Stores
+    5) Components
 - Add documentation and comments
 - Check the grammar and spelling
 - Edit README
