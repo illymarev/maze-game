@@ -42,12 +42,12 @@ export class MazeStore {
                 }
                 break
             case 'bulkMarkCurrent':
-                for (let item of action.payload){
+                for (let item of action.payload) {
                     this.nodes[item.row][item.column].markCurrent()
                 }
                 break
             case 'bulkClearCurrent':
-                for (let item of action.payload){
+                for (let item of action.payload) {
                     this.nodes[item.row][item.column].clearCurrent()
                 }
                 break
@@ -126,7 +126,7 @@ export class MazeNode {
     row = null
     column = null
 
-    availablePathways = {north: false, south: false, west: false, east: false} // TODO read more graph theory
+    availablePathways = {north: false, south: false, west: false, east: false} // TODO rename this to "edges"
     // and consider renaming this to "edges"
     visited = false
     current = false

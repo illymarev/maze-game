@@ -27,6 +27,7 @@ export class GameStore {
         )
 
         this.interval = null
+        // TODO rename "actionsToVisualize" to "visualizationActionsStack" or maybe just "visualizationActions"
         this.actionsToVisualize = []
         this.startNode = null
         this.endNode = null

@@ -4,16 +4,6 @@ import {pickRandomItem} from "../generation/utils";
 
 const depthFirstSearch = (maze, startNode, endNode) => {
     const actionsToVisualize = []
-    findRoute(maze, startNode, endNode, actionsToVisualize)
-
-    return {
-        newMaze: maze,
-        route: trackRoute(endNode),
-        actionsToVisualize: actionsToVisualize
-    }
-}
-
-const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
     const visitedStack = []
     let node = startNode
 
@@ -23,21 +13,6 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
             payload: {row: node.row, column: node.column}
         })
 
-        if (node === endNode) {
-            node.visited = true
-            node.previousNode = visitedStack[visitedStack.length - 1]
-            actionsToVisualize.push({
-                type: 'markVisited',
-                payload: {row: node.row, column: node.column}
-            })
-            actionsToVisualize.push({
-                type: 'clearCurrent',
-                payload: {row: node.row, column: node.column}
-            })
-            break
-        }
-
-
         if (!node.visited) {
             node.visited = true
             node.previousNode = visitedStack[visitedStack.length - 1]
@@ -46,6 +21,15 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
                 type: 'markVisited',
                 payload: {row: node.row, column: node.column}
             })
+        }
+
+        if (node === endNode) {
+            actionsToVisualize.push({
+                type: 'clearCurrent',
+                payload: {row: node.row, column: node.column}
+            })
+            visitedStack.length = 0
+            break
         }
 
         const unvisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited)
@@ -58,13 +42,19 @@ const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
             node = nextNode
         } else {
             // Start backtracking
-            visitedStack.pop()
+            visitedStack.pop() // remove the current node from the stack
             actionsToVisualize.push({
                 type: 'clearCurrent',
                 payload: {row: node.row, column: node.column}
             })
             node = visitedStack[visitedStack.length - 1]
         }
+    }
+
+    return {
+        newMaze: maze,
+        route: trackRoute(endNode),
+        actionsToVisualize: actionsToVisualize
     }
 }
 
