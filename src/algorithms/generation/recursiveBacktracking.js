@@ -1,19 +1,15 @@
 import {getAllNeighbourNodes} from "../helpers";
-import {determineDirectionAndMarkPath, pickRandomItem} from "./utils";
-
+import {determineDirectionAndMarkPath, pickRandomItem, resetVisitedNodes} from "./utils";
 
 const recursiveBacktracking = maze => {
     const visitedStack = []
     const actionsToVisualize = []
     const node = maze[0][0]
 
+    // Call the recursive part of this algorithm; we don't need to initialize the visitedStack and actionsToVisualize
+    // every time, so this function is separated
     recursivePart(maze, node, visitedStack, actionsToVisualize)
-    for (const row of maze) {
-        for (const node of row) {
-            node.visited = false
-        }
-    }
-    actionsToVisualize.push({type: 'resetVisited'})
+    resetVisitedNodes(maze, actionsToVisualize)
 
     return {
         newMaze: maze,

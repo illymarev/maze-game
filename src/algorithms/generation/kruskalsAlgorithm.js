@@ -24,7 +24,7 @@ const union = (node1, node2, actionsToVisualize) => {
     determineDirectionAndMarkPath(node1, node2, actionsToVisualize)
 }
 
-// Modified version of the kruskal's algorithm used to generate graphs instead of finding the MST
+// Modified version of the Kruskal's algorithm used to generate graphs instead of finding the MST
 const kruskalsAlgorithm = (visualizeCurrent, maze) => {
     const allPossibleEdges = getAllPossibleEdges(maze)
     shuffleArray(allPossibleEdges)

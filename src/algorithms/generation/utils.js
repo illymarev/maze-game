@@ -47,3 +47,12 @@ export const getAllPossibleEdges = maze => {
 
     return edges
 }
+
+export const resetVisitedNodes = (maze, actionsToVisualize) => {
+    for (const row of maze) {
+        for (const node of row) {
+            node.visited = false
+        }
+    }
+    actionsToVisualize.push({type: 'resetVisited'})
+}

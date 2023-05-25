@@ -1,5 +1,5 @@
 import {getAllNeighbourNodes} from "../helpers";
-import {determineDirectionAndMarkPath, pickRandomItem} from "./utils";
+import {determineDirectionAndMarkPath, pickRandomItem, resetVisitedNodes} from "./utils";
 
 const huntAndKillAlgorithm = maze => {
     const actionsToVisualize = []
@@ -13,12 +13,7 @@ const huntAndKillAlgorithm = maze => {
         }
     }
 
-    for (const row of maze) {
-        for (const node of row) {
-            node.visited = false
-        }
-    }
-    actionsToVisualize.push({type: 'resetVisited'})
+    resetVisitedNodes(maze, actionsToVisualize)
 
     return {
         newMaze: maze,
@@ -30,8 +25,8 @@ const huntAndKillAlgorithm = maze => {
 const hunt = (maze, actionsToVisualize) => {
     const columns = maze[0].length
 
-    // Since current version of the maze has more columns that rows,
-    // looping through columns seems to produce better mazes
+    // Since current version of the maze has more columns than rows,
+    // looping through columns, in my opinion, produces more beautiful mazes
     for (let column = 0; column < columns; column++) {
         for (let row of maze) {
             const node = row[column]
@@ -40,6 +35,7 @@ const hunt = (maze, actionsToVisualize) => {
                 type: 'markCurrent',
                 payload: {row: node.row, column: node.column}
             })
+
             if (node.visited) {
                 actionsToVisualize.push({
                     type: 'clearCurrent',
