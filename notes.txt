@@ -1,6 +1,6 @@
 TODO:
 - Cleanup:
-    1) Solving functions
+    1) Solving functions // done
     2) Generation functions
     3) utils, etc.
     4) Stores
