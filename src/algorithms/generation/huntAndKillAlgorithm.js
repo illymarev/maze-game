@@ -1,4 +1,4 @@
-import {getAllNeighbourNodes} from "../helpers";
+import {getAllNeighbourNodes} from "../utils";
 import {determineDirectionAndMarkPath, pickRandomItem, resetVisitedNodes} from "./utils";
 
 const huntAndKillAlgorithm = maze => {

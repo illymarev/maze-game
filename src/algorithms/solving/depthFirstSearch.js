@@ -1,5 +1,5 @@
-import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./utils";
+import {getReachableNeighborNodes} from "../utils";
+import trackRoute from "./utils";
 import {pickRandomItem} from "../generation/utils";
 
 const depthFirstSearch = (maze, startNode, endNode) => {

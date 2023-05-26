@@ -1,4 +1,4 @@
-export const trackRoute = endNode => {
+const trackRoute = endNode => {
     const route = []
     let node = endNode
     while (node) {
@@ -9,10 +9,4 @@ export const trackRoute = endNode => {
     return route
 }
 
-export const removePreviousNodes = maze => {
-    for (const row of maze) {
-        for (const node of row) {
-            delete node.previousNode
-        }
-    }
-}
+export default trackRoute

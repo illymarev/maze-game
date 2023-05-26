@@ -1,5 +1,5 @@
-import {getReachableNeighborNodes} from "../helpers";
-import {trackRoute} from "./utils";
+import {getReachableNeighborNodes} from "../utils";
+import trackRoute from "./utils";
 import Queue from "../dataStructures/Queue";
 
 const breadthFirstSearch = (maze, startNode, endNode) => {

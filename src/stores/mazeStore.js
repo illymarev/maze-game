@@ -1,6 +1,6 @@
 import {makeAutoObservable} from "mobx";
 import {toJS} from "mobx";
-import {getReachableNeighborNodes} from "../algorithms/helpers";
+import {getReachableNeighborNodes} from "../algorithms/utils";
 
 export class MazeStore {
     gameStore

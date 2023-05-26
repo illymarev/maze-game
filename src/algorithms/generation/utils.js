@@ -1,6 +1,6 @@
 import {determineDirection, reversedDirections} from "../directions";
 
-export const pickRandomItem = array_ => array_[Math.floor(Math.random() * array_.length)]
+export const pickRandomItem = array => array[Math.floor(Math.random() * array.length)]
 
 export const determineDirectionAndMarkPath = (startNode, endNode, actionsToVisualize) => {
     const directionToNextNode = determineDirection(startNode, endNode)
@@ -12,10 +12,11 @@ export const determineDirectionAndMarkPath = (startNode, endNode, actionsToVisua
     // Visualize both paths at the same time.
     actionsToVisualize.push({
         type: 'bulkMarkPath',
-        payload: [
-            {row: startNode.row, column: startNode.column, path: directionToNextNode},
-            {row: endNode.row, column: endNode.column, path: reversedDirection}
-        ]
+        payload: [{row: startNode.row, column: startNode.column, path: directionToNextNode}, {
+            row: endNode.row,
+            column: endNode.column,
+            path: reversedDirection
+        }]
     })
 }
 
@@ -31,7 +32,8 @@ export const getAllPossibleEdges = maze => {
 
     const edges = []
     for (let row of maze) {
-        // columns -1 is needed in order to connect the second last one with the last one
+        // Since we are connecting the last column with the second last column, the iteration should stop
+        // at the second last column because it will be connected with the next one, thus - the last one.
         for (let columnNumber = 0; columnNumber < columns - 1; columnNumber++) {
             const edge = [row[columnNumber], row[columnNumber + 1]]
             edges.push(edge)
@@ -39,6 +41,7 @@ export const getAllPossibleEdges = maze => {
     }
 
     for (let columnNumber = 0; columnNumber < columns; columnNumber++) {
+        // Same note as above, but regarding rows
         for (let rowNumber = 0; rowNumber < rows - 1; rowNumber++) {
             const edge = [maze[rowNumber][columnNumber], maze[rowNumber + 1][columnNumber]]
             edges.push(edge)
