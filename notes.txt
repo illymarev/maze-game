@@ -2,7 +2,7 @@ TODO:
 - Cleanup:
     1) Solving functions // done
     2) Generation functions // done
-    3) utils, etc.
+    3) utils, etc. // done
     4) Stores
     5) Components
 - Add documentation and comments
