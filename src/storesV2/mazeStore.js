@@ -11,7 +11,8 @@ class MazeStore {
         makeAutoObservable(this, {
             // does not modify the state of the maze store; it calls methods of specified nodes, but those methods are
             // already actions, so there's no need to mark this one as an action
-            applyVisualizationAction: false, nodeHasVisitedNeighbours: computed
+            applyVisualizationAction: false,
+            // nodeHasVisitedNeighbours: computed TODO ???
         })
     }
 
@@ -140,7 +141,7 @@ class MazeStore {
 
     // Computeds
     nodeHasVisitedNeighbours(targetNode) {
-        getReachableNeighborNodes(this.nodes, targetNode).some(node => node.visited)
+        return getReachableNeighborNodes(this.nodes, targetNode).some(node => node.visited)
     }
 
     get nodesToJS() {
