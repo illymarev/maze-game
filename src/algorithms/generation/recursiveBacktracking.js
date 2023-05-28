@@ -1,5 +1,5 @@
 import {getAllNeighbourNodes} from "../utils";
-import {determineDirectionAndMarkPath, pickRandomItem, resetVisitedNodes} from "./utils";
+import {determineDirectionAndCreateEdge, pickRandomItem, resetVisitedNodes} from "./utils";
 
 const recursiveBacktracking = maze => {
     const visitedStack = []
@@ -42,7 +42,7 @@ const recursivePart = (
     if (unvisitedNeighbours.length) {
         // Randomly select an unvisited neighbour
         const nextNode = pickRandomItem(unvisitedNeighbours)
-        determineDirectionAndMarkPath(node, nextNode, actionsToVisualize)
+        determineDirectionAndCreateEdge(node, nextNode, actionsToVisualize)
 
         actionsToVisualize.push({
             type: 'clearCurrent',

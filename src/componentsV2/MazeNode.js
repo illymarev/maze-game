@@ -3,51 +3,56 @@ import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
+import {noMovingItem, startFlag, finishFlag} from "../storesV2/options/movingItemOptions";
 
 // TODO
 const MazeNode = observer(({node, rootStore}) => {
+    const state = rootStore.stateStore
 
     const registerUsersInput = () => {
-        node.markVisited()
-        if (node.isStart) {
-            state.setGameState(gameInProgress)
-        } else if (node.isFinish) {
-            gameStore.showCorrectPath()
-            state.setGameState(finishedSolving)
-        }
+        console.log('hey there')
+        // node.markVisited()
+        // if (node.isStart) {
+        //     state.setGameState(gameInProgress)
+        // } else if (node.isFinish) {
+        //     gameStore.showCorrectPath()
+        //     state.setGameState(finishedSolving)
+        // }
     }
 
     let onMouseDownFunc, onMouseEnterFunc, onMouseUpFunc
-    if (state.isUsersSolvingInputAllowed) {
+    if (state.usersSolvingInputAllowed) {
 
         onMouseDownFunc = e => {
-            e.preventDefault()
-            if (node.isStart || node.hasVisitedNeighbour) {
-                registerUsersInput()
-            }
+            console.log('hey')
+            // e.preventDefault()
+            // if (node.isStart || node.hasVisitedNeighbour) {
+            //     registerUsersInput()
+            // }
         }
         onMouseEnterFunc = () => {
-            if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
-                registerUsersInput()
-            }
+            console.log('hey')
+            // if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
+            //     registerUsersInput()
+            // }
         }
         onMouseUpFunc = () => {
         }
 
-    } else if (state.isMovingStartAndFinishedAllowed) {
+    } else if (state.movingStartAndFinishedAllowed) {
         onMouseDownFunc = (e) => {
             e.preventDefault();
             if (node.isStart || node.isFinish) {
-                const movableItem = node.isStart ? 'start' : 'finish'
-                state.setMovableItem(movableItem)
+                const movingItem = node.isStart ? startFlag : finishFlag
+                state.setMovingItem(movingItem)
             }
         }
         onMouseEnterFunc = () => {
         }
         onMouseUpFunc = () => {
             if (state.movableItem) {
-                state.movableItem === 'start' ? node.setIsStart(true) : node.setIsFinish(true)
-                state.setMovableItem(null)
+                state.movingItem === startFlag ? node.setStart(true) : node.setFinish(true)
+                state.setMovingItem(noMovingItem)
             }
         }
 
@@ -68,14 +73,14 @@ const MazeNode = observer(({node, rootStore}) => {
     if (node.current) {
         generationVisualizationStyle.backgroundColor = '#3b8ef1'
     }
-    if (node.isRoute) {
+    if (node.route) {
         generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
     }
 
     let nodeText
-    if (node.isStart) {
+    if (node.start) {
         nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>
-    } else if (node.isFinish) {
+    } else if (node.finish) {
         nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>
     } else {
         nodeText = ''
@@ -95,10 +100,10 @@ const MazeNode = observer(({node, rootStore}) => {
               sx={{
                   aspectRatio: '1/1', display: 'flex',
                   alignItems: 'center', justifyContent: 'center',
-                  borderTop: node.availablePathways.north ? null : '2px solid #ccc',
-                  borderBottom: node.availablePathways.south ? null : '2px solid #ccc',
-                  borderLeft: node.availablePathways.west ? null : '2px solid #ccc',
-                  borderRight: node.availablePathways.east ? null : '2px solid #ccc',
+                  borderTop: node.edges.north ? null : '2px solid #ccc',
+                  borderBottom: node.edges.south ? null : '2px solid #ccc',
+                  borderLeft: node.edges.west ? null : '2px solid #ccc',
+                  borderRight: node.edges.east ? null : '2px solid #ccc',
                   ...generationVisualizationStyle
               }}>
             {nodeText}

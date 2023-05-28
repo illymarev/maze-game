@@ -17,6 +17,7 @@ import {
 const ConfigurationPanel = observer(({rootStore}) => {
     const state = rootStore.stateStore
     const config = rootStore.configStore
+    const controller = rootStore.controller
 
     const generationAlgorithmUIOptions = []
     const solvingAlgorithmUIOptions = []
@@ -55,7 +56,7 @@ const ConfigurationPanel = observer(({rootStore}) => {
     }
 
     const onGenerationButtonClick = () => {
-        console.log('there')
+        state.gameState.id === generationInProgress ? controller.stopVisualization() : controller.generateMaze()
     }
 
     const onSolvingButtonClick = () => {

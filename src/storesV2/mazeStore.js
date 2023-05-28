@@ -125,7 +125,7 @@ class MazeStore {
             for (let column = 0; column < columns; column++) {
                 const node = new MazeNode(row, column)
 
-                node.edges = newJSNodes[row][column].availablePathways
+                node.edges = newJSNodes[row][column].edges
                 node.visited = newJSNodes[row][column].visited
                 node.current = newJSNodes[row][column].current
                 node.isRoute = newJSNodes[row][column].isRoute

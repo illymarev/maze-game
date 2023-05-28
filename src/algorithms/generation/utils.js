@@ -2,21 +2,20 @@ import {determineDirection, reversedDirections} from "../directions";
 
 export const pickRandomItem = array => array[Math.floor(Math.random() * array.length)]
 
-export const determineDirectionAndMarkPath = (startNode, endNode, actionsToVisualize) => {
+export const determineDirectionAndCreateEdge = (startNode, endNode, visualizationActions) => {
     const directionToNextNode = determineDirection(startNode, endNode)
     const reversedDirection = reversedDirections[directionToNextNode]
 
-    startNode.availablePathways[directionToNextNode] = true // mark the path from the start node to the end node
-    endNode.availablePathways[reversedDirection] = true // mark the path from the end node to the start node
+    startNode.edges[directionToNextNode] = true // create the edge from the start node to the end node
+    endNode.edges[reversedDirection] = true // create the edge from the end node to the start node
 
     // Visualize both paths at the same time.
-    actionsToVisualize.push({
-        type: 'bulkMarkPath',
-        payload: [{row: startNode.row, column: startNode.column, path: directionToNextNode}, {
-            row: endNode.row,
-            column: endNode.column,
-            path: reversedDirection
-        }]
+    visualizationActions.enqueue({
+        type: 'bulkCreateEdge',
+        payload: [
+            {row: startNode.row, column: startNode.column, direction: directionToNextNode},
+            {row: endNode.row, column: endNode.column, direction: reversedDirection}
+        ]
     })
 }
 

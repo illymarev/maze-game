@@ -2,7 +2,7 @@ import mazeSizeOptions from "./options/mazeSizeOptions";
 import generationAlgorithmOptions from "./options/generationAlgorithmOptions";
 import solvingAlgorithmOptions from "./options/solvingAlgorithmOptions";
 
-import {slow, visualizationSpeedOptions} from './options/visualizationSpeedOptions'
+import {fast, visualizationSpeedOptions} from './options/visualizationSpeedOptions'
 import {
     longestShortestPathEdges,
     defaultStartAndFinishPlacementOptions
@@ -11,7 +11,7 @@ import {makeAutoObservable} from "mobx";
 
 class ConfigStore {
     mazeSize = mazeSizeOptions[0]
-    visualizationSpeed = visualizationSpeedOptions[slow]
+    visualizationSpeed = visualizationSpeedOptions[fast]
     generationAlgorithm = generationAlgorithmOptions[0]
     solvingAlgorithm = solvingAlgorithmOptions[0]
     defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[longestShortestPathEdges]

@@ -5,6 +5,7 @@ import ConfigurationPanel from "./ConfigurationPanel";
 import MazeLegend from "./MazeLegend";
 import {Stack} from "@mui/material";
 import GameState from "./GameState";
+import Maze from "./Maze";
 
 import * as React from "react";
 
@@ -39,7 +40,7 @@ const MazeGame = observer(({rootStore}) => {
                 <Stack height={'100%'} justifyContent={'center'} alignItems={'center'}>
                     <GameState state={state}/>
                     <MazeLegend/>
-                    {/*<Maze/>*/}
+                    <Maze rootStore={rootStore}/>
                 </Stack>
 
             </Box>

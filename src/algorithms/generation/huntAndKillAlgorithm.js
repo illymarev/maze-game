@@ -1,5 +1,5 @@
 import {getAllNeighbourNodes} from "../utils";
-import {determineDirectionAndMarkPath, pickRandomItem, resetVisitedNodes} from "./utils";
+import {determineDirectionAndCreateEdge, pickRandomItem, resetVisitedNodes} from "./utils";
 
 const huntAndKillAlgorithm = maze => {
     const actionsToVisualize = []
@@ -45,7 +45,7 @@ const hunt = (maze, actionsToVisualize) => {
                 const visitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => item.visited)
                 if (visitedNeighbours.length) {
                     const neighbourNode = pickRandomItem(visitedNeighbours)
-                    determineDirectionAndMarkPath(node, neighbourNode, actionsToVisualize)
+                    determineDirectionAndCreateEdge(node, neighbourNode, actionsToVisualize)
 
                     actionsToVisualize.push({
                         type: 'clearCurrent',
@@ -74,7 +74,7 @@ const walk = (maze, node, actionsToVisualize) => {
     const unvisitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => !item.visited)
     if (unvisitedNeighbours.length) {
         const nextNode = pickRandomItem(unvisitedNeighbours)
-        determineDirectionAndMarkPath(node, nextNode, actionsToVisualize)
+        determineDirectionAndCreateEdge(node, nextNode, actionsToVisualize)
 
         actionsToVisualize.push({
             type: 'clearCurrent',

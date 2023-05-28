@@ -1,4 +1,5 @@
-import {determineDirectionAndMarkPath, shuffleArray, getAllPossibleEdges} from "./utils";
+import {determineDirectionAndCreateEdge, shuffleArray, getAllPossibleEdges} from "./utils";
+import Queue from "../dataStructures/Queue";
 
 const find = node => {
     if (node.parent !== node) {
@@ -7,7 +8,7 @@ const find = node => {
     return node.parent
 }
 
-const union = (node1, node2, actionsToVisualize) => {
+const union = (node1, node2, visualizationActions) => {
     const parentOfNode1 = find(node1)
     const parentOfNode2 = find(node2)
 
@@ -21,14 +22,14 @@ const union = (node1, node2, actionsToVisualize) => {
         parentOfNode2.parent = parentOfNode1
         parentOfNode1.rank++
     }
-    determineDirectionAndMarkPath(node1, node2, actionsToVisualize)
+    determineDirectionAndCreateEdge(node1, node2, visualizationActions)
 }
 
 // Modified version of the Kruskal's algorithm used to generate graphs instead of finding the MST
 const kruskalsAlgorithm = (visualizeCurrent, maze) => {
     const allPossibleEdges = getAllPossibleEdges(maze)
     shuffleArray(allPossibleEdges)
-    const actionsToVisualize = []
+    const visualizationActions = new Queue()
 
     for (const row of maze) {
         for (const node of row) {
@@ -40,23 +41,29 @@ const kruskalsAlgorithm = (visualizeCurrent, maze) => {
     for (const edge of allPossibleEdges) {
         const [node1, node2] = edge
         if (visualizeCurrent) {
-            actionsToVisualize.push({
-                type: 'bulkMarkCurrent',
-                payload: [{row: node1.row, column: node1.column}, {row: node2.row, column: node2.column}]
+            visualizationActions.enqueue({
+                type: 'bulkSetCurrent',
+                payload: [
+                    {row: node1.row, column: node1.column, value: true},
+                    {row: node2.row, column: node2.column, value: true}
+                ]
             })
         }
 
-        union(node1, node2, actionsToVisualize)
+        union(node1, node2, visualizationActions)
 
         if (visualizeCurrent) {
-            actionsToVisualize.push({
-                type: 'bulkClearCurrent',
-                payload: [{row: node1.row, column: node1.column}, {row: node2.row, column: node2.column}]
+            visualizationActions.enqueue({
+                type: 'bulkSetCurrent',
+                payload: [
+                    {row: node1.row, column: node1.column, value: false},
+                    {row: node2.row, column: node2.column, value: false}
+                ]
             })
         }
     }
 
-    return {newMaze: maze, actionsToVisualize: actionsToVisualize}
+    return {newMaze: maze, visualizationActions: visualizationActions}
 }
 
 
