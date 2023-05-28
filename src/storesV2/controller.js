@@ -30,6 +30,12 @@ class Controller {
         this.maze.createEmptyNodes(this.config.rows, this.config.columns)
     }
 
+    finishMazeGeneration() {
+        this.maze.changeStartNode(this.startNode)
+        this.maze.changeFinishNode(this.endNode)
+        this.state.setGameState(readyToSolve)
+    }
+
     generateMaze() {
         this.state.setGameState(generationInProgress)
         // In case the maze is already generated, it should be reset to a new, empty one. Also, the size
@@ -55,7 +61,7 @@ class Controller {
         // Apply the visualization
         if (this.config.visualizationSpeed.id === immediate) {
             this.maze.setNodes(newMaze)
-            this.applyFinalVisualizationActions()
+            this.finishMazeGeneration()
         } else if (this.config.visualizationSpeed.id === fast) {
             this.visualizationActions = visualizationActions
             window.requestAnimationFrame(this.visualizeSingleStep.bind(this))
@@ -66,18 +72,50 @@ class Controller {
     }
 
     // ================== Solving ========================
-    // TODO
+    finishMazeSolving() {
+        this.maze.applyVisualizationAction({type: 'bulkSetRoute', payload: this.shortestPath}) // TODO think about the wording
+        // of "route"
+        this.state.setGameState(finishedSolving)
+    }
+
+    solveMaze() {
+        // In case already solved, but the user wants to solve again (maybe with different speed, etc.)
+        this.maze.applyVisualizationAction({type: 'resetRoute'})
+        this.maze.applyVisualizationAction({type: 'resetVisited'})
+
+        this.state.setGameState(solvingInProgress)
+
+        const maze = this.maze.nodesToJS
+        const startNode = maze[this.maze.start.row][this.maze.start.column]
+        const endNode = maze[this.maze.finish.row][this.maze.finish.column]
+
+        const {
+            newMaze,
+            visualizationActions,
+            route
+        } = this.config.solvingFunction(maze, startNode, endNode)
+
+        this.shortestPath = route
+
+        if (this.config.visualizationSpeed.id === immediate) {
+            this.maze.setNodes(newMaze)
+            // TODO debug the removal of start/end
+            this.finishMazeSolving()
+        } else if (this.config.visualizationSpeed.id === fast) {
+            this.visualizationActions = visualizationActions
+            window.requestAnimationFrame(this.visualizeSingleStep.bind(this))
+        } else {
+            this.visualizationActions = visualizationActions
+            this.interval = setInterval(this.visualizeSingleStep.bind(this), this.config.visualizationDelay)
+        }
+    }
 
     // ================== Visualization ==================
     applyFinalVisualizationActions() {
         if (this.state.gameState.id === generationInProgress) {
-            this.state.setGameState(readyToSolve)
-            this.maze.changeStartNode(this.startNode)
-            this.maze.changeFinishNode(this.endNode)
+            this.finishMazeGeneration()
         } else if (this.state.gameState.id === solvingInProgress) {
-            this.maze.applyVisualizationAction({type: 'markRoute', payload: this.shortestPath}) // TODO think about the wording
-            // of "route"
-            this.state.setGameState(finishedSolving)
+            this.finishMazeSolving()
         }
     }
 
@@ -102,7 +140,7 @@ class Controller {
 
     visualizeSingleStep() {
         // Visualization Speed "fast" uses the window.requestAnimationFrame. This code is needed to stop
-        // the visualization at this speed. Other speeds use the interval, and it will just be cancelled within
+        // the visualization at this speed. Other speeds use the interval, so it will just be cancelled within
         // the stopVisualization function
         if (this.config.visualizationSpeed === fast && this.blockVisualization) {
             this.blockVisualization = false

@@ -60,7 +60,7 @@ const ConfigurationPanel = observer(({rootStore}) => {
     }
 
     const onSolvingButtonClick = () => {
-        console.log('hey')
+        state.gameState.id === solvingInProgress ? controller.stopVisualization() : controller.solveMaze()
     }
 
     const onMoveStartFinishButtonClick = () => {

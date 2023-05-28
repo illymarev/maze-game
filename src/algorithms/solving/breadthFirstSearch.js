@@ -3,22 +3,22 @@ import trackRoute from "./utils";
 import Queue from "../dataStructures/Queue";
 
 const breadthFirstSearch = (maze, startNode, endNode) => {
-    const actionsToVisualize = []
+    const visualizationActions = new Queue()
     const queue = new Queue()
 
     queue.enqueue(startNode)
     startNode.visited = true
     startNode.previousNode = null
-    actionsToVisualize.push({
-        type: 'markVisited',
-        payload: {row: startNode.row, column: startNode.column}
+    visualizationActions.enqueue({
+        type: 'setVisited',
+        payload: {row: startNode.row, column: startNode.column, value: true}
     })
 
     while (queue.length) {
         const currentNode = queue.dequeue()
-        actionsToVisualize.push({
-            type: 'markCurrent',
-            payload: {row: currentNode.row, column: currentNode.column}
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: currentNode.row, column: currentNode.column, value: true}
         })
 
         const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited)
@@ -26,9 +26,9 @@ const breadthFirstSearch = (maze, startNode, endNode) => {
             queue.enqueue(neighbour)
             neighbour.previousNode = currentNode
             neighbour.visited = true
-            actionsToVisualize.push({
-                type: 'markVisited',
-                payload: {row: neighbour.row, column: neighbour.column}
+            visualizationActions.enqueue({
+                type: 'setVisited',
+                payload: {row: neighbour.row, column: neighbour.column, value: true}
             })
 
             if (neighbour === endNode) {
@@ -38,16 +38,16 @@ const breadthFirstSearch = (maze, startNode, endNode) => {
             }
         }
 
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: currentNode.row, column: currentNode.column}
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: currentNode.row, column: currentNode.column, value: false}
         })
     }
 
     return {
         newMaze: maze,
         route: trackRoute(endNode),
-        actionsToVisualize: actionsToVisualize
+        visualizationActions: visualizationActions
     }
 }
 
