@@ -9,7 +9,7 @@ export const determineDirectionAndCreateEdge = (startNode, endNode, visualizatio
     startNode.edges[directionToNextNode] = true // create the edge from the start node to the end node
     endNode.edges[reversedDirection] = true // create the edge from the end node to the start node
 
-    // Visualize both paths at the same time.
+    // Visualize both edges at the same time.
     visualizationActions.enqueue({
         type: 'bulkCreateEdge',
         payload: [
@@ -50,11 +50,11 @@ export const getAllPossibleEdges = maze => {
     return edges
 }
 
-export const resetVisitedNodes = (maze, actionsToVisualize) => {
+export const resetVisitedNodes = (maze, visualizationActions) => {
     for (const row of maze) {
         for (const node of row) {
             node.visited = false
         }
     }
-    actionsToVisualize.push({type: 'resetVisited'})
+    visualizationActions.enqueue({type: 'resetVisited'})
 }

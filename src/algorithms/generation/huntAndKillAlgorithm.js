@@ -1,28 +1,29 @@
 import {getAllNeighbourNodes} from "../utils";
 import {determineDirectionAndCreateEdge, pickRandomItem, resetVisitedNodes} from "./utils";
+import Queue from "../dataStructures/Queue";
 
 const huntAndKillAlgorithm = maze => {
-    const actionsToVisualize = []
+    const visualizationActions = new Queue()
     let node = maze[0][0]
 
     while (true) {
-        node = walk(maze, node, actionsToVisualize)
+        node = walk(maze, node, visualizationActions)
         if (!node) {
-            node = hunt(maze, actionsToVisualize)
+            node = hunt(maze, visualizationActions)
             if (!node) break
         }
     }
 
-    resetVisitedNodes(maze, actionsToVisualize)
+    resetVisitedNodes(maze, visualizationActions)
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize
+        visualizationActions: visualizationActions
     }
 
 }
 
-const hunt = (maze, actionsToVisualize) => {
+const hunt = (maze, visualizationActions) => {
     const columns = maze[0].length
 
     // Since current version of the maze has more columns than rows,
@@ -31,25 +32,25 @@ const hunt = (maze, actionsToVisualize) => {
         for (let row of maze) {
             const node = row[column]
 
-            actionsToVisualize.push({
-                type: 'markCurrent',
-                payload: {row: node.row, column: node.column}
+            visualizationActions.enqueue({
+                type: 'setCurrent',
+                payload: {row: node.row, column: node.column, value: true}
             })
 
             if (node.visited) {
-                actionsToVisualize.push({
-                    type: 'clearCurrent',
-                    payload: {row: node.row, column: node.column}
+                visualizationActions.enqueue({
+                    type: 'setCurrent',
+                    payload: {row: node.row, column: node.column, value: false}
                 })
             } else {
                 const visitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => item.visited)
                 if (visitedNeighbours.length) {
                     const neighbourNode = pickRandomItem(visitedNeighbours)
-                    determineDirectionAndCreateEdge(node, neighbourNode, actionsToVisualize)
+                    determineDirectionAndCreateEdge(node, neighbourNode, visualizationActions)
 
-                    actionsToVisualize.push({
-                        type: 'clearCurrent',
-                        payload: {row: node.row, column: node.column}
+                    visualizationActions.enqueue({
+                        type: 'setCurrent',
+                        payload: {row: node.row, column: node.column, value: false}
                     })
                     return node
                 }
@@ -59,33 +60,32 @@ const hunt = (maze, actionsToVisualize) => {
     return null
 }
 
-const walk = (maze, node, actionsToVisualize) => {
-    actionsToVisualize.push({
-        type: 'markCurrent',
-        payload: {row: node.row, column: node.column}
+const walk = (maze, node, visualizationActions) => {
+    visualizationActions.enqueue({
+        type: 'setCurrent',
+        payload: {row: node.row, column: node.column, value: true}
     })
 
     node.visited = true
-    actionsToVisualize.push({
-        type: 'markVisited',
-        payload: {row: node.row, column: node.column}
+    visualizationActions.enqueue({
+        type: 'setVisited',
+        payload: {row: node.row, column: node.column, value: true}
     })
 
     const unvisitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => !item.visited)
     if (unvisitedNeighbours.length) {
         const nextNode = pickRandomItem(unvisitedNeighbours)
-        determineDirectionAndCreateEdge(node, nextNode, actionsToVisualize)
+        determineDirectionAndCreateEdge(node, nextNode, visualizationActions)
 
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: node.row, column: node.column}
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: node.row, column: node.column, value: false}
         })
         return nextNode
-
     } else {
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: node.row, column: node.column}
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: node.row, column: node.column, value: false}
         })
         return null
     }

@@ -129,8 +129,8 @@ class MazeStore {
                 node.visited = newJSNodes[row][column].visited
                 node.current = newJSNodes[row][column].current
                 node.isRoute = newJSNodes[row][column].isRoute
-                node.isStart = newJSNodes[row][column].isStart
-                node.isFinish = newJSNodes[row][column].isFinish
+                node.start = newJSNodes[row][column].start
+                node.finish = newJSNodes[row][column].finish
                 newRow.push(node)
             }
             newNodes.push(newRow)

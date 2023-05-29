@@ -99,7 +99,6 @@ class Controller {
 
         if (this.config.visualizationSpeed.id === immediate) {
             this.maze.setNodes(newMaze)
-            // TODO debug the removal of start/end
             this.finishMazeSolving()
         } else if (this.config.visualizationSpeed.id === fast) {
             this.visualizationActions = visualizationActions
@@ -163,5 +162,11 @@ class Controller {
         this.interval = null
     }
 }
+
+// TODO
+// 2) fix start/end moving functionality
+// 3) fix user's input functionality
+// Verify that everything works and refactor react components after that
+// Global cleanup
 
 export default Controller
