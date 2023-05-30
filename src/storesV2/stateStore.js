@@ -48,7 +48,7 @@ class StateStore {
         return [readyToSolve, gameInProgress].includes(this.gameState.id)
     }
 
-    get movingStartAndFinishedAllowed() {
+    get movingStartAndFinishAllowed() {
         return this.gameState.id === movingStartAndFinish
     }
 }

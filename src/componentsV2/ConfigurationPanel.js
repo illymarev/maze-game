@@ -14,22 +14,58 @@ import {
     movingStartAndFinish
 } from "../storesV2/options/gameStateOptions";
 
-const ConfigurationPanel = observer(({rootStore}) => {
-    const state = rootStore.stateStore
-    const config = rootStore.configStore
-    const controller = rootStore.controller
-
+const GenerationAlgorithms = observer(({state, config}) => {
     const generationAlgorithmUIOptions = []
-    const solvingAlgorithmUIOptions = []
-    const visualizationSpeedUIOptions = []
-    const mazeSizeUIOptions = []
-    const startAndFinishPlacementUIOptions = []
-
-    for (const option of mazeSizeOptions) {
-        mazeSizeUIOptions.push(
+    for (const option of generationAlgorithmOptions) {
+        generationAlgorithmUIOptions.push(
             <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
         )
     }
+
+    return (
+        <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
+            <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
+            <Select
+                disabled={state.visualizationInProgress}
+                labelId="generation_algorithm_label"
+                id="generation_algorithm_selector"
+                sx={{'border-radius': '1.25rem', width: '90%'}}
+                value={config.generationAlgorithm.id}
+                onChange={e => config.setGenerationAlgorithm(e.target.value)}
+            >
+                {generationAlgorithmUIOptions}
+            </Select>
+        </Stack>
+    );
+})
+
+const SolvingAlgorithms = observer(({state, config}) => {
+    const solvingAlgorithmUIOptions = []
+    for (const option of solvingAlgorithmOptions) {
+        solvingAlgorithmUIOptions.push(
+            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
+        )
+    }
+
+    return (
+        <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
+            <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
+            <Select
+                disabled={state.visualizationInProgress}
+                labelId="solving_algorithm_label"
+                id="solving_algorithm_selector"
+                sx={{'border-radius': '1.25rem', width: '90%'}}
+                value={config.solvingAlgorithm.id}
+                onChange={e => config.setSolvingAlgorithm(e.target.value)}
+            >
+                {solvingAlgorithmUIOptions}
+            </Select>
+        </Stack>
+    );
+})
+
+const VisualizationSpeeds = observer(({state, config}) => {
+    const visualizationSpeedUIOptions = []
 
     for (const option of visualizationSpeedOptions) {
         visualizationSpeedUIOptions.push(
@@ -37,23 +73,82 @@ const ConfigurationPanel = observer(({rootStore}) => {
         )
     }
 
-    for (const option of generationAlgorithmOptions) {
-        generationAlgorithmUIOptions.push(
-            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
-        )
-    }
+    return (
+        <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+            <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
+            <Select
+                disabled={state.visualizationInProgress}
+                labelId="visualization_speed_label"
+                id="visualization_speed_slider"
+                sx={{'border-radius': '1.25rem', width: '90%'}}
+                value={config.visualizationSpeed.id}
+                onChange={e => config.setVisualizationDelay(e.target.value)}
+            >
+                {visualizationSpeedUIOptions}
+            </Select>
+        </Stack>
+    );
+})
 
-    for (const option of solvingAlgorithmOptions) {
-        solvingAlgorithmUIOptions.push(
-            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
-        )
-    }
+const StartAndFinishPlacements = observer(({config, state}) => {
+    const startAndFinishPlacementUIOptions = []
 
     for (const option of defaultStartAndFinishPlacementOptions) {
         startAndFinishPlacementUIOptions.push(
             <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
         )
     }
+
+    return (
+        <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+            <InputLabel id="visualization_speed_label">Default Start/Finish Position</InputLabel>
+            <Select
+                disabled={state.visualizationInProgress}
+                labelId="visualization_speed_label"
+                id="visualization_speed_slider"
+                sx={{'border-radius': '1.25rem', width: '90%'}}
+                value={config.defaultStartAndFinishPlacement.id}
+                onChange={e => config.setDefaultStartAndFinishPlacement(e.target.value)}
+            >
+                {startAndFinishPlacementUIOptions}
+            </Select>
+        </Stack>
+    );
+})
+
+const MazeSizes = observer(({config, state}) => {
+    const mazeSizeUIOptions = []
+
+    for (const option of mazeSizeOptions) {
+        mazeSizeUIOptions.push(
+            <MenuItem key={option.id} value={option.id}>{option.title}</MenuItem>
+        )
+    }
+
+    return (
+        <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
+            {/*// TODO verify all ids*/}
+            <InputLabel id="visualization_speed_label">Maze Size</InputLabel>
+            <Select
+                disabled={state.visualizationInProgress}
+                labelId="visualization_speed_label"
+                id="visualization_speed_slider"
+                sx={{'border-radius': '1.25rem', width: '90%'}}
+                value={config.mazeSize.id}
+                onChange={e => config.setMazeSize(e.target.value)}
+            >
+                {mazeSizeUIOptions}
+            </Select>
+        </Stack>
+    );
+})
+
+// TODO refactor into sub-components
+const ConfigurationPanel = observer(({rootStore}) => {
+    const state = rootStore.stateStore
+    const config = rootStore.configStore
+    const controller = rootStore.controller
+
 
     const onGenerationButtonClick = () => {
         state.gameState.id === generationInProgress ? controller.stopVisualization() : controller.generateMaze()
@@ -105,73 +200,15 @@ const ConfigurationPanel = observer(({rootStore}) => {
                 {solvingButtonText}
             </Button>
 
-            <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
-                <InputLabel id="generation_algorithm_label">Generation Algorithm</InputLabel>
-                <Select
-                    disabled={state.visualizationInProgress}
-                    labelId="generation_algorithm_label"
-                    id="generation_algorithm_selector"
-                    sx={{'border-radius': '1.25rem', width: '90%'}}
-                    value={config.generationAlgorithm.id}
-                    onChange={e => config.setGenerationAlgorithm(e.target.value)}
-                >
-                    {generationAlgorithmUIOptions}
-                </Select>
-            </Stack>
+            <GenerationAlgorithms config={config} state={state}/>
 
-            <Stack width={'100%'} justifyContent={'center'} alignItems={'center'}>
-                <InputLabel id="solving_algorithm_label">Solving Algorithm</InputLabel>
-                <Select
-                    disabled={state.visualizationInProgress}
-                    labelId="solving_algorithm_label"
-                    id="solving_algorithm_selector"
-                    sx={{'border-radius': '1.25rem', width: '90%'}}
-                    value={config.solvingAlgorithm.id}
-                    onChange={e => config.setSolvingAlgorithm(e.target.value)}
-                >
-                    {solvingAlgorithmUIOptions}
-                </Select>
-            </Stack>
-            <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
-                <InputLabel id="visualization_speed_label">Visualization Speed</InputLabel>
-                <Select
-                    disabled={state.visualizationInProgress}
-                    labelId="visualization_speed_label"
-                    id="visualization_speed_slider"
-                    sx={{'border-radius': '1.25rem', width: '90%'}}
-                    value={config.visualizationSpeed.id}
-                    onChange={e => config.setVisualizationDelay(e.target.value)}
-                >
-                    {visualizationSpeedUIOptions}
-                </Select>
-            </Stack>
-            <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
-                {/*// TODO verify all ids*/}
-                <InputLabel id="visualization_speed_label">Maze Size</InputLabel>
-                <Select
-                    disabled={state.visualizationInProgress}
-                    labelId="visualization_speed_label"
-                    id="visualization_speed_slider"
-                    sx={{'border-radius': '1.25rem', width: '90%'}}
-                    value={config.mazeSize.id}
-                    onChange={e => config.setMazeSize(e.target.value)}
-                >
-                    {mazeSizeUIOptions}
-                </Select>
-            </Stack>
-            <Stack justifyContent={'center'} alignItems={'center'} width={'100%'}>
-                <InputLabel id="visualization_speed_label">Default Start/Finish Position</InputLabel>
-                <Select
-                    disabled={state.visualizationInProgress}
-                    labelId="visualization_speed_label"
-                    id="visualization_speed_slider"
-                    sx={{'border-radius': '1.25rem', width: '90%'}}
-                    value={config.defaultStartAndFinishPlacement.id}
-                    onChange={e => config.setDefaultStartAndFinishPlacement(e.target.value)}
-                >
-                    {startAndFinishPlacementUIOptions}
-                </Select>
-            </Stack>
+            <SolvingAlgorithms config={config} state={state}/>
+
+            <VisualizationSpeeds config={config} state={state}/>
+
+            <MazeSizes config={config} state={state}/>
+
+            <StartAndFinishPlacements config={config} state={state}/>
             <Stack alignItems={'center'}>
                 <Button disabled={![readyToSolve, movingStartAndFinish].includes(state.gameState.id)}
                         color={moveStartFinishButtonColor}

@@ -1,80 +1,35 @@
 import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
-import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
-import {noMovingItem, startFlag, finishFlag} from "../storesV2/options/movingItemOptions";
 
-// TODO
 const MazeNode = observer(({node, rootStore}) => {
     const state = rootStore.stateStore
+    const controller = rootStore.controller
 
-    const registerUsersInput = () => {
-        console.log('hey there')
-        // node.markVisited()
-        // if (node.isStart) {
-        //     state.setGameState(gameInProgress)
-        // } else if (node.isFinish) {
-        //     gameStore.showCorrectPath()
-        //     state.setGameState(finishedSolving)
-        // }
+    const onMouseDownFunc = e => {
+        e.preventDefault()
+        controller.registerUsersInput(node)
     }
 
-    let onMouseDownFunc, onMouseEnterFunc, onMouseUpFunc
-    if (state.usersSolvingInputAllowed) {
+    const onMouseEnterFunc = () => {
+        if (state.mouseDown) controller.registerUsersInput(node);
+    }
 
-        onMouseDownFunc = e => {
-            console.log('hey')
-            // e.preventDefault()
-            // if (node.isStart || node.hasVisitedNeighbour) {
-            //     registerUsersInput()
-            // }
-        }
-        onMouseEnterFunc = () => {
-            console.log('hey')
-            // if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
-            //     registerUsersInput()
-            // }
-        }
-        onMouseUpFunc = () => {
-        }
-
-    } else if (state.movingStartAndFinishedAllowed) {
-        onMouseDownFunc = (e) => {
-            e.preventDefault();
-            if (node.isStart || node.isFinish) {
-                const movingItem = node.isStart ? startFlag : finishFlag
-                state.setMovingItem(movingItem)
-            }
-        }
-        onMouseEnterFunc = () => {
-        }
-        onMouseUpFunc = () => {
-            if (state.movableItem) {
-                state.movingItem === startFlag ? node.setStart(true) : node.setFinish(true)
-                state.setMovingItem(noMovingItem)
-            }
-        }
-
-    } else {
-        onMouseDownFunc = (e) => {
-            e.preventDefault()
-        }
-        onMouseEnterFunc = () => {
-        }
-        onMouseUpFunc = () => {
-        }
+    const onMouseUpFunc = () => {
+        controller.handleDroppingStartOrFinishFlag(node)
     }
 
 
-    const generationVisualizationStyle = {
-        backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
-    }
-    if (node.current) {
-        generationVisualizationStyle.backgroundColor = '#3b8ef1'
-    }
+    let backgroundColor
     if (node.route) {
-        generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
+        backgroundColor = 'rgba(247,255,22,0.75)'
+    } else if (node.current) {
+        backgroundColor = '#3b8ef1'
+    } else if (node.visited) {
+        backgroundColor = 'rgba(29,227,124,0.35)'
+    } else {
+        backgroundColor = 'white'
     }
 
     let nodeText
@@ -87,25 +42,26 @@ const MazeNode = observer(({node, rootStore}) => {
     }
 
     return (
-        <Grid item={true} xs={1}
-              onMouseDown={e => {
-                  onMouseDownFunc(e)
-              }}
-              onMouseEnter={() => {
-                  onMouseEnterFunc()
-              }}
-              onMouseUp={() => {
-                  onMouseUpFunc()
-              }}
-              sx={{
-                  aspectRatio: '1/1', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center',
-                  borderTop: node.edges.north ? null : '2px solid #ccc',
-                  borderBottom: node.edges.south ? null : '2px solid #ccc',
-                  borderLeft: node.edges.west ? null : '2px solid #ccc',
-                  borderRight: node.edges.east ? null : '2px solid #ccc',
-                  ...generationVisualizationStyle
-              }}>
+        <Grid
+            item={true}
+            className={'mazeNode'}
+            xs={1}
+            onMouseDown={e => {
+                onMouseDownFunc(e)
+            }}
+            onMouseEnter={() => {
+                onMouseEnterFunc()
+            }}
+            onMouseUp={() => {
+                onMouseUpFunc()
+            }}
+            sx={{
+                borderTop: node.edges.north ? null : '2px solid #ccc',
+                borderBottom: node.edges.south ? null : '2px solid #ccc',
+                borderLeft: node.edges.west ? null : '2px solid #ccc',
+                borderRight: node.edges.east ? null : '2px solid #ccc',
+                backgroundColor: backgroundColor
+            }}>
             {nodeText}
         </Grid>
     );

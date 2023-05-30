@@ -1,6 +1,5 @@
-import {computed, makeAutoObservable} from "mobx";
+import {makeAutoObservable} from "mobx";
 import {toJS} from "mobx";
-import {getReachableNeighborNodes} from "../algorithms/utils";
 
 class MazeStore {
     start = null
@@ -11,8 +10,7 @@ class MazeStore {
         makeAutoObservable(this, {
             // does not modify the state of the maze store; it calls methods of specified nodes, but those methods are
             // already actions, so there's no need to mark this one as an action
-            applyVisualizationAction: false,
-            // nodeHasVisitedNeighbours: computed TODO ???
+            applyVisualizationAction: false
         })
     }
 
@@ -81,6 +79,9 @@ class MazeStore {
 
     // ACTIONS
     changeFinishNode({row, column}) {
+        // Do not allow moving the finish flag to the same node as the start flag
+        if (this.nodes[row][column].start) return;
+
         if (this.finish) {
             this.nodes[this.finish.row][this.finish.column].setFinish(false);
         }
@@ -91,6 +92,9 @@ class MazeStore {
 
 
     changeStartNode({row, column}) {
+        // Do not allow moving the start flag to the same node as the finish flag
+        if (this.nodes[row][column].finish) return;
+
         if (this.start) {
             this.nodes[this.start.row][this.start.column].setStart(false);
         }
@@ -105,8 +109,8 @@ class MazeStore {
 
         for (let row = 0; row < rows; row++) {
             const newRow = [] // create a container for all nodes within a row
-            for (let column = 0; column < columns; column++) {
-                newRow.push(new MazeNode(row, column)) // fill the entire row
+            for (let column = 0; column < columns; column++) { // fill the entire row
+                newRow.push(new MazeNode(row, column))
             }
             newNodes.push(newRow) // once the row is filled, push it to the all nodes array
         }
@@ -140,10 +144,6 @@ class MazeStore {
     }
 
     // Computeds
-    nodeHasVisitedNeighbours(targetNode) {
-        return getReachableNeighborNodes(this.nodes, targetNode).some(node => node.visited)
-    }
-
     get nodesToJS() {
         return toJS(this).nodes
     }

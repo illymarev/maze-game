@@ -3,10 +3,12 @@ TODO:
     1) Solving functions // done
     2) Generation functions // done
     3) utils, etc. // done
-    4) Stores
+    4) Stores // done
     5) Components
-- Add documentation and comments
-- Check the grammar and spelling
+    6) Final global cleanup
+- Review the controller's logic critically again
+- Check the grammar and spelling on the UI
+- Return the welcome UI
 - Edit README
 
 NOTES:

@@ -1,15 +1,16 @@
 import {
-    finishedSolving,
+    finishedSolving, gameInProgress,
     generationInProgress,
     generationPending,
     readyToSolve,
     solvingInProgress
 } from "./options/gameStateOptions";
 import {longestShortestPathEdges} from "./options/defaultStartAndFinishPlacementOptions";
-import {findDiameter} from "../algorithms/diameter"; // TODO this should be default
+import findDiameter from "../algorithms/diameter";
 import {immediate, fast} from "./options/visualizationSpeedOptions";
+import {getReachableNeighborNodes} from "../algorithms/utils";
+import {finishFlag, noMovingItem, startFlag} from "./options/movingItemOptions";
 
-// Controls all the complex logic involving multiple stores
 class Controller {
     constructor(rootStore) {
         this.maze = rootStore.mazeStore
@@ -25,7 +26,6 @@ class Controller {
     }
 
     // ================== Generation =====================
-
     createEmptyMaze() {
         this.maze.createEmptyNodes(this.config.rows, this.config.columns)
     }
@@ -39,10 +39,11 @@ class Controller {
     generateMaze() {
         this.state.setGameState(generationInProgress)
         // In case the maze is already generated, it should be reset to a new, empty one. Also, the size
-        // might need to be adjusted
+        // might need to be adjusted if the maze size has been changed
         this.createEmptyMaze()
 
         // Reset these values because they point to an old maze, not the new one
+        this.shortestPath = null
         this.maze.mazeStart = null
         this.maze.mazeFinish = null
 
@@ -55,7 +56,7 @@ class Controller {
             this.endNode = endNode
         } else {
             this.startNode = {row: 0, column: 0}
-            this.endNode = {row: newMaze.length - 1, columns: newMaze[0].length - 1}
+            this.endNode = {row: newMaze.length - 1, column: newMaze[0].length - 1}
         }
 
         // Apply the visualization
@@ -73,9 +74,22 @@ class Controller {
 
     // ================== Solving ========================
     finishMazeSolving() {
-        this.maze.applyVisualizationAction({type: 'bulkSetRoute', payload: this.shortestPath}) // TODO think about the wording
-        // of "route"
+        this.showShortestPath()
         this.state.setGameState(finishedSolving)
+    }
+
+    showShortestPath() {
+        // This part will be executed in case the user is solving the maze manually
+        if (!this.shortestPath) {
+            const maze = this.maze.nodesToJS
+            maze.map(row => row.map(item => item.visited = false))
+            const startNode = maze[this.maze.start.row][this.maze.start.column]
+            const endNode = maze[this.maze.finish.row][this.maze.finish.column]
+            const {route} = this.config.solvingFunction(maze, startNode, endNode)
+            this.shortestPath = route
+        }
+
+        this.maze.applyVisualizationAction({type: 'bulkSetRoute', payload: this.shortestPath})
     }
 
     solveMaze() {
@@ -120,7 +134,7 @@ class Controller {
 
     stopVisualization() {
         if (this.config.visualizationSpeed.id === fast) {
-            this.blockVisualization = true
+            this.blockVisualization = true // if the visualization functions uses the window.RequestAnimationFrame
         } else {
             clearInterval(this.interval)
             this.interval = null
@@ -161,12 +175,46 @@ class Controller {
         clearInterval(this.interval)
         this.interval = null
     }
-}
 
-// TODO
-// 2) fix start/end moving functionality
-// 3) fix user's input functionality
-// Verify that everything works and refactor react components after that
-// Global cleanup
+    // ================== User's input ===================
+    registerUsersInput(node) {
+        if (this.state.usersSolvingInputAllowed) {
+            this.handleMazeSolvingInput(node)
+        } else if (this.state.movingStartAndFinishAllowed) {
+            this.handleMovingStartOrFinish(node)
+        }
+    }
+
+    handleMazeSolvingInput(node) {
+        if (node.start || getReachableNeighborNodes(this.maze.nodes, node).some(n => n.visited)) {
+            node.setVisited(true)
+            if (node.start) {
+                this.state.setGameState(gameInProgress)
+            } else if (node.finish) {
+                this.showShortestPath();
+                this.state.setGameState(finishedSolving)
+            }
+        }
+    }
+
+    handleMovingStartOrFinish(node) {
+        if (node.start) {
+            this.state.setMovingItem(startFlag)
+        } else if (node.finish) {
+            this.state.setMovingItem(finishFlag)
+        }
+    }
+
+    handleDroppingStartOrFinishFlag(node) {
+        if (this.state.movingStartAndFinishAllowed && this.state.movingItem) {
+            if (this.state.movingItem === startFlag) {
+                this.maze.changeStartNode({row: node.row, column: node.column})
+            } else if (this.state.movingItem === finishFlag) {
+                this.maze.changeFinishNode({row: node.row, column: node.column})
+            }
+            this.state.setMovingItem(noMovingItem)
+        }
+    }
+}
 
 export default Controller

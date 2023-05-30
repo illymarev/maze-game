@@ -11,7 +11,7 @@ const resetVisited = maze => {
     }
 }
 
-export const findDiameter = maze => {
+const findDiameter = maze => {
     let furthestNodes = {startNode: null, endNode: null, distance: 0}
 
 
@@ -58,3 +58,5 @@ const findFurthestNode = (startNode, maze) => {
     return {startNode: startNode, endNode: maxDistanceNode, distance: maxDistanceNode.distanceFromStart}
 
 }
+
+export default findDiameter

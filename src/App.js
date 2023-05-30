@@ -2,7 +2,6 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import {observer} from "mobx-react";
 import CssBaseline from '@mui/material/CssBaseline';
 import './App.css';
-import WelcomeModal from "./components/WelcomeModal";
 import MazeGame from './componentsV2/MazeGame'
 
 
