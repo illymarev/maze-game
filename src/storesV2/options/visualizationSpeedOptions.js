@@ -9,24 +9,24 @@ export const visualizationSpeedOptions = [
     {
         id: slow,
         delay: 500,
-        label: 'Slow'
+        title: 'Slow'
     },
     {
         id: medium,
         delay: 100,
-        label: 'Medium'
+        title: 'Medium'
     },
     {
         id: fast,
-        label: 'Fast' // No delay, uses the requestAnimationFrame
+        title: 'Fast' // No delay, uses the requestAnimationFrame
     },
     {
         id: veryFast,
         delay: 1.5,
-        label: 'Very Fast'
+        title: 'Very Fast'
     },
     {
         id: immediate,
-        label: 'Immediate' // No delay, it does not visualize actions, only changes the whole maze at once
+        title: 'Immediate' // No delay, it does not visualize actions, only changes the whole maze at once
     }
 ]

@@ -29,7 +29,7 @@ class ConfigStore {
         this.mazeSize = mazeSizeOptions[mazeSizeId]
     }
 
-    setVisualizationDelay(visualizationSpeedOptionId) {
+    setVisualizationSpeed(visualizationSpeedOptionId) {
         this.visualizationSpeed = visualizationSpeedOptions[visualizationSpeedOptionId]
     }
 
