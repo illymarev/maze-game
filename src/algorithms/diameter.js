@@ -1,33 +1,14 @@
-// Calculating the diameter BFS from every node of the maze and causes a freeze when generating a large maze
-// TODO either optimize the algorithm or transfer the calculation to web worker/AWS lambda
-import {getReachableNeighborNodes} from "./utils";
 import Queue from "./dataStructures/Queue";
-
-const resetVisited = maze => {
-    for (const row of maze) {
-        for (const node of row) {
-            node.visited = false
-        }
-    }
-}
+import {getReachableNeighborNodes} from "./utils";
 
 const findDiameter = maze => {
-    let furthestNodes = {startNode: null, endNode: null, distance: 0}
+    const startNode = findFurthestNode(maze[0][0], maze)
+    // The method above mutates the maze, thus - resetting visited nodes is required
+    maze.map(row => row.map(node => node.visited = false))
+    const endNode = findFurthestNode(startNode, maze)
+    maze.map(row => row.map(node => node.visited = false))
 
-
-    for (const row of maze) {
-        for (const node of row) {
-            // This function mutates the original data structure
-            const currentFurthestCombination = findFurthestNode(node, maze)
-            if (currentFurthestCombination.distance > furthestNodes.distance) {
-                furthestNodes = currentFurthestCombination
-            }
-            resetVisited(maze) // resetting all visited nodes will be faster than creating a copy of the node
-            // & maze every time
-        }
-    }
-
-    return furthestNodes
+    return {startNode: startNode, endNode: endNode}
 }
 
 const findFurthestNode = (startNode, maze) => {
@@ -42,7 +23,12 @@ const findFurthestNode = (startNode, maze) => {
     while (queue.length) {
         const currentNode = queue.dequeue()
 
-        if (currentNode.distanceFromStart > maxDistanceNode.distanceFromStart) {
+        // >= is used instead of > for visual beauty because BFS always explores nodes in the same order.
+        // If two neighbour nodes have the same distance from start, 1 node will always be visited before another.
+        // If we set the first node as the finish, the second node will remain unvisited during the visualization,
+        // thus - will not look very good. In order to avoid this, I use >=, so that the finish node will be the one
+        // that is going to be visited the last.
+        if (currentNode.distanceFromStart >= maxDistanceNode.distanceFromStart) {
             maxDistanceNode = currentNode
         }
 
@@ -55,8 +41,8 @@ const findFurthestNode = (startNode, maze) => {
         }
     }
 
-    return {startNode: startNode, endNode: maxDistanceNode, distance: maxDistanceNode.distanceFromStart}
+    return maxDistanceNode
 
 }
 
-export default findDiameter
+export default findDiameter;
