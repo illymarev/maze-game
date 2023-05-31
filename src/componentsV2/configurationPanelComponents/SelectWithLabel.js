@@ -1,6 +1,6 @@
 import {Stack, InputLabel, Select, MenuItem} from "@mui/material";
 
-const SelectWithInput = ({id, labelId, labelText, disabled, value, onChangeFunction, options}) => (
+const SelectWithLabel = ({id, labelId, labelText, disabled, value, onChangeFunction, options}) => (
     <Stack className={'selectWithInputStack'}>
         <InputLabel id={labelId}>{labelText}</InputLabel>
         <Select
@@ -16,4 +16,4 @@ const SelectWithInput = ({id, labelId, labelText, disabled, value, onChangeFunct
     </Stack>
 );
 
-export default SelectWithInput;
+export default SelectWithLabel;

@@ -1,9 +1,9 @@
-import SelectWithInput from "./SelectWithInput";
+import SelectWithLabel from "./SelectWithLabel";
 import {observer} from "mobx-react";
 import generationAlgorithmOptions from "../../storesV2/options/generationAlgorithmOptions";
 
 const GenerationAlgorithmSelector = observer(({state, config}) =>
-    <SelectWithInput
+    <SelectWithLabel
         id={'generation-algorithm-selector'}
         labelId={'generation-algorithm-selector-label'}
         labelText={'Generation Algorithm'}

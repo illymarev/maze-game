@@ -1,9 +1,9 @@
 import {observer} from "mobx-react";
 import mazeSizeOptions from "../../storesV2/options/mazeSizeOptions";
-import SelectWithInput from "./SelectWithInput";
+import SelectWithLabel from "./SelectWithLabel";
 
 const MazeSizeSelector = observer(({config, state}) =>
-    <SelectWithInput
+    <SelectWithLabel
         id={'maze-size-selector'}
         labelId={'maze-size-selector-label'}
         labelText={'Maze Size'}

@@ -1,9 +1,9 @@
 import {observer} from "mobx-react";
 import solvingAlgorithmOptions from "../../storesV2/options/solvingAlgorithmOptions";
-import SelectWithInput from "./SelectWithInput";
+import SelectWithLabel from "./SelectWithLabel";
 
 const SolvingAlgorithmSelector = observer(({state, config}) =>
-    <SelectWithInput
+    <SelectWithLabel
         id={'solving-algorithm-selector'}
         labelId={'solving-algorithm-selector-label'}
         labelText={'Solving Algorithm'}
