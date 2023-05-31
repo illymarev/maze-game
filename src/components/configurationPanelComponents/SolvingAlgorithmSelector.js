@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import solvingAlgorithmOptions from "../../storesV2/options/solvingAlgorithmOptions";
+import solvingAlgorithmOptions from "../../stores/options/solvingAlgorithmOptions";
 import SelectWithLabel from "./SelectWithLabel";
 
 const SolvingAlgorithmSelector = observer(({state, config}) =>

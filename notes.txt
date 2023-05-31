@@ -1,2 +1,0 @@
-To deploy changes, run 'npm run deploy'
-https://illymarev.github.io/maze-game/

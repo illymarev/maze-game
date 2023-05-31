@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {visualizationSpeedOptions} from "../../storesV2/options/visualizationSpeedOptions";
+import {visualizationSpeedOptions} from "../../stores/options/visualizationSpeedOptions";
 import SelectWithLabel from "./SelectWithLabel";
 
 const VisualizationSpeedSelector = observer(({state, config}) =>

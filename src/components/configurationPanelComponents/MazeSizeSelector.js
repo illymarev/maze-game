@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import mazeSizeOptions from "../../storesV2/options/mazeSizeOptions";
+import mazeSizeOptions from "../../stores/options/mazeSizeOptions";
 import SelectWithLabel from "./SelectWithLabel";
 
 const MazeSizeSelector = observer(({config, state}) =>

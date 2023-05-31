@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {defaultStartAndFinishPlacementOptions} from "../../storesV2/options/defaultStartAndFinishPlacementOptions";
+import {defaultStartAndFinishPlacementOptions} from "../../stores/options/defaultStartAndFinishPlacementOptions";
 import SelectWithLabel from "./SelectWithLabel";
 
 const StartAndFinishPlacementSelector = observer(({config, state}) =>

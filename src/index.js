@@ -7,7 +7,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import RootStore from "./storesV2/rootStore";
+import RootStore from "./stores/rootStore";
 
 // TODO read the official documentation about where it should be created
 const rootStore = new RootStore();

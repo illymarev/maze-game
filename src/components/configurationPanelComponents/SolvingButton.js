@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {generationInProgress, generationPending, solvingInProgress} from "../../storesV2/options/gameStateOptions";
+import {generationInProgress, generationPending, solvingInProgress} from "../../stores/options/gameStateOptions";
 import {Button} from "@mui/material";
 
 const SolvingButton = observer(({state, controller}) => {

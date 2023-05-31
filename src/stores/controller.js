@@ -42,10 +42,8 @@ class Controller {
         // might need to be adjusted if the maze size has been changed
         this.createEmptyMaze()
 
-        // Reset these values because they point to an old maze, not the new one
+        // Reset because they point to an old maze, not the new one
         this.shortestPath = null
-        this.maze.mazeStart = null
-        this.maze.mazeFinish = null
 
         const {newMaze, visualizationActions} = this.config.generationFunction(this.maze.nodesToJS)
 

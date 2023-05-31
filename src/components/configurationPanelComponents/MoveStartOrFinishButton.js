@@ -1,5 +1,5 @@
 import {observer} from "mobx-react";
-import {movingStartAndFinish, readyToSolve} from "../../storesV2/options/gameStateOptions";
+import {movingStartAndFinish, readyToSolve} from "../../stores/options/gameStateOptions";
 import {SwipeVerticalOutlined} from "@mui/icons-material";
 import {Button} from "@mui/material";
 

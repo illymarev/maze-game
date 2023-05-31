@@ -1,4 +1,4 @@
-import {generationInProgress, solvingInProgress} from "../../storesV2/options/gameStateOptions";
+import {generationInProgress, solvingInProgress} from "../../stores/options/gameStateOptions";
 import {Button} from "@mui/material";
 import {observer} from "mobx-react";
 
