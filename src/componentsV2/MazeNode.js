@@ -8,8 +8,8 @@ const MazeNode = observer(({node, rootStore}) => {
     const controller = rootStore.controller
 
     const onMouseDownFunc = e => {
-        e.preventDefault()
-        controller.registerUsersInput(node)
+        e.preventDefault();
+        controller.registerUsersInput(node);
     }
 
     const onMouseEnterFunc = () => {
@@ -17,7 +17,7 @@ const MazeNode = observer(({node, rootStore}) => {
     }
 
     const onMouseUpFunc = () => {
-        controller.handleDroppingStartOrFinishFlag(node)
+        controller.handleDroppingStartOrFinishFlag(node);
     }
 
 

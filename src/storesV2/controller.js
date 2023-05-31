@@ -207,6 +207,7 @@ class Controller {
 
     handleDroppingStartOrFinishFlag(node) {
         if (this.state.movingStartAndFinishAllowed && this.state.movingItem) {
+            this.shortestPath = null; // start/finish position is going to change, so the old path is no longer relevant
             if (this.state.movingItem === startFlag) {
                 this.maze.changeStartNode({row: node.row, column: node.column})
             } else if (this.state.movingItem === finishFlag) {
