@@ -15,4 +15,4 @@ class RootStore {
     };
 }
 
-export default RootStore;
+export default RootStore
