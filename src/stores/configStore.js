@@ -64,4 +64,4 @@ class ConfigStore {
 
 }
 
-export default ConfigStore;
+export default ConfigStore

@@ -53,4 +53,4 @@ class StateStore {
     };
 }
 
-export default StateStore;
+export default StateStore

@@ -194,4 +194,4 @@ class MazeNode {
     };
 }
 
-export default MazeStore;
+export default MazeStore
