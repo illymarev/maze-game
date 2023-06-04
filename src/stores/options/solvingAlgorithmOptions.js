@@ -4,12 +4,12 @@ import depthFirstSearch from "../../algorithms/solving/depthFirstSearch";
 const solvingAlgorithmOptions = [
     {
         id: 0,
-        title: "Breadth First Search",
+        title: "Breadth-first search",
         relatedFunction: breadthFirstSearch
     },
     {
         id: 1,
-        title: "Depth First Search",
+        title: "Depth-first search",
         relatedFunction: depthFirstSearch
     }
 ];

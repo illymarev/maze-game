@@ -15,7 +15,13 @@ const ConfigurationPanel = observer(({rootStore}) => {
     const controller = rootStore.controller;
 
     return (
-        <Stack width={'100%'} height={'100%'} alignItems={'center'} justifyContent={'space-evenly'}>
+        <Stack
+            width={'100%'}
+            height={'100%'}
+            alignItems={'center'}
+            justifyContent={{xs: 'space-evenly', xl: 'center'}}
+            spacing={{xl: 4}}
+        >
 
             <GenerationButton state={state} controller={controller}/>
 

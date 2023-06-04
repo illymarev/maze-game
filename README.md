@@ -1,22 +1,27 @@
-# Visualizer of the maze creation and solving
+# Maze game with algorithms visualization
+
 https://illymarev.github.io/maze-game/
 
 ## Description
 
-Generate the maze, solve it automatically or try solving it on your own! Selecting the visualization speed will allow
-you to explore the algorithm at your own pace. Make sure to try moving the start/end nodes! Settings panel provides you
-with an opportunity to customize the maze size and default start/end nodes placement!
+Maze game with options to visualize generation and solving algorithms, customize visualization speed, and change the
+maze size and start/finish positions.
 
 ## Generating the maze
 
-Various customization options are available:
+Available generation algorithms include:
 
-- The settings icon in the top right corner allows changing the grid size and default start/end positions
-- "Edit" icon above the maze grid allows you to move start/end nodes right after the maze is generated
+- Modified Kruskal's algorithm
+- Hunt And Kill algorithm
+- Recursive backtracking algorithm
+
+Once the maze is generated, start and finish can be moved by clicking
+"Move start/finish" on the settings panel and dragging flags on the maze.
 
 ## Solving the maze
 
-There are 2 options available:
+Mazes can be solved either manually, by clicking nodes/dragging over them, or automatically, using available solving
+algorithms that include:
 
-- Solving automatically using the "Solve" button
-- Clicking/dragging over maze cells.
+- Breadth-first search
+- Depth-first search

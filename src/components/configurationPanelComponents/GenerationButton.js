@@ -18,7 +18,7 @@ const GenerationButton = observer(({state, controller}) => {
             variant="contained"
             color={color}
             size='large'
-            sx={{height: {md: '50px', xxl: '60px'}, fontSize: {xl: '1.15rem', xxl: '1.25rem'}}}
+            sx={{height: {md: '50px', xl: '60px', xxl: '65px'}, fontSize: {xl: '1.25rem', xxl: '1.4rem'}}}
         >
             {text}
         </Button>
