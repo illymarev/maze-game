@@ -9,10 +9,10 @@ import Maze from "./Maze";
 
 import * as React from "react";
 
-const drawerWidth = '20%'
+const drawerWidth = '20%';
 
 const MazeGame = observer(({rootStore}) => {
-    const state = rootStore.stateStore
+    const state = rootStore.stateStore;
 
     return (
         <Box sx={{display: 'flex'}}
@@ -45,7 +45,7 @@ const MazeGame = observer(({rootStore}) => {
 
             </Box>
         </Box>
-    )
-})
+    );
+});
 
-export default MazeGame
+export default MazeGame;

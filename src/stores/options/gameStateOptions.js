@@ -1,11 +1,11 @@
 // These are referenced in some stores & the controller, so create variables to avoid referencing by ID
-export const generationPending = 0
-export const generationInProgress = 1
-export const readyToSolve = 2
-export const movingStartAndFinish = 3
-export const gameInProgress = 4
-export const solvingInProgress = 5
-export const finishedSolving = 6
+export const generationPending = 0;
+export const generationInProgress = 1;
+export const readyToSolve = 2;
+export const movingStartAndFinish = 3;
+export const gameInProgress = 4;
+export const solvingInProgress = 5;
+export const finishedSolving = 6;
 
 export const gameStateOptions = [
     {
@@ -43,4 +43,4 @@ export const gameStateOptions = [
         title: 'Finish! Maze Solved!',
         description: 'Nicely done! Click "generate" to continue with a new maze!'
     }
-]
+];

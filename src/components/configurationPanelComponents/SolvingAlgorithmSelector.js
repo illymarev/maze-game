@@ -12,6 +12,6 @@ const SolvingAlgorithmSelector = observer(({state, config}) =>
         onChangeFunction={e => config.setSolvingAlgorithm(e.target.value)}
         options={solvingAlgorithmOptions}
     />
-)
+);
 
 export default SolvingAlgorithmSelector;

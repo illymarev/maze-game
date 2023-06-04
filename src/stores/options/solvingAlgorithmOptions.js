@@ -12,6 +12,6 @@ const solvingAlgorithmOptions = [
         title: "Depth First Search",
         relatedFunction: depthFirstSearch
     }
-]
+];
 
-export default solvingAlgorithmOptions
+export default solvingAlgorithmOptions;

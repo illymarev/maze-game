@@ -10,7 +10,7 @@ const GameState = observer(({state}) => (
             {state.gameState.description}
         </Typography>
     </Stack>
-))
+));
 
-export default GameState
+export default GameState;
 

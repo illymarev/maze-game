@@ -6,14 +6,14 @@ import {Button} from "@mui/material";
 const MoveStartOrFinishButton = observer(({state}) => {
     const onButtonClick = () => {
         if (state.gameState.id === movingStartAndFinish) {
-            state.setGameState(readyToSolve)
+            state.setGameState(readyToSolve);
         } else {
-            state.setGameState(movingStartAndFinish)
+            state.setGameState(movingStartAndFinish);
         }
     }
 
-    const text = state.gameState.id === movingStartAndFinish ? 'Stop Moving Start/Finish' : 'Move Start/Finish'
-    const color = state.gameState.id === movingStartAndFinish ? 'danger' : 'neutral'
+    const text = state.gameState.id === movingStartAndFinish ? 'Stop Moving Start/Finish' : 'Move Start/Finish';
+    const color = state.gameState.id === movingStartAndFinish ? 'danger' : 'neutral';
 
     return (
         <Button

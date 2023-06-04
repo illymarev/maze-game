@@ -10,16 +10,16 @@ export const directions = {
     south: (row, column) => [row + 1, column],
     west: (row, column) => [row, column - 1],
     east: (row, column) => [row, column + 1]
-}
+};
 
 export const reversedDirections = {
     north: 'south', south: 'north', west: 'east', east: 'west'
-}
+};
 
 // Determines the direction between two nodes based on their coordinates
 export const determineDirection = (startNode, targetNode) => {
     for (const [direction, calcFunction] of Object.entries(directions)) {
-        const [row, column] = calcFunction(startNode.row, startNode.column)
-        if (row === targetNode.row && column === targetNode.column) return direction
+        const [row, column] = calcFunction(startNode.row, startNode.column);
+        if (row === targetNode.row && column === targetNode.column) return direction;
     }
-}
+};

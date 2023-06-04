@@ -1,18 +1,17 @@
-import {makeAutoObservable} from "mobx";
-import {toJS} from "mobx";
+import {makeAutoObservable, toJS} from "mobx";
 
 class MazeStore {
-    start = null
-    finish = null
-    nodes = []
+    start = null;
+    finish = null;
+    nodes = [];
 
     constructor() {
         makeAutoObservable(this, {
             // does not modify the state of the maze store; it calls methods of specified nodes, but those methods are
             // already actions, so there's no need to mark this one as an action
             applyVisualizationAction: false
-        })
-    }
+        });
+    };
 
 
     /**
@@ -72,10 +71,10 @@ class MazeStore {
                 break;
 
             default:
-                throw Error('Not Implemented')
+                throw Error('Not Implemented');
         }
 
-    }
+    };
 
     // ACTIONS
     changeFinishNode({row, column}) {
@@ -88,7 +87,7 @@ class MazeStore {
 
         this.finish = {row: row, column: column};
         this.nodes[row][column].setFinish(true);
-    }
+    };
 
 
     changeStartNode({row, column}) {
@@ -101,98 +100,98 @@ class MazeStore {
 
         this.start = {row: row, column: column};
         this.nodes[row][column].setStart(true);
-    }
+    };
 
 
     createEmptyNodes(rows, columns) {
-        const newNodes = []
+        const newNodes = [];
 
         for (let row = 0; row < rows; row++) {
-            const newRow = [] // create a container for all nodes within a row
+            const newRow = []; // create a container for all nodes within a row
             for (let column = 0; column < columns; column++) { // fill the entire row
-                newRow.push(new MazeNode(row, column))
+                newRow.push(new MazeNode(row, column));
             }
-            newNodes.push(newRow) // once the row is filled, push it to the all nodes array
+            newNodes.push(newRow); // once the row is filled, push it to the all nodes array
         }
 
-        this.nodes = newNodes
-    }
+        this.nodes = newNodes;
+    };
 
     setNodes(newJSNodes) {
         // newJSNodes is a grid with nodes represented as javascript objects instead of instances of MazeNode class.
         // So we need to create these instances
-        const [rows, columns] = [newJSNodes.length, newJSNodes[0].length]
+        const [rows, columns] = [newJSNodes.length, newJSNodes[0].length];
 
-        const newNodes = []
+        const newNodes = [];
         for (let row = 0; row < rows; row++) {
-            const newRow = []
+            const newRow = [];
             for (let column = 0; column < columns; column++) {
-                const node = new MazeNode(row, column)
+                const node = new MazeNode(row, column);
 
-                node.edges = newJSNodes[row][column].edges
-                node.visited = newJSNodes[row][column].visited
-                node.current = newJSNodes[row][column].current
-                node.isRoute = newJSNodes[row][column].isRoute
-                node.start = newJSNodes[row][column].start
-                node.finish = newJSNodes[row][column].finish
-                newRow.push(node)
+                node.edges = newJSNodes[row][column].edges;
+                node.visited = newJSNodes[row][column].visited;
+                node.current = newJSNodes[row][column].current;
+                node.isRoute = newJSNodes[row][column].isRoute;
+                node.start = newJSNodes[row][column].start;
+                node.finish = newJSNodes[row][column].finish;
+                newRow.push(node);
             }
-            newNodes.push(newRow)
+            newNodes.push(newRow);
         }
 
-        this.nodes = newNodes
-    }
+        this.nodes = newNodes;
+    };
 
     // Computeds
     get nodesToJS() {
-        return toJS(this).nodes
-    }
+        return toJS(this).nodes;
+    };
 }
 
 class MazeNode {
-    row = null
-    column = null
+    row = null;
+    column = null;
 
-    edges = {north: false, south: false, west: false, east: false}
-    visited = false // indicates if the node has already been visited
-    current = false  // indicates if a visualized algorithm is currently using this node as the main one
-    route = false // indicates if the node is part of the shortest path
-    start = false
-    finish = false
+    edges = {north: false, south: false, west: false, east: false};
+    visited = false; // indicates if the node has already been visited
+    current = false;  // indicates if a visualized algorithm is currently using this node as the main one
+    route = false; // indicates if the node is part of the shortest path
+    start = false;
+    finish = false;
 
     constructor(row, column) {
         makeAutoObservable(this, {
             // static, used in algorithms & id generation
             row: false, column: false
-        })
-        this.row = row
-        this.column = column
-    }
+        });
+        this.row = row;
+        this.column = column;
+    };
 
     // ACTIONS
     createEdge(direction) {
-        this.edges[direction] = true
-    }
+        this.edges[direction] = true;
+    };
 
     setCurrent(bool) {
-        this.current = bool
-    }
+        this.current = bool;
+    };
 
     setFinish(bool) {
-        this.finish = bool
-    }
+        this.finish = bool;
+    };
 
     setRoute(bool) {
-        this.route = bool
-    }
+        this.route = bool;
+    };
 
     setStart(bool) {
-        this.start = bool
-    }
+        this.start = bool;
+    };
 
     setVisited(bool) {
-        this.visited = bool
-    }
+        this.visited = bool;
+    };
 }
 
-export default MazeStore
+export default MazeStore;

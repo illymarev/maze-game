@@ -4,8 +4,8 @@ import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
 import {observer} from "mobx-react";
 
 const MazeNode = observer(({node, rootStore}) => {
-    const state = rootStore.stateStore
-    const controller = rootStore.controller
+    const state = rootStore.stateStore;
+    const controller = rootStore.controller;
 
     const onMouseDownFunc = e => {
         e.preventDefault();
@@ -21,24 +21,24 @@ const MazeNode = observer(({node, rootStore}) => {
     }
 
 
-    let backgroundColor
+    let backgroundColor;
     if (node.route) {
-        backgroundColor = 'rgba(247,255,22,0.75)'
+        backgroundColor = 'rgba(247,255,22,0.75)';
     } else if (node.current) {
-        backgroundColor = '#3b8ef1'
+        backgroundColor = '#3b8ef1';
     } else if (node.visited) {
-        backgroundColor = 'rgba(29,227,124,0.35)'
+        backgroundColor = 'rgba(29,227,124,0.35)';
     } else {
-        backgroundColor = 'white'
+        backgroundColor = 'white';
     }
 
-    let nodeText
+    let nodeText;
     if (node.start) {
-        nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>
+        nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>;
     } else if (node.finish) {
-        nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>
+        nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>;
     } else {
-        nodeText = ''
+        nodeText = '';
     }
 
     return (
@@ -65,7 +65,7 @@ const MazeNode = observer(({node, rootStore}) => {
             {nodeText}
         </Grid>
     );
-})
+});
 
 
-export default MazeNode
+export default MazeNode;

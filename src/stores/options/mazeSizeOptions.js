@@ -17,6 +17,6 @@ const mazeSizeOptions = [
         rows: 18,
         columns: 36
     }
-]
+];
 
-export default mazeSizeOptions
+export default mazeSizeOptions;

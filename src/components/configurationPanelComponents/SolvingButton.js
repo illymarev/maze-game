@@ -4,11 +4,11 @@ import {Button} from "@mui/material";
 
 const SolvingButton = observer(({state, controller}) => {
     const onButtonClick = () => {
-        state.gameState.id === solvingInProgress ? controller.stopVisualization() : controller.solveMaze()
+        state.gameState.id === solvingInProgress ? controller.stopVisualization() : controller.solveMaze();
     }
 
-    const text = state.gameState.id === solvingInProgress ? 'Stop Solving' : 'Solve'
-    const color = state.gameState.id === solvingInProgress ? 'danger' : 'primary'
+    const text = state.gameState.id === solvingInProgress ? 'Stop Solving' : 'Solve';
+    const color = state.gameState.id === solvingInProgress ? 'danger' : 'primary';
 
     return (
         <Button

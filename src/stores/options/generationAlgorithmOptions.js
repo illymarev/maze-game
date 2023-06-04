@@ -23,6 +23,6 @@ const generationAlgorithmOptions = [
         title: 'Recursive Backtracking',
         relatedFunction: recursiveBacktracking
     }
-]
+];
 
-export default generationAlgorithmOptions
+export default generationAlgorithmOptions;

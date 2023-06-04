@@ -4,11 +4,11 @@ import {observer} from "mobx-react";
 
 const GenerationButton = observer(({state, controller}) => {
     const onButtonClick = () => {
-        state.gameState.id === generationInProgress ? controller.stopVisualization() : controller.generateMaze()
-    }
+        state.gameState.id === generationInProgress ? controller.stopVisualization() : controller.generateMaze();
+    };
 
-    const text = state.gameState.id === generationInProgress ? 'Stop Generating' : 'Generate'
-    const color = state.gameState.id === generationInProgress ? 'danger' : 'secondary'
+    const text = state.gameState.id === generationInProgress ? 'Stop Generating' : 'Generate';
+    const color = state.gameState.id === generationInProgress ? 'danger' : 'secondary';
 
     return (
         <Button

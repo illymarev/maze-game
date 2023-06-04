@@ -49,4 +49,4 @@ const MazeLegend = () => (
     </Stack>
 );
 
-export default MazeLegend
+export default MazeLegend;

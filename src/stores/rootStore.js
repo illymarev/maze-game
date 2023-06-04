@@ -6,13 +6,13 @@ import StateStore from "./stateStore";
 
 class RootStore {
     constructor() {
-        this.stateStore = new StateStore()
-        this.configStore = new ConfigStore()
-        this.mazeStore = new MazeStore()
+        this.stateStore = new StateStore();
+        this.configStore = new ConfigStore();
+        this.mazeStore = new MazeStore();
 
-        this.controller = new Controller(this)
-        this.controller.createEmptyMaze()
-    }
+        this.controller = new Controller(this);
+        this.controller.createEmptyMaze();
+    };
 }
 
-export default RootStore
+export default RootStore;

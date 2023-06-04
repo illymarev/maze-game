@@ -10,9 +10,9 @@ import SolvingButton from "./configurationPanelComponents/SolvingButton";
 import MoveStartOrFinishButton from "./configurationPanelComponents/MoveStartOrFinishButton";
 
 const ConfigurationPanel = observer(({rootStore}) => {
-    const state = rootStore.stateStore
-    const config = rootStore.configStore
-    const controller = rootStore.controller
+    const state = rootStore.stateStore;
+    const config = rootStore.configStore;
+    const controller = rootStore.controller;
 
     return (
         <Stack width={'100%'} height={'100%'} alignItems={'center'} justifyContent={'space-evenly'}>
@@ -34,7 +34,7 @@ const ConfigurationPanel = observer(({rootStore}) => {
             <MoveStartOrFinishButton state={state}/>
 
         </Stack>
-    )
-})
+    );
+});
 
 export default ConfigurationPanel;

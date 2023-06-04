@@ -4,64 +4,64 @@ import solvingAlgorithmOptions from "./options/solvingAlgorithmOptions";
 
 import {fast, visualizationSpeedOptions} from './options/visualizationSpeedOptions'
 import {
-    longestShortestPathEdges,
-    defaultStartAndFinishPlacementOptions
+    defaultStartAndFinishPlacementOptions,
+    longestShortestPathEdges
 } from "./options/defaultStartAndFinishPlacementOptions";
 import {makeAutoObservable} from "mobx";
 
 class ConfigStore {
-    mazeSize = mazeSizeOptions[0]
-    visualizationSpeed = visualizationSpeedOptions[fast]
-    generationAlgorithm = generationAlgorithmOptions[0]
-    solvingAlgorithm = solvingAlgorithmOptions[0]
-    defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[longestShortestPathEdges]
+    mazeSize = mazeSizeOptions[0];
+    visualizationSpeed = visualizationSpeedOptions[fast];
+    generationAlgorithm = generationAlgorithmOptions[0];
+    solvingAlgorithm = solvingAlgorithmOptions[0];
+    defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[longestShortestPathEdges];
 
     constructor() {
-        makeAutoObservable(this)
-    }
+        makeAutoObservable(this);
+    };
 
     // ACTIONS
     setDefaultStartAndFinishPlacement(placementOptionId) {
-        this.defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[placementOptionId]
-    }
+        this.defaultStartAndFinishPlacement = defaultStartAndFinishPlacementOptions[placementOptionId];
+    };
 
     setMazeSize(mazeSizeId) {
-        this.mazeSize = mazeSizeOptions[mazeSizeId]
-    }
+        this.mazeSize = mazeSizeOptions[mazeSizeId];
+    };
 
     setVisualizationSpeed(visualizationSpeedOptionId) {
-        this.visualizationSpeed = visualizationSpeedOptions[visualizationSpeedOptionId]
-    }
+        this.visualizationSpeed = visualizationSpeedOptions[visualizationSpeedOptionId];
+    };
 
     setGenerationAlgorithm(generationAlgorithmOptionId) {
-        this.generationAlgorithm = generationAlgorithmOptions[generationAlgorithmOptionId]
-    }
+        this.generationAlgorithm = generationAlgorithmOptions[generationAlgorithmOptionId];
+    };
 
     setSolvingAlgorithm(solvingAlgorithmOptionId) {
-        this.solvingAlgorithm = solvingAlgorithmOptions[solvingAlgorithmOptionId]
-    }
+        this.solvingAlgorithm = solvingAlgorithmOptions[solvingAlgorithmOptionId];
+    };
 
     // COMPUTEDS
     get rows() {
-        return this.mazeSize.rows
-    }
+        return this.mazeSize.rows;
+    };
 
     get columns() {
-        return this.mazeSize.columns
-    }
+        return this.mazeSize.columns;
+    };
 
     get visualizationDelay() {
-        return this.visualizationSpeed.delay
-    }
+        return this.visualizationSpeed.delay;
+    };
 
     get generationFunction() {
-        return this.generationAlgorithm.relatedFunction
-    }
+        return this.generationAlgorithm.relatedFunction;
+    };
 
     get solvingFunction() {
-        return this.solvingAlgorithm.relatedFunction
-    }
+        return this.solvingAlgorithm.relatedFunction;
+    };
 
 }
 
-export default ConfigStore
+export default ConfigStore;
