@@ -27,3 +27,26 @@ html {
     font-size: 14px;
     font-family: Roboto, sans-serif;
 }
+
+.mazeNode {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.selectWithInputStack {
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.selectWithInputSelect {
+    border-radius: 1.25rem !important;
+    width: 90%;
+}
+
+.primaryButton {
+    border-radius: 1.25rem !important;
+    width: 90%;
+}

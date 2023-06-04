@@ -1,26 +1,23 @@
-import ConfigurationPanel from "./ConfigurationPanel";
-import Maze from "./Maze";
-import {Stack} from "@mui/material";
-import {GameState} from "./GameState";
-import MazeLegend from "./MazeLegend";
 import {observer} from "mobx-react";
-import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import ConfigurationPanel from "./ConfigurationPanel";
+import MazeLegend from "./MazeLegend";
+import {Stack} from "@mui/material";
+import GameState from "./GameState";
+import Maze from "./Maze";
+
 import * as React from "react";
 
-const drawerWidth = '20%'
+const drawerWidth = '20%';
 
-
-// TODO 3) Allow drag&drop of start/end points
-const MazeGame = observer(({gameStore}) => {
-    const maze = gameStore.maze
-    const config = gameStore.config
-    const state = gameStore.state
+const MazeGame = observer(({rootStore}) => {
+    const state = rootStore.stateStore;
 
     return (
         <Box sx={{display: 'flex'}}
-             onMouseDown={() => state.setIsMouseDown(true)}
-             onMouseUp={() => state.setIsMouseDown(false)}>
+             onMouseDown={() => state.setMouseDown(true)}
+             onMouseUp={() => state.setMouseDown(false)}>
             <Drawer
                 sx={{
                     width: drawerWidth,
@@ -33,7 +30,7 @@ const MazeGame = observer(({gameStore}) => {
                 variant="permanent"
                 anchor="left"
             >
-                <ConfigurationPanel gameStore={gameStore} config={config} state={state}/>
+                <ConfigurationPanel rootStore={rootStore}/>
             </Drawer>
             <Box
                 component="main"
@@ -43,12 +40,12 @@ const MazeGame = observer(({gameStore}) => {
                 <Stack height={'100%'} justifyContent={'center'} alignItems={'center'}>
                     <GameState state={state}/>
                     <MazeLegend/>
-                    <Maze maze={maze} config={config}/>
+                    <Maze rootStore={rootStore}/>
                 </Stack>
 
             </Box>
         </Box>
-    )
-})
+    );
+});
 
-export default MazeGame
+export default MazeGame;

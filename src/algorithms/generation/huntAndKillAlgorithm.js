@@ -1,98 +1,94 @@
-import {getAllNeighbourNodes} from "../helpers";
-import {determineDirectionAndMarkPath, pickRandomItem} from "./utils";
+import {getAllNeighbourNodes} from "../utils";
+import {determineDirectionAndCreateEdge, pickRandomItem, resetVisitedNodes} from "./utils";
+import Queue from "../dataStructures/Queue";
 
 const huntAndKillAlgorithm = maze => {
-    const actionsToVisualize = []
-    let node = maze[0][0]
+    const visualizationActions = new Queue();
+    let node = maze[0][0];
 
     while (true) {
-        node = walk(maze, node, actionsToVisualize)
+        node = walk(maze, node, visualizationActions);
         if (!node) {
-            node = hunt(maze, actionsToVisualize)
-            if (!node) break
+            node = hunt(maze, visualizationActions);
+            if (!node) break;
         }
     }
 
-    for (const row of maze) {
-        for (const node of row) {
-            node.visited = false
-        }
-    }
-    actionsToVisualize.push({type: 'resetVisited'})
+    resetVisitedNodes(maze, visualizationActions);
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize
+        visualizationActions: visualizationActions
     }
 
 }
 
-const hunt = (maze, actionsToVisualize) => {
-    const columns = maze[0].length
+const hunt = (maze, visualizationActions) => {
+    const columns = maze[0].length;
 
-    // Since current version of the maze has more columns that rows,
-    // looping through columns seems to produce better mazes
+    // Since current version of the maze has more columns than rows,
+    // looping through columns, in my opinion, produces more beautiful mazes
     for (let column = 0; column < columns; column++) {
         for (let row of maze) {
-            const node = row[column]
+            const node = row[column];
 
-            actionsToVisualize.push({
-                type: 'markCurrent',
-                payload: {row: node.row, column: node.column}
-            })
+            visualizationActions.enqueue({
+                type: 'setCurrent',
+                payload: {row: node.row, column: node.column, value: true}
+            });
+
             if (node.visited) {
-                actionsToVisualize.push({
-                    type: 'clearCurrent',
-                    payload: {row: node.row, column: node.column}
-                })
+                visualizationActions.enqueue({
+                    type: 'setCurrent',
+                    payload: {row: node.row, column: node.column, value: false}
+                });
             } else {
-                const visitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => item.visited)
+                const visitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => item.visited);
                 if (visitedNeighbours.length) {
-                    const neighbourNode = pickRandomItem(visitedNeighbours)
-                    determineDirectionAndMarkPath(node, neighbourNode, actionsToVisualize)
+                    const neighbourNode = pickRandomItem(visitedNeighbours);
+                    determineDirectionAndCreateEdge(node, neighbourNode, visualizationActions);
 
-                    actionsToVisualize.push({
-                        type: 'clearCurrent',
-                        payload: {row: node.row, column: node.column}
-                    })
-                    return node
+                    visualizationActions.enqueue({
+                        type: 'setCurrent',
+                        payload: {row: node.row, column: node.column, value: false}
+                    });
+                    return node;
                 }
             }
         }
     }
-    return null
+    return null;
 }
 
-const walk = (maze, node, actionsToVisualize) => {
-    actionsToVisualize.push({
-        type: 'markCurrent',
-        payload: {row: node.row, column: node.column}
-    })
+const walk = (maze, node, visualizationActions) => {
+    visualizationActions.enqueue({
+        type: 'setCurrent',
+        payload: {row: node.row, column: node.column, value: true}
+    });
 
-    node.visited = true
-    actionsToVisualize.push({
-        type: 'markVisited',
-        payload: {row: node.row, column: node.column}
-    })
+    node.visited = true;
+    visualizationActions.enqueue({
+        type: 'setVisited',
+        payload: {row: node.row, column: node.column, value: true}
+    });
 
-    const unvisitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => !item.visited)
+    const unvisitedNeighbours = getAllNeighbourNodes(maze, node).filter(item => !item.visited);
     if (unvisitedNeighbours.length) {
-        const nextNode = pickRandomItem(unvisitedNeighbours)
-        determineDirectionAndMarkPath(node, nextNode, actionsToVisualize)
+        const nextNode = pickRandomItem(unvisitedNeighbours);
+        determineDirectionAndCreateEdge(node, nextNode, visualizationActions);
 
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: node.row, column: node.column}
-        })
-        return nextNode
-
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: node.row, column: node.column, value: false}
+        });
+        return nextNode;
     } else {
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: node.row, column: node.column}
-        })
-        return null
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: node.row, column: node.column, value: false}
+        });
+        return null;
     }
 }
 
-export default huntAndKillAlgorithm
+export default huntAndKillAlgorithm;

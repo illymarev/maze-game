@@ -1,202 +1,197 @@
-import {makeAutoObservable} from "mobx";
-import {toJS} from "mobx";
-import {getReachableNeighborNodes} from "../algorithms/helpers";
+import {makeAutoObservable, toJS} from "mobx";
 
-export class MazeStore {
-    gameStore
-    config
-    mazeStart
-    mazeFinish
+class MazeStore {
+    start = null;
+    finish = null;
+    nodes = [];
 
-    nodes = []
-
-    constructor(gameStore) {
+    constructor() {
         makeAutoObservable(this, {
-            // todo read whether this should be overriden
-            applySingleAction: false,
-            gameStore: false,
-            config: false,
-            mazeStart: false,
-            mazeFinish: false
-        })
-        this.gameStore = gameStore
-        this.config = gameStore.config
-        this.createEmptyNodes()
-    }
+            // does not modify the state of the maze store; it calls methods of specified nodes, but those methods are
+            // already actions, so there's no need to mark this one as an action
+            applyVisualizationAction: false
+        });
+    };
 
-    // TODO
-    applySingleAction(action) {
+
+    /**
+     * Applies an action needed to visualize generation/solving
+     * @param action javascript objects that represent the visualization action that needs to be applied.
+     *               Must have the key "type". Additional info should be provided under the key "payload"
+     */
+    applyVisualizationAction(action) {
         switch (action.type) {
-            case 'markCurrent':
-                this.nodes[action.payload.row][action.payload.column].markCurrent()
-                break
-            case 'markVisited':
-                this.nodes[action.payload.row][action.payload.column].markVisited()
-                break
-            case 'clearCurrent':
-                this.nodes[action.payload.row][action.payload.column].clearCurrent()
-                break
-            case 'bulkMarkPath':
+            // Actions that are applied to multiple nodes at the same time
+            case 'bulkSetCurrent': // used in the Kruskal's algorithm
                 for (let item of action.payload) {
-                    this.nodes[item.row][item.column].markPath(item.path)
+                    this.nodes[item.row][item.column].setCurrent(item.value);
                 }
-                break
-            case 'bulkMarkCurrent':
-                for (let item of action.payload){
-                    this.nodes[item.row][item.column].markCurrent()
+                break;
+            // Every node stores the information for simplicity of drawing maze walls, so the graph is implemented
+            // as if it is directed (it stores whether an edge is available from every node the edge is connected to).
+            // Because of this, we need to create this edge from both nodes, thus - the method is called bulk create.
+            case 'bulkCreateEdge':
+                for (let item of action.payload) {
+                    this.nodes[item.row][item.column].createEdge(item.direction);
                 }
-                break
-            case 'bulkClearCurrent':
-                for (let item of action.payload){
-                    this.nodes[item.row][item.column].clearCurrent()
+                break;
+            // Marks nodes on the shortest path in order to highlight it on the UI
+            case 'bulkSetRoute':
+                for (let item of action.payload) {
+                    this.nodes[item.row][item.column].setRoute(true);
                 }
-                break
+                break;
             case 'resetRoute':
                 for (let row of this.nodes) {
                     for (let node of row) {
-                        node.clearRoute()
+                        node.setRoute(false);
                     }
                 }
-                break
+                break;
             case 'resetVisited':
                 for (let row of this.nodes) {
                     for (let node of row) {
-                        node.clearVisited()
+                        node.setVisited(false);
                     }
                 }
-                break
+                break;
             case 'resetCurrent':
                 for (let row of this.nodes) {
                     for (let node of row) {
-                        node.clearCurrent()
+                        node.setCurrent(false);
                     }
                 }
-                break
-            case 'markRoute':
-                for (let item of action.payload) {
-                    this.nodes[item.row][item.column].markRoute()
-                }
-                break
+                break;
+            // Actions that are applied to 1 node at a time
+            case 'setCurrent':
+                this.nodes[action.payload.row][action.payload.column].setCurrent(action.payload.value);
+                break;
+            case 'setVisited':
+                this.nodes[action.payload.row][action.payload.column].setVisited(action.payload.value);
+                break;
+
             default:
-                throw Error('Not Implemented')
+                throw Error('Not Implemented');
         }
 
-    }
+    };
 
-    createEmptyNodes() {
-        const newNodes = []
-        for (let row = 0; row < this.config.rows; row++) {
-            const mazeRow = []
-            for (let column = 0; column < this.config.columns; column++) {
-                const node = new MazeNode(this, row, column)
-                mazeRow.push(node)
+    // ACTIONS
+    changeFinishNode({row, column}) {
+        // Do not allow moving the finish flag to the same node as the start flag
+        if (this.nodes[row][column].start) return;
+
+        if (this.finish) {
+            this.nodes[this.finish.row][this.finish.column].setFinish(false);
+        }
+
+        this.finish = {row: row, column: column};
+        this.nodes[row][column].setFinish(true);
+    };
+
+
+    changeStartNode({row, column}) {
+        // Do not allow moving the start flag to the same node as the finish flag
+        if (this.nodes[row][column].finish) return;
+
+        if (this.start) {
+            this.nodes[this.start.row][this.start.column].setStart(false);
+        }
+
+        this.start = {row: row, column: column};
+        this.nodes[row][column].setStart(true);
+    };
+
+
+    createEmptyNodes(rows, columns) {
+        const newNodes = [];
+
+        for (let row = 0; row < rows; row++) {
+            const newRow = []; // create a container for all nodes within a row
+            for (let column = 0; column < columns; column++) { // fill the entire row
+                newRow.push(new MazeNode(row, column));
             }
-            newNodes.push(mazeRow)
+            newNodes.push(newRow); // once the row is filled, push it to the all nodes array
         }
-        this.nodes = newNodes
-    }
 
-    setNodes(newMazeNodes) {
-        const newNodes = []
-        for (let row = 0; row < newMazeNodes.length; row++) {
-            const newRow = []
-            for (let column = 0; column < newMazeNodes[0].length; column++) {
-                const node = new MazeNode(this, row, column)
-                node.availablePathways = newMazeNodes[row][column].availablePathways
-                node.visited = newMazeNodes[row][column].visited
-                node.current = newMazeNodes[row][column].current
-                node.isRoute = newMazeNodes[row][column].isRoute
-                node.isStart = newMazeNodes[row][column].isStart
-                node.isFinish = newMazeNodes[row][column].isFinish
-                newRow.push(node)
+        this.nodes = newNodes;
+    };
+
+    setNodes(newJSNodes) {
+        // newJSNodes is a grid with nodes represented as javascript objects instead of instances of MazeNode class.
+        // So we need to create these instances
+        const [rows, columns] = [newJSNodes.length, newJSNodes[0].length];
+
+        const newNodes = [];
+        for (let row = 0; row < rows; row++) {
+            const newRow = [];
+            for (let column = 0; column < columns; column++) {
+                const node = new MazeNode(row, column);
+
+                node.edges = newJSNodes[row][column].edges;
+                node.visited = newJSNodes[row][column].visited;
+                node.current = newJSNodes[row][column].current;
+                node.isRoute = newJSNodes[row][column].isRoute;
+                node.start = newJSNodes[row][column].start;
+                node.finish = newJSNodes[row][column].finish;
+                newRow.push(node);
             }
-            newNodes.push(newRow)
+            newNodes.push(newRow);
         }
-        this.nodes = newNodes
-    }
 
+        this.nodes = newNodes;
+    };
+
+    // Computeds
     get nodesToJS() {
-        return toJS(this).nodes
-    }
-
+        return toJS(this).nodes;
+    };
 }
 
-export class MazeNode {
-    maze = null
-    row = null
-    column = null
+class MazeNode {
+    row = null;
+    column = null;
 
-    availablePathways = {north: false, south: false, west: false, east: false} // TODO read more graph theory
-    // and consider renaming this to "edges"
-    visited = false
-    current = false
-    isRoute = false
-    isStart = false
-    isFinish = false
+    edges = {north: false, south: false, west: false, east: false};
+    visited = false; // indicates if the node has already been visited
+    current = false;  // indicates if a visualized algorithm is currently using this node as the main one
+    route = false; // indicates if the node is part of the shortest path
+    start = false;
+    finish = false;
 
-    constructor(maze, row, column) {
+    constructor(row, column) {
         makeAutoObservable(this, {
-            row: false,
-            column: false,
-            maze: false
-        })
-        this.maze = maze
-        this.row = row
-        this.column = column
+            // static, used in algorithms & id generation
+            row: false, column: false
+        });
+        this.row = row;
+        this.column = column;
+    };
 
-    }
+    // ACTIONS
+    createEdge(direction) {
+        this.edges[direction] = true;
+    };
 
-    setIsStart(bool) {
-        if (bool === true) {
-            const previousStart = this.maze.mazeStart
-            if (previousStart) {
-                this.maze.nodes[previousStart.row][previousStart.column].setIsStart(false)
-            }
-            this.maze.mazeStart = {row: this.row, column: this.column}
-        }
-        this.isStart = bool
-    }
+    setCurrent(bool) {
+        this.current = bool;
+    };
 
-    setIsFinish(bool) {
-        if (bool === true) {
-            const previousFinish = this.maze.mazeFinish
-            if (previousFinish) {
-                this.maze.nodes[previousFinish.row][previousFinish.column].setIsFinish(false)
-            }
-            this.maze.mazeFinish = {row: this.row, column: this.column}
-        }
-        this.isFinish = bool
-    }
+    setFinish(bool) {
+        this.finish = bool;
+    };
 
-    markCurrent() {
-        this.current = true
-    }
+    setRoute(bool) {
+        this.route = bool;
+    };
 
-    markVisited() {
-        this.visited = true
-    }
+    setStart(bool) {
+        this.start = bool;
+    };
 
-    clearCurrent() {
-        this.current = false
-    }
-
-    markPath(path) {
-        this.availablePathways[path] = true
-    }
-
-    clearRoute() {
-        this.isRoute = false
-    }
-
-    clearVisited() {
-        this.visited = false
-    }
-
-    markRoute() {
-        this.isRoute = true
-    }
-
-    get hasVisitedNeighbour() {
-        return getReachableNeighborNodes(this.maze.nodes, this).some(node => node.visited)
-    }
+    setVisited(bool) {
+        this.visited = bool;
+    };
 }
+
+export default MazeStore;

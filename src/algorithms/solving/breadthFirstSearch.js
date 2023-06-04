@@ -1,62 +1,54 @@
-import {getReachableNeighborNodes} from "../helpers";
-import {removePreviousNodes, trackRoute} from "./utils";
+import {getReachableNeighborNodes} from "../utils";
+import trackRoute from "./utils";
+import Queue from "../dataStructures/Queue";
 
-const breadthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
-    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
-    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
-    const actionsToVisualize = []
+const breadthFirstSearch = (maze, startNode, endNode) => {
+    const visualizationActions = new Queue();
+    const queue = new Queue();
 
-    findRoute(maze, startNode, endNode, actionsToVisualize)
-    const route = trackRoute(endNode)
-    removePreviousNodes(maze)
-
-    return {
-        newMaze: maze,
-        actionsToVisualize: actionsToVisualize,
-        route: route
-    }
-}
-
-const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
-    const queue = [startNode]
-    startNode.visited = true
-    startNode.previousNode = null
-    actionsToVisualize.push({
-        type: 'markVisited',
-        payload: {row: startNode.row, column: startNode.column}
-    })
+    queue.enqueue(startNode);
+    startNode.visited = true;
+    startNode.previousNode = null;
+    visualizationActions.enqueue({
+        type: 'setVisited',
+        payload: {row: startNode.row, column: startNode.column, value: true}
+    });
 
     while (queue.length) {
-        const currentNode = queue.shift() // todo implement a queue
-        actionsToVisualize.push({
-            type: 'markCurrent',
-            payload: {row: currentNode.row, column: currentNode.column}
-        })
+        const currentNode = queue.dequeue();
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: currentNode.row, column: currentNode.column, value: true}
+        });
 
-        const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited)
+        const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited);
         for (const neighbour of unvisitedNeighbours) {
-            queue.push(neighbour)
-            neighbour.previousNode = currentNode
-            neighbour.visited = true
-            actionsToVisualize.push({
-                type: 'markVisited',
-                payload: {row: neighbour.row, column: neighbour.column}
-            })
+            queue.enqueue(neighbour);
+            neighbour.previousNode = currentNode;
+            neighbour.visited = true;
+            visualizationActions.enqueue({
+                type: 'setVisited',
+                payload: {row: neighbour.row, column: neighbour.column, value: true}
+            });
 
             if (neighbour === endNode) {
-                queue.length = 0;
-                break;
+                queue.clear(); // will clear all items in the queue and, as a result, stop the while loop
+                break; // break out of the unvisitedNeighbours loop, the end node has already been found, thus -
+                // there's no need in checking other neighbours
             }
         }
 
-        actionsToVisualize.push({
-            type: 'clearCurrent',
-            payload: {row: currentNode.row, column: currentNode.column}
-        })
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: currentNode.row, column: currentNode.column, value: false}
+        });
     }
+
+    return {
+        newMaze: maze,
+        route: trackRoute(endNode),
+        visualizationActions: visualizationActions
+    };
 }
 
-
-export default breadthFirstSearch
-
-
+export default breadthFirstSearch;

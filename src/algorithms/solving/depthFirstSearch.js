@@ -1,77 +1,62 @@
-import {getReachableNeighborNodes} from "../helpers";
-import {removePreviousNodes, trackRoute} from "./utils";
+import {getReachableNeighborNodes} from "../utils";
+import trackRoute from "./utils";
 import {pickRandomItem} from "../generation/utils";
+import Queue from "../dataStructures/Queue";
 
-const depthFirstSearch = (maze, startNodeCoordinates, endNodeCoordinates) => {
-    const startNode = maze[startNodeCoordinates.row][startNodeCoordinates.column]
-    const endNode = maze[endNodeCoordinates.row][endNodeCoordinates.column]
-    const actionsToVisualize = []
+const depthFirstSearch = (maze, startNode, endNode) => {
+    const visualizationActions = new Queue();
+    const visitedStack = [];
+    let node = startNode;
 
+    while (true) {
+        visualizationActions.enqueue({
+            type: 'setCurrent',
+            payload: {row: node.row, column: node.column, value: true}
+        });
 
-    findRoute(maze, startNode, endNode, actionsToVisualize)
-    const route = trackRoute(endNode)
-    removePreviousNodes(maze)
+        if (!node.visited) {
+            node.visited = true;
+            node.previousNode = visitedStack[visitedStack.length - 1];
+            visitedStack.push(node);
+            visualizationActions.enqueue({
+                type: 'setVisited',
+                payload: {row: node.row, column: node.column, value: true}
+            });
+        }
+
+        if (node === endNode) {
+            visualizationActions.enqueue({
+                type: 'setCurrent',
+                payload: {row: node.row, column: node.column, value: false}
+            });
+            visitedStack.length = 0;
+            break;
+        }
+
+        const unvisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited);
+        if (unvisitedNeighbours.length) {
+            const nextNode = pickRandomItem(unvisitedNeighbours);
+            visualizationActions.enqueue({
+                type: 'setCurrent',
+                payload: {row: node.row, column: node.column, value: false}
+            });
+            node = nextNode;
+        } else {
+            // Start backtracking
+            visitedStack.pop(); // remove the current node from the stack
+            visualizationActions.enqueue({
+                type: 'setCurrent',
+                payload: {row: node.row, column: node.column, value: false}
+            });
+            node = visitedStack[visitedStack.length - 1];
+        }
+    }
 
     return {
         newMaze: maze,
-        actionsToVisualize: actionsToVisualize,
-        route: route
-    }
+        route: trackRoute(endNode),
+        visualizationActions: visualizationActions
+    };
 }
 
-const findRoute = (maze, startNode, endNode, actionsToVisualize) => {
-    const visitedStack = []
-    let node = startNode
-
-    while (true) {
-        actionsToVisualize.push({
-            type: 'markCurrent',
-            payload: {row: node.row, column: node.column}
-        })
-
-        if (node === endNode) {
-            node.visited = true
-            node.previousNode = visitedStack[visitedStack.length - 1]
-            actionsToVisualize.push({
-                type: 'markVisited',
-                payload: {row: node.row, column: node.column}
-            })
-            actionsToVisualize.push({
-                type: 'clearCurrent',
-                payload: {row: node.row, column: node.column}
-            })
-            break
-        }
-
-
-        if (!node.visited) {
-            node.visited = true
-            node.previousNode = visitedStack[visitedStack.length - 1]
-            visitedStack.push(node)
-            actionsToVisualize.push({
-                type: 'markVisited',
-                payload: {row: node.row, column: node.column}
-            })
-        }
-
-        const unvisitedNeighbours = getReachableNeighborNodes(maze, node).filter(neighbour => !neighbour.visited)
-        if (unvisitedNeighbours.length) {
-            const nextNode = pickRandomItem(unvisitedNeighbours)
-            actionsToVisualize.push({
-                type: 'clearCurrent',
-                payload: {row: node.row, column: node.column}
-            })
-            node = nextNode
-        } else {
-            // Start backtracking
-            visitedStack.pop()
-            actionsToVisualize.push({
-                type: 'clearCurrent',
-                payload: {row: node.row, column: node.column}
-            })
-            node = visitedStack[visitedStack.length - 1]
-        }
-    }
-}
-
-export default depthFirstSearch
+export default depthFirstSearch;

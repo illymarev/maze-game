@@ -1,9 +1,0 @@
-TODO:
-- Cleanup
-- Add documentation and comments
-- Check the grammar and spelling
-- Edit README
-
-NOTES:
- To deploy changes, run 'npm run deploy'
- https://illymarev.github.io/maze-game/

@@ -1,9 +1,9 @@
 import {createTheme, ThemeProvider} from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import MazeGame from './components/MazeGame'
-import './App.css';
-import WelcomeModal from "./components/WelcomeModal";
 import {observer} from "mobx-react";
+import CssBaseline from '@mui/material/CssBaseline';
+import './App.css';
+import MazeGame from './components/MazeGame'
+
 
 const theme = createTheme({
     breakpoints: {
@@ -36,14 +36,12 @@ const theme = createTheme({
     },
 });
 
-const App = observer(({gameStore}) => {
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <WelcomeModal/>
-            <MazeGame gameStore={gameStore}/>
-        </ThemeProvider>
-    );
-})
+
+const App = observer(({rootStore}) => (
+    <ThemeProvider theme={theme}>
+        <CssBaseline/>
+        <MazeGame rootStore={rootStore}/>
+    </ThemeProvider>
+));
 
 export default App;

@@ -1,7 +1,7 @@
 import {Stack, Typography} from "@mui/material";
 import {observer} from "mobx-react";
 
-export const GameState = observer(({state}) => (
+const GameState = observer(({state}) => (
     <Stack marginBottom={'2rem'}>
         <Typography variant="h3" component="h3">
             {state.gameState.title}
@@ -10,5 +10,7 @@ export const GameState = observer(({state}) => (
             {state.gameState.description}
         </Typography>
     </Stack>
-))
+));
+
+export default GameState;
 

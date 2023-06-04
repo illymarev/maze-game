@@ -1,78 +1,48 @@
-// TODO This requires a huge amount of calculations and causes a freeze even on high-end pcs/laptops
-// Either transfer this to a web worker, or to the AWS lambda
-// This is not going to be visualized because visualizing it even for small maze is going to take a while
-import {getReachableNeighborNodes} from "./helpers";
 import Queue from "./dataStructures/Queue";
+import {getReachableNeighborNodes} from "./utils";
 
-const resetVisited = maze => {
-    for (const row of maze) {
-        for (const node of row) {
-            node.visited = false
-        }
-    }
-}
+const findDiameter = maze => {
+    const startNode = findFurthestNode(maze[0][0], maze);
+    // The method above mutates the maze, thus - resetting visited nodes is required
+    maze.map(row => row.map(node => node.visited = false));
+    const endNode = findFurthestNode(startNode, maze);
+    maze.map(row => row.map(node => node.visited = false));
 
-export const findDiameter = maze => {
-    const mazeCopy = []
-    for (const row of maze) {
-        const rowCopy = []
-        for (const node of row) {
-            rowCopy.push(
-                {
-                    availablePathways: {...node.availablePathways},
-                    row: node.row,
-                    column: node.column,
-                    visited: false
-                }
-            )
-        }
-        mazeCopy.push(rowCopy)
-    }
-
-
-    let furthestNodes = {startNode: null, endNode: null, distance: 0}
-
-
-    for (const row of mazeCopy) {
-        for (const node of row) {
-            // This function mutates the original data structure
-            const currentFurthestCombination = findFurthestNode(node, mazeCopy)
-            if (currentFurthestCombination.distance > furthestNodes.distance) {
-                furthestNodes = currentFurthestCombination
-            }
-            resetVisited(mazeCopy) // resetting all visited nodes will be faster than creating a copy of the node
-            // & maze every time
-        }
-    }
-
-    return furthestNodes
+    return {startNode: startNode, endNode: endNode};
 }
 
 const findFurthestNode = (startNode, maze) => {
-    const queue = new Queue()
-    queue.enqueue(startNode)
-    startNode.visited = true
-    startNode.previousNode = null
-    startNode.distanceFromStart = 0
+    const queue = new Queue();
+    queue.enqueue(startNode);
+    startNode.visited = true;
+    startNode.previousNode = null;
+    startNode.distanceFromStart = 0;
 
-    let maxDistanceNode = startNode
+    let maxDistanceNode = startNode;
 
     while (queue.length) {
-        const currentNode = queue.dequeue()
+        const currentNode = queue.dequeue();
 
-        if (currentNode.distanceFromStart > maxDistanceNode.distanceFromStart) {
-            maxDistanceNode = currentNode
+        // >= is used instead of > for visual beauty because BFS always explores nodes in the same order.
+        // If two neighbour nodes have the same distance from start, 1 node will always be visited before another.
+        // If we set the first node as the finish, the second node will remain unvisited during the visualization,
+        // thus - will not look very good. In order to avoid this, I use >=, so that the finish node will be the one
+        // that is going to be visited the last.
+        if (currentNode.distanceFromStart >= maxDistanceNode.distanceFromStart) {
+            maxDistanceNode = currentNode;
         }
 
-        const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited)
+        const unvisitedNeighbours = getReachableNeighborNodes(maze, currentNode).filter(item => !item.visited);
         for (const neighbour of unvisitedNeighbours) {
-            queue.enqueue(neighbour)
-            neighbour.previousNode = currentNode
-            neighbour.distanceFromStart = currentNode.distanceFromStart + 1
-            neighbour.visited = true
+            queue.enqueue(neighbour);
+            neighbour.previousNode = currentNode;
+            neighbour.distanceFromStart = currentNode.distanceFromStart + 1;
+            neighbour.visited = true;
         }
     }
 
-    return {startNode: startNode, endNode: maxDistanceNode, distance: maxDistanceNode.distanceFromStart}
+    return maxDistanceNode;
 
 }
+
+export default findDiameter;

@@ -7,15 +7,16 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {GameStore} from "./stores/gameStore";
+import RootStore from "./stores/rootStore";
 
-const gameStore = new GameStore()
+// TODO read the official documentation about where it should be created
+const rootStore = new RootStore();
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <App gameStore={gameStore}/>
+        <App rootStore={rootStore}/>
     </React.StrictMode>
 );
 

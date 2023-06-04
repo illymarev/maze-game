@@ -1,112 +1,71 @@
 import {Grid} from "@mui/material";
 import OutlinedFlagRoundedIcon from '@mui/icons-material/OutlinedFlagRounded';
 import SportsScoreOutlinedIcon from '@mui/icons-material/SportsScoreOutlined';
-import {gameInProgress, finishedSolving} from "../stores/options/gameStates";
 import {observer} from "mobx-react";
 
-const MazeNode = observer(({node, config}) => {
+const MazeNode = observer(({node, rootStore}) => {
+    const state = rootStore.stateStore;
+    const controller = rootStore.controller;
 
-    const gameStore = config.gameStore
-    const state = config.gameStore.state
-
-    const registerUsersInput = () => {
-        node.markVisited()
-        if (node.isStart) {
-            state.setGameState(gameInProgress)
-        } else if (node.isFinish) {
-            gameStore.showCorrectPath()
-            state.setGameState(finishedSolving)
-        }
+    const onMouseDownFunc = e => {
+        e.preventDefault();
+        controller.registerUsersInput(node);
     }
 
-    let onMouseDownFunc, onMouseEnterFunc, onMouseUpFunc
-    if (state.isUsersSolvingInputAllowed) {
+    const onMouseEnterFunc = () => {
+        if (state.mouseDown) controller.registerUsersInput(node);
+    }
 
-        onMouseDownFunc = e => {
-            e.preventDefault()
-            if (node.isStart || node.hasVisitedNeighbour) {
-                registerUsersInput()
-            }
-        }
-        onMouseEnterFunc = () => {
-            if (state.isMouseDown && (node.isStart || node.hasVisitedNeighbour)) {
-                registerUsersInput()
-            }
-        }
-        onMouseUpFunc = () => {
-        }
+    const onMouseUpFunc = () => {
+        controller.handleDroppingStartOrFinishFlag(node);
+    }
 
-    } else if (state.isMovingStartAndFinishedAllowed) {
-        onMouseDownFunc = (e) => {
-            e.preventDefault();
-            if (node.isStart || node.isFinish) {
-                const movableItem = node.isStart ? 'start' : 'finish'
-                state.setMovableItem(movableItem)
-            }
-        }
-        onMouseEnterFunc = () => {
-        }
-        onMouseUpFunc = () => {
-            if (state.movableItem) {
-                state.movableItem === 'start' ? node.setIsStart(true) : node.setIsFinish(true)
-                state.setMovableItem(null)
-            }
-        }
 
+    let backgroundColor;
+    if (node.route) {
+        backgroundColor = 'rgba(247,255,22,0.75)';
+    } else if (node.current) {
+        backgroundColor = '#3b8ef1';
+    } else if (node.visited) {
+        backgroundColor = 'rgba(29,227,124,0.35)';
     } else {
-        onMouseDownFunc = (e) => {
-            e.preventDefault()
-        }
-        onMouseEnterFunc = () => {
-        }
-        onMouseUpFunc = () => {
-        }
+        backgroundColor = 'white';
     }
 
-
-    const generationVisualizationStyle = {
-        backgroundColor: node.visited ? 'rgba(29,227,124,0.35)' : null
-    }
-    if (node.current) {
-        generationVisualizationStyle.backgroundColor = '#3b8ef1'
-    }
-    if (node.isRoute) {
-        generationVisualizationStyle.backgroundColor = 'rgba(247,255,22,0.75)'
-    }
-
-    let nodeText
-    if (node.isStart) {
-        nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>
-    } else if (node.isFinish) {
-        nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>
+    let nodeText;
+    if (node.start) {
+        nodeText = <OutlinedFlagRoundedIcon fontSize={'small'}/>;
+    } else if (node.finish) {
+        nodeText = <SportsScoreOutlinedIcon fontSize={'small'}/>;
     } else {
-        nodeText = ''
+        nodeText = '';
     }
 
     return (
-        <Grid item={true} xs={1}
-              onMouseDown={e => {
-                  onMouseDownFunc(e)
-              }}
-              onMouseEnter={() => {
-                  onMouseEnterFunc()
-              }}
-              onMouseUp={() => {
-                  onMouseUpFunc()
-              }}
-              sx={{
-                  aspectRatio: '1/1', display: 'flex',
-                  alignItems: 'center', justifyContent: 'center',
-                  borderTop: node.availablePathways.north ? null : '2px solid #ccc',
-                  borderBottom: node.availablePathways.south ? null : '2px solid #ccc',
-                  borderLeft: node.availablePathways.west ? null : '2px solid #ccc',
-                  borderRight: node.availablePathways.east ? null : '2px solid #ccc',
-                  ...generationVisualizationStyle
-              }}>
+        <Grid
+            item={true}
+            className={'mazeNode'}
+            xs={1}
+            onMouseDown={e => {
+                onMouseDownFunc(e)
+            }}
+            onMouseEnter={() => {
+                onMouseEnterFunc()
+            }}
+            onMouseUp={() => {
+                onMouseUpFunc()
+            }}
+            sx={{
+                borderTop: node.edges.north ? null : '2px solid #ccc',
+                borderBottom: node.edges.south ? null : '2px solid #ccc',
+                borderLeft: node.edges.west ? null : '2px solid #ccc',
+                borderRight: node.edges.east ? null : '2px solid #ccc',
+                backgroundColor: backgroundColor
+            }}>
             {nodeText}
         </Grid>
     );
-})
+});
 
 
-export default MazeNode
+export default MazeNode;
