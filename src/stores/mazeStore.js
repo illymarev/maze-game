@@ -82,7 +82,7 @@ class MazeStore {
         if (this.nodes[row][column].start) return;
 
         if (this.finish) {
-            this.nodes[this.finish.row][this.finish.column].setFinish(false);
+            this.nodes[this.finish.row]?.[this.finish.column]?.setFinish(false);
         }
 
         this.finish = {row: row, column: column};
@@ -95,7 +95,7 @@ class MazeStore {
         if (this.nodes[row][column].finish) return;
 
         if (this.start) {
-            this.nodes[this.start.row][this.start.column].setStart(false);
+            this.nodes[this.start.row]?.[this.start.column]?.setStart(false);
         }
 
         this.start = {row: row, column: column};

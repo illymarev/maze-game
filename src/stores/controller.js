@@ -51,6 +51,8 @@ class Controller {
         // Calculate start/finish placement
         if (this.config.defaultStartAndFinishPlacement.id === longestShortestPathEdges) {
             const {startNode, endNode} = findDiameter(newMaze);
+            console.log(newMaze)
+            console.log(startNode, endNode)
             this.startNode = startNode;
             this.endNode = endNode;
         } else {
